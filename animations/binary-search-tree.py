@@ -152,64 +152,6 @@ class Tree:
         self.vertices.remove(node)
         self.edge_data_objects.remove(node.data_object)
 
-        # # creating nodes!
-        # node1 = TreeNode(x + 2 * hspace, y + 0 * vspace)
-        # node2 = TreeNode(x - 0 * hspace, y + 1 * vspace)
-        # node3 = TreeNode(x + 4 * hspace, y + 1 * vspace)
-        # node4 = TreeNode(x - 1 * hspace, y + 2 * 1.25 * vspace)
-        # node5 = TreeNode(x + 1 * hspace, y + 2 * 1.25 * vspace)
-        # node6 = TreeNode(x + 5 * hspace, y + 2 * 1.25 * vspace)
-        # node7 = TreeNode(x - 0 * hspace, y + 3 * 1.35 * vspace)
-        # node8 = TreeNode(x + 2 * hspace, y + 3 * 1.35 * vspace)
-        # node9 = TreeNode(x + 4 * hspace, y + 3 * 1.35 * vspace)
-        # self.vertices.add(node1)
-        # self.vertices.add(node2)
-        # self.vertices.add(node3)
-        # self.vertices.add(node4)
-        # self.vertices.add(node5)
-        # self.vertices.add(node6)
-        # self.vertices.add(node7)
-        # self.vertices.add(node8)
-        # self.vertices.add(node9)
-        #
-        # # assigning data!
-        # node1.set_data(2)
-        # node2.set_data(-1)
-        # node3.set_data(1)
-        # node4.set_data(0)
-        # node5.set_data(5)
-        # node6.set_data(2)
-        # node7.set_data(1)
-        # node8.set_data(7)
-        # node9.set_data(-3)
-        # self.edge_data_objects.add(node1.data_object)
-        # self.edge_data_objects.add(node2.data_object)
-        # self.edge_data_objects.add(node3.data_object)
-        # self.edge_data_objects.add(node4.data_object)
-        # self.edge_data_objects.add(node5.data_object)
-        # self.edge_data_objects.add(node6.data_object)
-        # self.edge_data_objects.add(node7.data_object)
-        # self.edge_data_objects.add(node8.data_object)
-        # self.edge_data_objects.add(node9.data_object)
-        #
-        # # parenting!
-        # node9.set_parent(node6)
-        # node8.set_parent(node5)
-        # node7.set_parent(node5)
-        # node6.set_parent(node3)
-        # node5.set_parent(node2)
-        # node4.set_parent(node2)
-        # node3.set_parent(node1)
-        # node2.set_parent(node1)
-        #
-        # for first_node in self.vertices:
-        #     for second_node in self.vertices:
-        #         if second_node.parent == first_node:
-        #             edge = Arrow([first_node.node_object.get_x(), first_node.node_object.get_y(), 0],
-        #                          [second_node.node_object.get_x(), second_node.node_object.get_y(), 0])
-        #             edge.scale(0.93)
-        #             self.edges.add(edge)
-
     def sketch_tree(self, scene):
         scene.play(*[Write(vertice.node_object) for vertice in self.vertices], run_time=1.5)
         scene.wait(1.5)
