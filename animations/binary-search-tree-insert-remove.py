@@ -14,6 +14,8 @@ class Node:
 
         self.x = x
         self.y = y
+        self.right_edge = None
+        self.left_edge = None
         self.node_object = Circle()
         self.data_object = TextMobject(str(node_data))
         self.data_object.move_to([x, y, 0])
@@ -58,21 +60,23 @@ class Tree:
 
                 if current is None:
                     node = None
+                    edge = None
                     if dir == 'r':
                         node = Node(parent.x + self.hspace, parent.y + self.vspace, value)
                         parent.right = node
+                        edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
+                        parent.right_edge = edge
                     else:
                         node = Node(parent.x - self.hspace, parent.y + self.vspace, value)
                         parent.left = node
+                        edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
+                        parent.left_edge = edge
 
                     node.parent = parent
                     self.vertices.add(node)
                     self.edge_data_objects.add(node.data_object)
-                    edge = Arrow([parent.node_object.get_x(), parent.node_object.get_y(), 0],
-                                 [node.node_object.get_x(), node.node_object.get_y(), 0])
                     edge.scale(0.93)
                     self.edges.add(edge)
-
                     break
 
                 if value >= current.data:
@@ -83,6 +87,69 @@ class Tree:
                     parent = current
                     current = current.left
                     dir = 'l'
+
+
+    def delete(self, value):
+
+        # finding the node
+        current = self.root
+        node = None
+        parent = None
+        dir = None
+
+        while True:
+            if current is None:
+                return
+            elif current.data == value:
+                node = current
+                break
+            elif value >= current.data:
+                parent = current
+                current = current.right
+                dir = 'r'
+            else:
+                parent = current
+                current = current.left
+                dir = 'l'
+        
+
+        # deleting the node
+        if node.parent is None:
+            self.root = None
+        elif node.right is None and node.left is None:
+            if dir == 'r':
+                parent.right = None
+            else:
+                parent.left = None
+        elif node.right is None:
+            node.left.parent = node.parent
+            if dir == 'r':
+                parent.right = node.left
+            else:
+                parent.left = node.left
+        elif node.left is None:
+            node.right.parent = node.parent
+            if dir == 'r':
+                parent.right = node.right
+            else:
+                parent.left = node.right
+        
+        else:
+            smallest = node.right
+            while smallest.left is not None:
+                smallest = smallest.left
+            node.left.parent = smallest
+            smallest.left = node.left
+            node.right.parent = parent
+            if dir == 'r':
+                parent.right = node.right
+            else:
+                parent.left = node.right
+
+
+        # deleting the node's graphics
+        self.vertices.remove(node)
+        self.edge_data_objects.remove(node.data_object)
 
 
     def sketch_tree(self, scene):
@@ -108,4 +175,5 @@ class Tree_Scene(Scene):
         tree.insert(-1)
         tree.insert(12)
         tree.insert(6)
+
         tree.sketch_tree(self)
