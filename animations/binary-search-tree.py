@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-import colour
-from pygments.styles.paraiso_dark import GREEN
 
 from manimlib.imports import *
 import itertools
@@ -8,27 +6,27 @@ import itertools
 
 class TreeNode:
 
-    def __init__(self, x, y, node_data, scaling_factor=0.3, node_color=RED):
+    def __init__(self, x, y, node_key, scaling_factor=0.3, node_color=RED):
         self.parent = None
         self.left = None
         self.right = None
-        self.data = node_data
+        self.key = node_key
 
         self.x = x
         self.y = y
         self.right_edge = None
         self.left_edge = None
         self.node_object = Circle()
-        self.data_object = TextMobject(str(node_data))
-        self.data_object.move_to([x, y, 0])
+        self.key_object = TextMobject(str(node_key))
+        self.key_object.move_to([x, y, 0])
         self.node_object.move_to([x, y, 0])
         self.node_object.scale(scaling_factor)
         self.node_object.set_color(node_color)
 
-    def set_data(self, node_data):
-        self.data_object = TextMobject(str(node_data))
-        self.data_object.move_to([self.node_object.get_x(), self.node_object.get_y(), 0])
-        self.data = node_data
+    def set_key(self, node_key):
+        self.key_object = TextMobject(str(node_key))
+        self.key_object.move_to([self.node_object.get_x(), self.node_object.get_y(), 0])
+        self.key = node_key
 
 
 class Tree:
@@ -43,7 +41,7 @@ class Tree:
 
         self.vertices = VGroup()
         self.edges = VGroup()
-        self.edge_data_objects = VGroup()
+        self.vertice_key_objects = VGroup()
 
     def insert(self, value):
 
@@ -51,7 +49,7 @@ class Tree:
             node = TreeNode(self.x, self.y, value)
             self.root = node
             self.vertices.add(node)
-            self.edge_data_objects.add(node.data_object)
+            self.vertice_key_objects.add(node.key_object)
 
         else:
 
@@ -77,12 +75,12 @@ class Tree:
 
                     node.parent = parent
                     self.vertices.add(node)
-                    self.edge_data_objects.add(node.data_object)
+                    self.vertice_key_objects.add(node.key_object)
                     edge.scale(0.93)
                     self.edges.add(edge)
                     break
 
-                if value >= current.data:
+                if value >= current.key:
                     parent = current
                     current = current.right
                     dir = 'r'
@@ -102,10 +100,10 @@ class Tree:
         while True:
             if current is None:
                 return
-            elif current.data == value:
+            elif current.key == value:
                 node = current
                 break
-            elif value >= current.data:
+            elif value >= current.key:
                 parent = current
                 current = current.right
                 dir = 'r'
@@ -149,7 +147,7 @@ class Tree:
 
         # deleting the node's graphics
         self.vertices.remove(node)
-        self.edge_data_objects.remove(node.data_object)
+        self.vertice_key_objects.remove(node.key_object)
 
     def sketch_tree(self, scene):
         scene.play(*[Write(vertice.node_object) for vertice in self.vertices], run_time=1.5)
@@ -157,8 +155,8 @@ class Tree:
         for edge in self.edges:
             scene.play(Write(edge), run_time=0.6)
         scene.wait(1.5)
-        for data_object in self.edge_data_objects:
-            scene.play(Write(data_object), run_time=0.5)
+        for key_object in self.vertice_key_objects:
+            scene.play(Write(key_object), run_time=0.5)
 
 
 # def apply_in_order_code_frame(scene, tree, in_order_code):
@@ -176,66 +174,62 @@ def apply_in_order_on_tree(scene, root, stack):
     if root is None:
         return
 
-    print('#################')
-    print(root.node_object.get_x(), root.node_object.get_y())
-    print(root.data)
-    [print('stack is {}, {}'.format(arrow.get_x(), arrow.get_y())) for arrow in stack]
-    print('#################')
+    # print('#################')
+    # print(root.node_object.get_x(), root.node_object.get_y())
+    # print(root.key)
+    # [print('stack is {}, {}'.format(arrow.get_x(), arrow.get_y())) for arrow in stack]
+    # print('#################')
 
-    arrow = Arrow([root.node_object.get_x() - 1.5, root.node_object.get_y(), 0],
-                  [root.node_object.get_x() - 0.5, root.node_object.get_y(), 0])
-    arrow.set_color(PURPLE)
-    arrow.rotate(0.01)
-    arrow.scale(1.5)
+    # arrow = Arrow([root.node_object.get_x() - 1.5, root.node_object.get_y(), 0],
+    #               [root.node_object.get_x() - 0.5, root.node_object.get_y(), 0])
+    # arrow.set_color(PURPLE)
+    # arrow.rotate(0.01)
+    # arrow.scale(1.5)
 
-    stack.append(arrow.copy())
+    # stack.append(arrow.copy())
 
-    if root.parent is None:
-        scene.play(GrowArrow(arrow))
-    else:
-        if len(stack) >= 2:
-            scene.play(Transform(stack[-2], arrow))
+    # if root.parent is None:
+    #     scene.play(GrowArrow(arrow))
+    # else:
+    # if len(stack) >= 2:
+    #     scene.play(Transform(stack[-2], arrow))
 
-    yellow_root_object = root.node_object.copy()
-    original_root_object = root.node_object.copy()
-    yellow_root_object.set_color(YELLOW)
-    scene.play(ReplacementTransform(root.node_object, yellow_root_object), run_time=0.5)
+    scene.play(root.node_object.set_color, GREEN, run_time=0.5)
     scene.wait(1.5)
 
-    if root.left is not None:
-        scene.play(ReplacementTransform(yellow_root_object, original_root_object), run_time=0.5)
-
+    # color new edge
+    if root.left_edge is not None:
+        scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
+    scene.wait(1.5)
 
     apply_in_order_on_tree(scene, root.left, stack)
 
-    print(root.data)
+    print(root.key)
 
     if root.left is not None:
-        yellow_root_object = root.node_object.copy()
-        original_root_object = root.node_object.copy()
-        yellow_root_object.set_color(YELLOW)
-        scene.play(ReplacementTransform(root.node_object, yellow_root_object), run_time=0.5)
+        scene.play(root.node_object.set_color, GREEN, run_time=0.5)
         scene.wait(1.5)
 
-    green_root_object = root.node_object.copy()
-    green_root_object.set_color(GREEN)
-    scene.play(ReplacementTransform(root.node_object, green_root_object), run_time=0.5)
-    root.node_object = green_root_object
+    scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
     scene.wait(1)
 
-    print('coords {}'.format(root.data))
-    if len(stack) != 0:
-        print('top of stack {}, {}'.format(stack[-1].get_x(), stack[-1].get_y()))
+    # print('coords {}'.format(root.key))
+    # if len(stack) != 0:
+    #     print('top of stack {}, {}'.format(stack[-1].get_x(), stack[-1].get_y()))
 
+    # color new edge
+    if root.right_edge is not None:
+        scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
+    scene.wait(1.5)
 
     apply_in_order_on_tree(scene, root.right, stack)
 
-    last_arrow = stack.pop()
+    # last_arrow = stack.pop()
 
-    [print(arrow.get_x(), arrow.get_y()) for arrow in stack]
-    [scene.play(Write(Dot([arrow.get_x(), arrow.get_y(), 0]))) for arrow in stack]
-    if len(stack) >= 2:
-        scene.play(Transform(last_arrow, stack[-2]))
+    # [print(arrow.get_x(), arrow.get_y()) for arrow in stack]
+    # [scene.play(Write(Dot([arrow.get_x(), arrow.get_y(), 0]))) for arrow in stack]
+    # if len(stack) >= 2:
+    #     scene.play(Transform(last_arrow, stack[-2]))
 
 
 class TreeScene(Scene):
@@ -259,57 +253,56 @@ class TreeScene(Scene):
 
         self.wait(1.5)
 
-        # code lines
-
         in_order_code = VGroup()
 
-        in_order_code_line1 = TextMobject("\\texttt {public void inOrder(TreeNode node)}")
-        in_order_code_line1.move_to([-3.45, 2 - 0.6 * 0, 0])
-        in_order_code.add(in_order_code_line1)
+        # drawing the code
+        l1 = TextMobject("\\textrm{def} ", "\\textrm{inOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
+        for i, color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l1)
 
-        parenthese1 = Text("{")
-        parenthese1.move_to([0.2, 2 - 0.6 * 0, 0])
-        in_order_code.add(parenthese1)
+        l2 = TextMobject("    \\textrm{if} ", "\\textrm{node}", " \\textrm{==} ", "\\textrm{None}", "\\textrm{:}")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, YELLOW_B, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l2)
 
-        in_order_code_line2 = TextMobject("\\texttt {if (node == null)}")
-        in_order_code_line2.move_to([-4.5, 2 - 0.6 * 1, 0])
-        in_order_code.add(in_order_code_line2)
+        l3 = TextMobject("        \\textrm{return}")
+        l3.set_color(YELLOW_B)
+        in_order_code.add(l3)
 
-        parenthese2 = Text("{")
-        parenthese2.move_to([-2.5, 2 - 0.6 * 1, 0])
-        in_order_code.add(parenthese2)
+        l4 = TextMobject("    \\textrm{inOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{left}",
+                         "\\textrm{)}")
+        for i, color in zip(l4, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l4)
 
-        in_order_code_line3 = TextMobject("\\texttt {return;}")
-        in_order_code_line3.move_to([-4.35, 2 - 0.6 * 2, 0])
-        in_order_code.add(in_order_code_line3)
+        l5 = TextMobject("    \\textrm{print}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{key}",
+                         "\\textrm{)}")
+        for i, color in zip(l5, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l5)
 
-        in_order_code_line4 = Text("}")
-        in_order_code_line4.move_to([-6, 2 - 0.6 * 3, 0])
-        in_order_code.add(in_order_code_line4)
+        l6 = TextMobject("    \\textrm{inOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{right}",
+                         "\\textrm{)}")
+        for i, color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l6)
 
-        in_order_code_line5 = TextMobject("\\texttt {inOrder(node.left);")
-        in_order_code_line5.move_to([-4.3, 2 - 0.6 * 4, 0])
-        in_order_code.add(in_order_code_line5)
+        # for line in in_order_code:
+        #     for part in line:
+        #         print(part)
+        #         print(dir(part))
+        #         part = part.become("\\textrm{}".format(part.tex_string))
 
-        in_order_code_line6 = TextMobject("\\texttt {System.out.println(node.data);")
-        in_order_code_line6.move_to([-3.2, 2 - 0.6 * 5, 0])
-        in_order_code.add(in_order_code_line6)
+        for i, l in enumerate(in_order_code):
+            l.to_edge(LEFT, buff=0.2)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.5 * i, 0])
 
-        in_order_code_line7 = TextMobject("\\texttt {inOrder(node.right);")
-        in_order_code_line7.move_to([-4.2, 2 - 0.6 * 6, 0])
-        in_order_code.add(in_order_code_line7)
+        in_order_code.scale(0.85)
+        in_order_code.shift([0, 1.7, 0])
 
-        in_order_code_line8 = Text("}")
-        in_order_code_line8.move_to([-6.7, 2 - 0.6 * 7, 0])
-        in_order_code.add(in_order_code_line8)
-
-        for line in in_order_code:
-            line.scale(0.75)
-            line.set_color(BLUE)
-            self.play(Write(line))
-            # removing the single characters
-            if not hasattr(line, 'tex_string'):
-                in_order_code.remove(line)
+        self.play(Write(in_order_code), run_time=2)
+        self.wait(0.5)
 
         # apply in-order
         # apply_in_order_code_frame(self, tree, in_order_code)
