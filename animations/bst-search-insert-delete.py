@@ -238,6 +238,20 @@ class Tree:
 
     def delete(self, scene, value):
 
+        # title
+        title = TextMobject("Delete:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        scene.play(Write(title))
+
+        # drawing the searched value
+        searched = TextMobject(f"Let's delete {value}.")
+        searched.shift([0, title.get_y(), 0])
+        searched.set_color(GREEN)
+        scene.play(Write(searched))
+        scene.wait(0.5)
+
         # finding the node
         current = self.root
         node = None
@@ -486,8 +500,21 @@ class TreeScene(Scene):
         # self.wait(2)
 
         # INSERT:
-        tree = Tree(3.7, 2)
-        for v in [5, 4, 7, 6, -1, 12, 2, 10, 1, 11]:
+        # tree = Tree(3.7, 2)
+        # for v in [5, 4, 7, 6, -1, 12, 2, 10, 1, 11]:
+        #     tree.insert(self, v)
+        # tree.reset_colors(self)
+        # self.wait(1)
+
+        # tree.sketch_tree(self)
+        # self.wait(1)
+
+        # tree.insert(self, 3, True)
+        # self.wait(2)
+
+        # DELETE:
+        tree = Tree(0.5, 1.7)
+        for v in [4, 3, 7, 6, 5, -1, 12, -6, 10, 11]:
             tree.insert(self, v)
         tree.reset_colors(self)
         self.wait(1)
@@ -495,7 +522,8 @@ class TreeScene(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.insert(self, 3, True)
+        tree.delete(self, 7)
         self.wait(2)
+
 
 
