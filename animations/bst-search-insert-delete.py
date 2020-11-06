@@ -42,12 +42,61 @@ class Tree:
 
     def insert(self, scene, value, show_sketch=False):
 
+        if show_sketch:
+
+            # title
+            title = TextMobject("Insert:")
+            title.to_edge(LEFT, buff=0.8)
+            title.shift([0, 3, 0])
+            title.scale(1.2)
+            scene.play(Write(title))
+
+            # drawing the code line
+            line = Line([-6.1, 1.4, 0], [-6.1, -2, 0])
+            scene.play(FadeInFromDown(line))
+
+            # drawing the code
+            lines = [
+                "def insert(key, root):",
+                "   current = root",
+                "   while current != None:",
+                "       if:  key >= current.key:",
+                "           current = current.right",
+                "       else key < current.key:",
+                "           current = current.left",
+                "   create\_node(key)"
+            ]
+
+            code = VGroup()
+            for i, l in enumerate(lines):
+                t = TextMobject(l)
+                t.scale(0.85)
+                t.shift([0, 1.1, 0])
+                t.set_color(BLUE)
+                t.to_edge(LEFT, buff=1.2)
+                t.shift([0.2 * (len(l) - len(l.lstrip())), -0.4 * i, 0])
+                code.add(t)
+
+            scene.play(FadeInFrom(code, 2 * LEFT), run_time=2)
+            scene.wait(0.5)
+
+            # drawing the searched value
+            searched = TextMobject(f"Let's insert {value}.")
+            searched.shift([0, title.get_y(), 0])
+            searched.set_color(GREEN)
+            scene.play(Write(searched))
+            scene.wait(0.5)
+
+
+        # showing the process on the tree
+
         if self.root is None:
             node = TreeNode(self.x, self.y, value)
             self.root = node
             self.vertices.add(node)
             self.edge_data_objects.add(node.data_object)
-            node.node_object.set_color(YELLOW_E)
+            node.node_object.set_color(GREEN)
+            node.data_object.set_color(GREEN)
             if show_sketch:
                 scene.play(Write(node.node_object))
                 scene.play(Write(node.data_object))
@@ -74,13 +123,13 @@ class Tree:
                         edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
                         parent.left_edge = edge
 
-                    node.node_object.set_color(YELLOW_E)
-                    node.data_object.set_color(YELLOW_E)
+                    node.node_object.set_color(GREEN)
+                    node.data_object.set_color(GREEN)
                     node.parent = parent
                     self.vertices.add(node)
                     self.edge_data_objects.add(node.data_object)
                     edge.scale(0.93)
-                    edge.set_color(YELLOW_E)
+                    edge.set_color(GREEN)
                     self.edges.add(edge)
 
                     if show_sketch:
@@ -110,8 +159,6 @@ class Tree:
                     if show_sketch and parent.left_edge is not None:
                         scene.play(parent.left_edge.set_color, YELLOW_E)
 
-        self.reset_colors(scene, show_sketch)
-
     
     def search(self, scene, value):
 
@@ -135,7 +182,7 @@ class Tree:
             "           return current",
             "       if key < current.key:",
             "           current = current.left",
-            "       else:  key > current.key:",
+            "       else:  \#key > current.key:",
             "           current = current.right",
             "   return current"
         ]
@@ -425,16 +472,30 @@ class Tree:
 class TreeScene(Scene):
 
     def construct(self):
-        tree = Tree(3.7, 2.5)
 
         # SEARCH:
-        for v in [5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9]:
+        # tree = Tree(3.7, 2.5)
+        # for v in [5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9]:
+        #     tree.insert(self, v)
+        # self.wait(1)
+
+        # tree.sketch_tree(self)
+        # self.wait(1)
+
+        # tree.search(self, 8)
+        # self.wait(2)
+
+        # INSERT:
+        tree = Tree(3.7, 2)
+        for v in [5, 4, 7, 6, -1, 12, 2, 10, 1, 11]:
             tree.insert(self, v)
+        tree.reset_colors(self)
         self.wait(1)
 
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.search(self, 8)
-        self.wait(2)  
+        tree.insert(self, 3, True)
+        self.wait(2)
+
 
