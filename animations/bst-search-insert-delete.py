@@ -114,6 +114,54 @@ class Tree:
 
     
     def search(self, scene, value):
+
+        # title
+        title = TextMobject("Search:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        scene.play(Write(title))
+
+        # drawing the code line
+        line = Line([-6.1, 1.6, 0], [-6.1, -2.4, 0])
+        scene.play(FadeInFromDown(line))
+
+        # drawing the code
+        lines = [
+            "def search(key, root):",
+            "   current = root",
+            "   while current != None:",
+            "       if key == current.key:",
+            "           return current",
+            "       if key < current.key:",
+            "           current = current.left",
+            "       else:  key > current.key:",
+            "           current = current.right",
+            "   return current"
+        ]
+
+        code = VGroup()
+        for i, l in enumerate(lines):
+            t = TextMobject(l)
+            t.scale(0.85)
+            t.shift([0, 1.4, 0])
+            t.set_color(BLUE)
+            t.to_edge(LEFT, buff=1.2)
+            t.shift([0.2 * (len(l) - len(l.lstrip())), -0.4 * i, 0])
+            code.add(t)
+
+        scene.play(FadeInFrom(code, 2 * LEFT), run_time=2)
+        scene.wait(0.5)
+
+        # drawing the searched value
+        searched = TextMobject(f"Let's search for {value}.")
+        searched.shift([0, title.get_y(), 0])
+        searched.set_color(GREEN)
+        scene.play(Write(searched))
+        scene.wait(0.5)
+
+
+        # showing the process on the tree
         current = self.root
         while True:
             if current is None:
@@ -139,9 +187,6 @@ class Tree:
                     if current.left is not None:
                         scene.play(current.left_edge.set_color, YELLOW_E)
                     current = current.left
-
-        scene.wait(1)
-        self.reset_colors(scene, True)
 
 
     def delete(self, scene, value):
@@ -334,14 +379,13 @@ class Tree:
 
 
     def sketch_tree(self, scene):
-        scene.play(*[Write(v.node_object) for v in self.vertices], run_time=1.5)
-        scene.wait(0.5)
-
+        scene.play(
+            *[Write(v.node_object) for v in self.vertices],
+            *[Write(do) for do in self.edge_data_objects],
+            run_time=1.5
+        )
         scene.play(*[GrowArrow(e) for e in self.edges], run_time=1.5)
-        scene.wait(0.5)
 
-        scene.play(*[Write(do) for do in self.edge_data_objects], run_time=1.5)
-        scene.wait(0.5)
 
     def get_all_subtree(self, all_nodes_circle, all_nodes_data, all_edges, root):
         if root is None:
@@ -376,19 +420,21 @@ class Tree:
                 e.set_color(WHITE)
             for edo in self.edge_data_objects:
                 edo.set_color(WHITE)
+            
 
 class TreeScene(Scene):
 
     def construct(self):
-        tree = Tree(3.5, 2.5)
+        tree = Tree(3.7, 2.5)
 
-        for v in [5, 3, 7, 6, -1, 12, 2, 10, 14, -2, 1, 8, 11]:
+        # SEARCH:
+        for v in [5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9]:
             tree.insert(self, v)
-            self.wait(0.3)
+        self.wait(1)
 
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.delete(self, -1)
-        self.wait(1.5)
+        tree.search(self, 8)
+        self.wait(2)  
 
