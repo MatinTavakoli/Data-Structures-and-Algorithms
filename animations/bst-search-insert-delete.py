@@ -392,6 +392,7 @@ class Tree:
 
             # showing the process on the tree
             current = self.root
+            not_found = None
 
             pointer = TextMobject("\^")
             pointer.rotate(PI)
@@ -413,7 +414,21 @@ class Tree:
                 scene.wait(0.5)
 
                 if current is None:
-                    return
+                    new_rect = SurroundingRectangle(l10, buff=0.06, color=RED)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.wait(0.5)
+
+                    not_found = TextMobject("Not Found!")
+                    not_found.set_color(RED)
+                    not_found.scale(0.7)
+                    not_found.move_to([pointer.get_x(), pointer.get_y() - 0.4, 0])
+                    scene.play(Write(not_found))
+                    scene.wait(1)
+                    scene.play(FadeOut(not_found))
+
+                    break
+
                 else:
 
                     new_rect = SurroundingRectangle(l4, buff=0.06, color=WHITE)
@@ -452,6 +467,9 @@ class Tree:
                                     current.right_edge.set_color, BLUE_C,
                                     pointer.shift, [self.hspace, self.vspace, 0]
                                 )
+                            else:
+                                scene.play(pointer.shift, [self.hspace, self.vspace, 0])
+                            
                             current = current.right
 
                             if current is not None:
@@ -477,13 +495,15 @@ class Tree:
                                         current.left_edge.set_color, BLUE_C,
                                         pointer.shift, [-self.hspace, self.vspace, 0]
                                     )
+                                else:
+                                    scene.play(pointer.shift, [-self.hspace, self.vspace, 0])
+                                
                                 current = current.left
 
                                 if current is not None:
                                     scene.play(current.node_object.set_color, BLUE_C)
                                     scene.wait(0.5)
-
-
+                                    
             scene.wait(1)
             self.reset_colors(scene, True)
             scene.play(FadeOut(rect), FadeOut(pointer))
@@ -967,6 +987,24 @@ class Insert(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Insert")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.3, 0])
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2))
+        self.wait(2)
+
         tree = Tree(3.3, 2)
         tree.insert(self, False, 5, 4, 7, 6, -1, 12, 2, 10, 11)
         tree.reset_colors(self)
@@ -983,6 +1021,24 @@ class Search(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Search")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.3, 0])
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2))
+        self.wait(2)
+
         tree = Tree(3.7, 2.5)
         tree.insert(self, False, 5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9)
         tree.reset_colors(self)
@@ -991,13 +1047,31 @@ class Search(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.search(self, 11)
+        tree.search(self, 11, -4)
         self.wait(2)
 
 
 class Delete(Scene):
 
     def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Delete")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.3, 0])
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2))
+        self.wait(2)
 
         tree = Tree(3.1, 1.7)
         for v in [3, 2, 7, 6, 5, -1, 12, 9, 8, 15, 10]:
