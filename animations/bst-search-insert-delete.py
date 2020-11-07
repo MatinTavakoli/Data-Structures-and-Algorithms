@@ -40,7 +40,7 @@ class Tree:
         self.edge_data_objects = VGroup()
         self.root = None
 
-    def insert(self, scene, value, show_sketch=False):
+    def insert(self, scene, show_sketch, *values):
 
         if show_sketch:
 
@@ -110,90 +110,99 @@ class Tree:
                 scene.play(FadeInFrom(l, LEFT), run_time=0.5)
             scene.wait(1)
 
-            # drawing the searched value
-            searched = TextMobject(f"Let's insert {value}.")
-            searched.shift([0, title.get_y(), 0])
-            searched.set_color(GREEN)
-            scene.play(Write(searched))
-            scene.wait(0.5)
 
+        for value in values:
 
-        # showing the process on the tree
-
-        if self.root is None:
-            node = TreeNode(self.x, self.y, value)
-            self.root = node
-            self.vertices.add(node)
-            self.edge_data_objects.add(node.data_object)
-            node.node_object.set_color(GREEN)
-            node.node_object.set_fill(GREEN, 1)
             if show_sketch:
-                scene.play(Write(node.node_object))
-                scene.play(Write(node.data_object))
+                # drawing the searched value
+                searched = TextMobject(f"Let's insert {value}.")
+                searched.shift([0, title.get_y(), 0])
+                searched.set_color(GREEN)
+                scene.play(Write(searched))
+                scene.wait(0.5)
 
-        else:
 
-            current = self.root
-            parent = None
-            dir = None
+            # showing the process on the tree
 
-            while True:
+            if self.root is None:
+                node = TreeNode(self.x, self.y, value)
+                self.root = node
+                self.vertices.add(node)
+                self.edge_data_objects.add(node.data_object)
+                node.node_object.set_color(GREEN)
+                node.node_object.set_fill(GREEN, 1)
+                if show_sketch:
+                    scene.play(Write(node.node_object))
+                    scene.play(Write(node.data_object))
 
-                if current is None:
-                    node = None
-                    edge = None
-                    if dir == 'r':
-                        node = TreeNode(parent.x + self.hspace, parent.y + self.vspace, value)
-                        parent.right = node
-                        edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
-                        parent.right_edge = edge
-                    else:
-                        node = TreeNode(parent.x - self.hspace, parent.y + self.vspace, value)
-                        parent.left = node
-                        edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
-                        parent.left_edge = edge
+            else:
 
-                    node.node_object.set_color(GREEN)
-                    node.node_object.set_fill(GREEN, 1)
-                    node.parent = parent
-                    self.vertices.add(node)
-                    self.edge_data_objects.add(node.data_object)
-                    edge.scale(0.93)
-                    edge.set_color(GREEN)
-                    self.edges.add(edge)
+                current = self.root
+                parent = None
+                dir = None
+
+                while True:
+
+                    if current is None:
+                        node = None
+                        edge = None
+                        if dir == 'r':
+                            node = TreeNode(parent.x + self.hspace, parent.y + self.vspace, value)
+                            parent.right = node
+                            edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
+                            parent.right_edge = edge
+                        else:
+                            node = TreeNode(parent.x - self.hspace, parent.y + self.vspace, value)
+                            parent.left = node
+                            edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
+                            parent.left_edge = edge
+
+                        node.node_object.set_color(GREEN)
+                        node.node_object.set_fill(GREEN, 1)
+                        node.parent = parent
+                        self.vertices.add(node)
+                        self.edge_data_objects.add(node.data_object)
+                        edge.scale(0.93)
+                        edge.set_color(GREEN)
+                        self.edges.add(edge)
+
+                        if show_sketch:
+                            scene.play(GrowArrow(edge))
+                            scene.play(Write(node.node_object))
+                            scene.play(Write(node.data_object))
+
+                        break
 
                     if show_sketch:
-                        scene.play(GrowArrow(edge))
-                        scene.play(Write(node.node_object))
-                        scene.play(Write(node.data_object))
+                        scene.play(current.node_object.set_color, BLUE_C)
+                        scene.wait(0.3)
 
-                    break
+                    if value >= current.data:
+                        parent = current
+                        current = current.right
+                        dir = 'r'
+                        if show_sketch and parent.right_edge is not None:
+                            scene.play(parent.right_edge.set_color, BLUE_C)
+                    else:
+                        parent = current
+                        current = current.left
+                        dir = 'l'
+                        if show_sketch and parent.left_edge is not None:
+                            scene.play(parent.left_edge.set_color, BLUE_C)
 
                 if show_sketch:
+                    scene.wait(1)
+                    self.reset_colors(scene, True)
                     scene.play(
-                        current.node_object.set_color, BLUE_C,
+                        FadeOut(searched)
                     )
-                    scene.wait(0.3)
 
-                if value >= current.data:
-                    parent = current
-                    current = current.right
-                    dir = 'r'
-                    if show_sketch and parent.right_edge is not None:
-                        scene.play(parent.right_edge.set_color, BLUE_C)
-                else:
-                    parent = current
-                    current = current.left
-                    dir = 'l'
-                    if show_sketch and parent.left_edge is not None:
-                        scene.play(parent.left_edge.set_color, BLUE_C)
-        
         if show_sketch:
             scene.wait(1)
             self.reset_colors(scene, True)
 
     
-    def search(self, scene, value):
+    def search(self, scene, *values):
 
         # title
         title = TextMobject("Search:")
@@ -271,39 +280,49 @@ class Tree:
             scene.play(FadeInFrom(l, LEFT), run_time=0.5)
         scene.wait(1)
 
-        # drawing the searched value
-        searched = TextMobject(f"Let's search for {value}.")
-        searched.shift([0, title.get_y(), 0])
-        searched.set_color(GREEN)
-        scene.play(Write(searched))
-        scene.wait(0.5)
+        for value in values:
+
+            # drawing the searched value
+            searched = TextMobject(f"Let's search for {value}.")
+            searched.shift([0, title.get_y(), 0])
+            searched.set_color(GREEN)
+            scene.play(Write(searched))
+            scene.wait(0.5)
 
 
-        # showing the process on the tree
-        current = self.root
-        while True:
-            if current is None:
-                return
-            else:
-                scene.play(
-                    current.node_object.set_color, BLUE_C,
-                )
-
-                if current.data == value:
-                    scene.play(
-                        current.node_object.set_color, GREEN,
-                        current.node_object.set_fill, GREEN, 1
-                    )
-                    break
-                elif value >= current.data:
-                    if current.right is not None:
-                        scene.play(current.right_edge.set_color, BLUE_C)
-                    current = current.right
-                    
+            # showing the process on the tree
+            current = self.root
+            while True:
+                if current is None:
+                    return
                 else:
-                    if current.left is not None:
-                        scene.play(current.left_edge.set_color, BLUE_C)
-                    current = current.left
+                    scene.play(
+                        current.node_object.set_color, BLUE_C,
+                    )
+
+                    if current.data == value:
+                        scene.play(
+                            current.node_object.set_color, GREEN,
+                            current.node_object.set_fill, GREEN, 1
+                        )
+                        break
+                    elif value >= current.data:
+                        if current.right is not None:
+                            scene.play(current.right_edge.set_color, BLUE_C)
+                        current = current.right
+                        
+                    else:
+                        if current.left is not None:
+                            scene.play(current.left_edge.set_color, BLUE_C)
+                        current = current.left
+
+
+            scene.wait(1)
+            self.reset_colors(scene, True)
+            scene.play(
+                FadeOut(searched)
+            )
+            scene.wait(0.3)
 
 
     def delete(self, scene, *values):
@@ -797,7 +816,7 @@ class Search(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.search(self, 8)
+        tree.search(self, 11, 2)
         self.wait(2)
 
 
@@ -805,16 +824,15 @@ class Insert(Scene):
 
     def construct(self):
 
-        tree = Tree(3.7, 2)
-        for v in [5, 4, 7, 6, -1, 12, 2, 10, 1, 11]:
-            tree.insert(self, v)
+        tree = Tree(3.3, 2)
+        tree.insert(self, False, 5, 4, 7, 6, -1, 12, 2, 10, 1, 11)
         tree.reset_colors(self)
         self.wait(1)
 
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.insert(self, 3, True)
+        tree.insert(self, True, 3, 12)
         self.wait(2)
 
 
