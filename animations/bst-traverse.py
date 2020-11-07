@@ -29,14 +29,19 @@ class TreeNode:
         self.key = node_key
 
     # tree traverses
+    def pre_order(self, scene, root, counter):
 
-    def pre_order(self, scene, root):
         if root is None:
             return
 
-        print(root.key)
-
         scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
+        visited_node = TextMobject(str(root.key))
+        visited_node.set_color(BLUE)
+        visited_node.move_to([-7 + counter[0], -3, 0])
+        scene.play(Write(visited_node))
+        print(root.key)
+        counter[0] = counter[0] + 1
+
         scene.wait(1)
 
         # color new edge
@@ -52,16 +57,16 @@ class TreeNode:
         #     scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
         # scene.wait(1.5)
 
-        root.pre_order(scene, root.left)
+        root.pre_order(scene, root.left, counter)
 
         # color new edge
         if root.right_edge is not None:
             scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
             scene.wait(1.5)
 
-        root.pre_order(scene, root.right)
+        root.pre_order(scene, root.right, counter)
 
-    def in_order(self, scene, root):
+    def in_order(self, scene, root, counter):
         if root is None:
             return
 
@@ -73,15 +78,16 @@ class TreeNode:
             scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
             scene.wait(1.5)
 
-        root.in_order(scene, root.left)
-
-        print(root.key)
-
-        # if root.left is not None:
-        #     scene.play(root.node_object.set_color, GREEN, run_time=0.5)
-        #     scene.wait(1.5)
+        root.in_order(scene, root.left, counter)
 
         scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
+        visited_node = TextMobject(str(root.key))
+        visited_node.set_color(BLUE)
+        visited_node.move_to([-7 + counter[0], -3, 0])
+        scene.play(Write(visited_node))
+        print(root.key)
+        counter[0] = counter[0] + 1
+
         scene.wait(1)
 
         # color new edge
@@ -89,9 +95,9 @@ class TreeNode:
             scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
             scene.wait(1.5)
 
-        root.in_order(scene, root.right)
+        root.in_order(scene, root.right, counter)
 
-    def post_order(self, scene, root):
+    def post_order(self, scene, root, counter):
         if root is None:
             return
 
@@ -100,18 +106,23 @@ class TreeNode:
             scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
             scene.wait(1.5)
 
-        root.post_order(scene, root.left)
+        root.post_order(scene, root.left, counter)
 
         # color new edge
         if root.right_edge is not None:
             scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
             scene.wait(1.5)
 
-        root.post_order(scene, root.right)
-
-        print(root.key)
+        root.post_order(scene, root.right, counter)
 
         scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
+        visited_node = TextMobject(str(root.key))
+        visited_node.set_color(BLUE)
+        visited_node.move_to([-7 + counter[0], -3, 0])
+        scene.play(Write(visited_node))
+        print(root.key)
+        counter[0] = counter[0] + 1
+
         scene.wait(1)
 
 
@@ -287,7 +298,6 @@ class PreOrderScene(Scene):
         title.shift([0, 3, 0])
         title.scale(1.2)
         self.play(Write(title))
-
         pre_order_code = VGroup()
 
         # drawing the code
@@ -339,7 +349,26 @@ class PreOrderScene(Scene):
         self.play(Write(pre_order_code), run_time=2)
         self.wait(0.5)
 
-        tree.root.pre_order(self, tree.root)
+        # result array
+        res_arr = Polygon([-6.5, -3.5, 0], [6.5, -3.5, 0], [6.5, -2.5, 0], [-6.5, -2.5, 0])
+        res_arr.set_color(WHITE)
+        self.play(Write(res_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 13):
+            line = Line([-6.5 + i, -2.5, 0], [-6.5 + i, -3.5, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{printed nodes}")
+        res_text.move_to([-5, -2, 0])
+        self.play(Write(res_text))
+
+        # keeping the current node in the array. starts from 1
+        counter = [1]
+
+        # applying the traverse
+        tree.root.pre_order(self, tree.root, counter)
 
 
 class InOrderScene(Scene):
@@ -425,8 +454,26 @@ class InOrderScene(Scene):
         self.play(Write(in_order_code), run_time=2)
         self.wait(0.5)
 
-        #applying the traverse
-        tree.root.in_order(self, tree.root)
+        # result array
+        res_arr = Polygon([-6.5, -3.5, 0], [6.5, -3.5, 0], [6.5, -2.5, 0], [-6.5, -2.5, 0])
+        res_arr.set_color(WHITE)
+        self.play(Write(res_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 13):
+            line = Line([-6.5 + i, -2.5, 0], [-6.5 + i, -3.5, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{printed nodes}")
+        res_text.move_to([-5, -2, 0])
+        self.play(Write(res_text))
+
+        # keeping the current node in the array. starts from 1
+        counter = [1]
+
+        # applying the traverse
+        tree.root.in_order(self, tree.root, counter)
 
 
 class PostOrderScene(Scene):
@@ -511,5 +558,23 @@ class PostOrderScene(Scene):
         self.play(Write(post_order_code), run_time=2)
         self.wait(0.5)
 
+        # result array
+        res_arr = Polygon([-6.5, -3.5, 0], [6.5, -3.5, 0], [6.5, -2.5, 0], [-6.5, -2.5, 0])
+        res_arr.set_color(WHITE)
+        self.play(Write(res_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 13):
+            line = Line([-6.5 + i, -2.5, 0], [-6.5 + i, -3.5, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{printed nodes}")
+        res_text.move_to([-5, -2, 0])
+        self.play(Write(res_text))
+
+        # keeping the current node in the array. starts from 1
+        counter = [1]
+
         # applying the traverse
-        tree.root.post_order(self, tree.root)
+        tree.root.post_order(self, tree.root, counter)
