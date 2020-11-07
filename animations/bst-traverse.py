@@ -29,25 +29,33 @@ class TreeNode:
         self.key = node_key
 
     # tree traverses
-    def pre_order(self, scene, root, counter):
+    def pre_order(self, scene, root, counter, code):
 
         if root is None:
             return
 
-        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
+        code[3].save_state()
+        scene.play(code[3].scale, 1.25, code[3].move_to, [code[3].get_x() + 0.35, code[3].get_y(), 0], code[3].set_color,
+                   YELLOW, run_time=1.5)
+        scene.wait(0.4)
+
+        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
         visited_node = TextMobject(str(root.key))
         visited_node.set_color(BLUE)
         visited_node.move_to([-7 + counter[0], -3, 0])
         scene.play(Write(visited_node))
+
+        scene.play(Restore(code[3]))
+
         print(root.key)
         counter[0] = counter[0] + 1
 
-        scene.wait(1)
+        scene.wait(0.75)
 
         # color new edge
         if root.left_edge is not None:
             scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
-            scene.wait(1.5)
+            scene.wait(0.75)
 
         # scene.play(root.node_object.set_color, GREEN, run_time=0.5)
         # scene.wait(1.5)
@@ -55,75 +63,92 @@ class TreeNode:
         # # color new edge
         # if root.left_edge is not None:
         #     scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
-        # scene.wait(1.5)
+        # scene.wait(1)
 
-        root.pre_order(scene, root.left, counter)
+        root.pre_order(scene, root.left, counter, code)
 
         # color new edge
         if root.right_edge is not None:
             scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
-            scene.wait(1.5)
+            scene.wait(0.75)
 
-        root.pre_order(scene, root.right, counter)
+        root.pre_order(scene, root.right, counter, code)
 
-    def in_order(self, scene, root, counter):
+    def in_order(self, scene, root, counter, code):
+
         if root is None:
             return
 
         scene.play(root.node_object.set_color, GREEN, run_time=0.5)
-        scene.wait(1.5)
+        scene.wait(0.75)
 
         # color new edge
         if root.left_edge is not None:
             scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
-            scene.wait(1.5)
+            scene.wait(0.75)
 
-        root.in_order(scene, root.left, counter)
+        root.in_order(scene, root.left, counter, code)
 
-        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
+        code[4].save_state()
+        scene.play(code[4].scale, 1.25, code[4].move_to, [code[4].get_x() + 0.35, code[4].get_y(), 0], code[4].set_color,
+                   YELLOW, run_time=1.5)
+        scene.wait(0.4)
+
+        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
         visited_node = TextMobject(str(root.key))
         visited_node.set_color(BLUE)
         visited_node.move_to([-7 + counter[0], -3, 0])
         scene.play(Write(visited_node))
+
+        scene.play(Restore(code[4]))
+
         print(root.key)
         counter[0] = counter[0] + 1
 
-        scene.wait(1)
+        scene.wait(0.75)
 
         # color new edge
         if root.right_edge is not None:
             scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
-            scene.wait(1.5)
+            scene.wait(0.75)
 
-        root.in_order(scene, root.right, counter)
+        root.in_order(scene, root.right, counter, code)
 
-    def post_order(self, scene, root, counter):
+    def post_order(self, scene, root, counter, code):
         if root is None:
             return
 
         # color new edge
         if root.left_edge is not None:
             scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
-            scene.wait(1.5)
+            scene.wait(0.75)
 
-        root.post_order(scene, root.left, counter)
+        root.post_order(scene, root.left, counter, code)
 
         # color new edge
         if root.right_edge is not None:
             scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
-            scene.wait(1.5)
+            scene.wait(0.75)
 
-        root.post_order(scene, root.right, counter)
+        root.post_order(scene, root.right, counter, code)
 
-        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.5)
+        code[5].save_state()
+        scene.play(code[5].scale, 1.25, code[5].move_to, [code[5].get_x() + 0.35, code[5].get_y(), 0], code[5].set_color,
+                   YELLOW, run_time=1.5)
+        scene.wait(0.4)
+
+        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
         visited_node = TextMobject(str(root.key))
         visited_node.set_color(BLUE)
         visited_node.move_to([-7 + counter[0], -3, 0])
         scene.play(Write(visited_node))
+
+        scene.play(Restore(code[5]))
+
         print(root.key)
         counter[0] = counter[0] + 1
 
-        scene.wait(1)
+        scene.wait(0.75)
 
 
 class Tree:
@@ -247,13 +272,37 @@ class Tree:
         self.vertice_key_objects.remove(node.key_object)
 
     def sketch_tree(self, scene):
-        scene.play(*[Write(vertice.node_object) for vertice in self.vertices], run_time=1.5)
-        scene.wait(1.5)
-        for edge in self.edges:
-            scene.play(Write(edge), run_time=0.6)
-        scene.wait(1.5)
-        for key_object in self.vertice_key_objects:
-            scene.play(Write(key_object), run_time=0.5)
+        scene.play(
+            *[Write(v.node_object) for v in self.vertices],
+            *[Write(do) for do in self.vertice_key_objects],
+            run_time=1.5
+        )
+        scene.play(*[GrowArrow(e) for e in self.edges], run_time=1.5)
+
+    def reset_colors(self, scene, show_sketch=False):
+        if show_sketch:
+            changes = []
+            for v in self.vertices:
+                changes.append(v.node_object.set_fill)
+                changes.append(RED)
+                changes.append(0)
+                changes.append(v.node_object.set_color)
+                changes.append(RED)
+            for e in self.edges:
+                changes.append(e.set_color)
+                changes.append(WHITE)
+            for edo in self.vertice_key_objects:
+                changes.append(edo.set_color)
+                changes.append(WHITE)
+            scene.play(*changes)
+        else:
+            for v in self.vertices:
+                v.node_object.set_color(RED)
+                v.node_object.set_fill(RED, 0)
+            for e in self.edges:
+                e.set_color(WHITE)
+            for edo in self.vertice_key_objects:
+                edo.set_color(WHITE)
 
 
 # def apply_in_order_code_frame(scene, tree, in_order_code):
@@ -293,7 +342,7 @@ class PreOrderScene(Scene):
         # pre-order
 
         # title
-        title = TextMobject("pre-order:")
+        title = TextMobject("Pre-order:")
         title.to_edge(LEFT, buff=0.8)
         title.shift([0, 3, 0])
         title.scale(1.2)
@@ -341,7 +390,7 @@ class PreOrderScene(Scene):
 
         for i, l in enumerate(pre_order_code):
             l.to_edge(LEFT, buff=0.2)
-            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.5 * i, 0])
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
 
         pre_order_code.scale(0.85)
         pre_order_code.shift([0, 1.7, 0])
@@ -367,8 +416,13 @@ class PreOrderScene(Scene):
         # keeping the current node in the array. starts from 1
         counter = [1]
 
+        self.wait(1.2)
+
         # applying the traverse
-        tree.root.pre_order(self, tree.root, counter)
+        tree.root.pre_order(self, tree.root, counter, pre_order_code)
+
+        self.wait(0.5)
+        tree.reset_colors(self, True)
 
 
 class InOrderScene(Scene):
@@ -397,7 +451,7 @@ class InOrderScene(Scene):
         # in-order
 
         # title
-        title = TextMobject("in-order:")
+        title = TextMobject("In-order:")
         title.to_edge(LEFT, buff=0.8)
         title.shift([0, 3, 0])
         title.scale(1.2)
@@ -446,7 +500,7 @@ class InOrderScene(Scene):
 
         for i, l in enumerate(in_order_code):
             l.to_edge(LEFT, buff=0.2)
-            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.5 * i, 0])
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
 
         in_order_code.scale(0.85)
         in_order_code.shift([0, 1.7, 0])
@@ -472,8 +526,13 @@ class InOrderScene(Scene):
         # keeping the current node in the array. starts from 1
         counter = [1]
 
+        self.wait(1.2)
+
         # applying the traverse
-        tree.root.in_order(self, tree.root, counter)
+        tree.root.in_order(self, tree.root, counter, in_order_code)
+
+        self.wait(0.5)
+        tree.reset_colors(self, True)
 
 
 class PostOrderScene(Scene):
@@ -501,7 +560,7 @@ class PostOrderScene(Scene):
         # post-order
 
         # title
-        title = TextMobject("post-order:")
+        title = TextMobject("Post-order:")
         title.to_edge(LEFT, buff=0.8)
         title.shift([0, 3, 0])
         title.scale(1.2)
@@ -550,7 +609,7 @@ class PostOrderScene(Scene):
 
         for i, l in enumerate(post_order_code):
             l.to_edge(LEFT, buff=0.2)
-            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.5 * i, 0])
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
 
         post_order_code.scale(0.85)
         post_order_code.shift([0, 1.7, 0])
@@ -576,5 +635,10 @@ class PostOrderScene(Scene):
         # keeping the current node in the array. starts from 1
         counter = [1]
 
+        self.wait(1.2)
+
         # applying the traverse
-        tree.root.post_order(self, tree.root, counter)
+        tree.root.post_order(self, tree.root, counter, post_order_code)
+
+        self.wait(0.5)
+        tree.reset_colors(self, True)
