@@ -34,8 +34,12 @@ class TreeNode:
         if root is None:
             return
 
+        scene.play(root.node_object.set_color, GREEN, run_time=0.5)
+        scene.wait(0.75)
+
         code[3].save_state()
-        scene.play(code[3].scale, 1.25, code[3].move_to, [code[3].get_x() + 0.35, code[3].get_y(), 0], code[3].set_color,
+        scene.play(code[3].scale, 1.25, code[3].move_to, [code[3].get_x() + 0.35, code[3].get_y(), 0],
+                   code[3].set_color,
                    YELLOW, run_time=1.5)
         scene.wait(0.4)
 
@@ -90,7 +94,8 @@ class TreeNode:
         root.in_order(scene, root.left, counter, code)
 
         code[4].save_state()
-        scene.play(code[4].scale, 1.25, code[4].move_to, [code[4].get_x() + 0.35, code[4].get_y(), 0], code[4].set_color,
+        scene.play(code[4].scale, 1.25, code[4].move_to, [code[4].get_x() + 0.35, code[4].get_y(), 0],
+                   code[4].set_color,
                    YELLOW, run_time=1.5)
         scene.wait(0.4)
 
@@ -118,6 +123,9 @@ class TreeNode:
         if root is None:
             return
 
+        scene.play(root.node_object.set_color, GREEN, run_time=0.5)
+        scene.wait(0.75)
+
         # color new edge
         if root.left_edge is not None:
             scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
@@ -133,7 +141,8 @@ class TreeNode:
         root.post_order(scene, root.right, counter, code)
 
         code[5].save_state()
-        scene.play(code[5].scale, 1.25, code[5].move_to, [code[5].get_x() + 0.35, code[5].get_y(), 0], code[5].set_color,
+        scene.play(code[5].scale, 1.25, code[5].move_to, [code[5].get_x() + 0.35, code[5].get_y(), 0],
+                   code[5].set_color,
                    YELLOW, run_time=1.5)
         scene.wait(0.4)
 
@@ -305,23 +314,30 @@ class Tree:
                 edo.set_color(WHITE)
 
 
-# def apply_in_order_code_frame(scene, tree, in_order_code):
-#     frame = SurroundingRectangle(in_order_code[0])
-#     frame.set_color(YELLOW)
-#     scene.play(Write(frame))
-#     scene.wait(2)
-#     for i in range(1, len(in_order_code)):
-#         new_frame = SurroundingRectangle(in_order_code[i])
-#         new_frame.set_color(YELLOW)
-#         scene.play(Transform(frame, new_frame))
-#         scene.wait(2)
-
 class PreOrderScene(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Pre-order Traversal")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0,0.5,0])
+        title_l2.shift([0,-0.3,0])
+        creators = TextMobject("Made by Hossein Zaredar \& Matin Tavakoli")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2))
+        self.wait(2)
+
         # tree construction
-        tree = Tree(3.5, 2.5)
+        tree = Tree(2.5, 2.5)
         tree.insert(5)
         tree.insert(3)
         tree.insert(7)
@@ -429,8 +445,26 @@ class InOrderScene(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("In-order Traversal")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.3, 0])
+        creators = TextMobject("Made by Hossein Zaredar \& Matin Tavakoli")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2))
+        self.wait(2)
+
         # tree construction
-        tree = Tree(3.5, 2.5)
+        tree = Tree(2.5, 2.5)
         tree.insert(5)
         tree.insert(3)
         tree.insert(7)
@@ -538,8 +572,26 @@ class InOrderScene(Scene):
 class PostOrderScene(Scene):
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Post-order Traversal")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.3, 0])
+        creators = TextMobject("Made by Hossein Zaredar \& Matin Tavakoli")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2))
+        self.wait(2)
+
         # tree construction
-        tree = Tree(3.5, 2.5)
+        tree = Tree(2.5, 2.5)
         tree.insert(5)
         tree.insert(3)
         tree.insert(7)
