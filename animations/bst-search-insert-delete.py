@@ -126,6 +126,7 @@ class Tree:
             self.vertices.add(node)
             self.edge_data_objects.add(node.data_object)
             node.node_object.set_color(GREEN)
+            node.node_object.set_fill(GREEN, 1)
             if show_sketch:
                 scene.play(Write(node.node_object))
                 scene.play(Write(node.data_object))
@@ -153,6 +154,7 @@ class Tree:
                         parent.left_edge = edge
 
                     node.node_object.set_color(GREEN)
+                    node.node_object.set_fill(GREEN, 1)
                     node.parent = parent
                     self.vertices.add(node)
                     self.edge_data_objects.add(node.data_object)
@@ -290,7 +292,7 @@ class Tree:
                 if current.data == value:
                     scene.play(
                         current.node_object.set_color, GREEN,
-                        current.data_object.set_color, WHITE
+                        current.node_object.set_fill, GREEN, 1
                     )
                     break
                 elif value >= current.data:
@@ -312,6 +314,7 @@ class Tree:
         title.shift([0, 3, 0])
         title.scale(1.2)
         scene.play(Write(title))
+        scene.wait(1)
 
         for value in values:
 
@@ -353,7 +356,10 @@ class Tree:
                     current = current.left
                     dir = 'l'
 
-            scene.play(node.node_object.set_color, GREEN)
+            scene.play(
+                node.node_object.set_color, GREEN,
+                node.node_object.set_fill, GREEN, 1
+            )
             scene.wait(1)
 
 
@@ -370,7 +376,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(0.5)
+                scene.wait(1)
 
                 # step 2
                 step2 = TextMobject("Step 2: Just remove the node!")
@@ -422,7 +428,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(0.5)
+                scene.wait(1)
 
                 # step 2
                 step2 = TextMobject("Step 2: Remove the node.")
@@ -497,7 +503,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(0.5)
+                scene.wait(1)
 
                 # step 2
                 step2 = TextMobject("Step 2: Remove the node.")
@@ -572,7 +578,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(0.5)
+                scene.wait(1)
 
                 # step 2
                 step2_1 = TextMobject("Step 2: Find the smallest node")
@@ -778,37 +784,44 @@ class Tree:
                 edo.set_color(WHITE)
             
 
-class TreeScene(Scene):
+class Search(Scene):
 
     def construct(self):
 
-        # # SEARCH:
-        # tree = Tree(3.7, 2.5)
-        # for v in [5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9]:
-        #     tree.insert(self, v)
-        # tree.reset_colors(self)
-        # self.wait(1)
+        tree = Tree(3.7, 2.5)
+        for v in [5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9]:
+            tree.insert(self, v)
+        tree.reset_colors(self)
+        self.wait(1)
 
-        # tree.sketch_tree(self)
-        # self.wait(1)
+        tree.sketch_tree(self)
+        self.wait(1)
 
-        # tree.search(self, 8)
-        # self.wait(2)
+        tree.search(self, 8)
+        self.wait(2)
 
-        # INSERT:
-        # tree = Tree(3.7, 2)
-        # for v in [5, 4, 7, 6, -1, 12, 2, 10, 1, 11]:
-        #     tree.insert(self, v)
-        # tree.reset_colors(self)
-        # self.wait(1)
 
-        # tree.sketch_tree(self)
-        # self.wait(1)
+class Insert(Scene):
 
-        # tree.insert(self, 3, True)
-        # self.wait(2)
+    def construct(self):
 
-        # DELETE:
+        tree = Tree(3.7, 2)
+        for v in [5, 4, 7, 6, -1, 12, 2, 10, 1, 11]:
+            tree.insert(self, v)
+        tree.reset_colors(self)
+        self.wait(1)
+
+        tree.sketch_tree(self)
+        self.wait(1)
+
+        tree.insert(self, 3, True)
+        self.wait(2)
+
+
+class Delete(Scene):
+
+    def construct(self):
+
         tree = Tree(3.1, 1.7)
         for v in [3, 2, 7, 6, 5, -1, 12, 9, 8, 15, 10]:
             tree.insert(self, v)
