@@ -165,8 +165,17 @@ class Tree:
                 parent = None
                 dir = None
 
+                pointer = TextMobject("\^")
+                pointer.rotate(PI)
+                pointer.move_to([current.node_object.get_x(), current.node_object.get_y() + 0.5, 0])
+                pointer.set_color(ORANGE)
+                pointer.scale(2)
+
                 if show_sketch:
-                    scene.play(current.node_object.set_color, BLUE_C)
+                    scene.play(
+                        current.node_object.set_color, BLUE_C,
+                        Write(pointer)
+                    )
                     scene.wait(0.3)
 
                 while True:
@@ -230,9 +239,17 @@ class Tree:
                             scene.wait(0.5)
 
                             if parent.right_edge is not None:
-                                scene.play(parent.right_edge.set_color, BLUE_C)
+                                scene.play(
+                                    parent.right_edge.set_color, BLUE_C,
+                                    pointer.shift, [self.hspace, self.vspace, 0]
+                                )
                                 scene.play(current.node_object.set_color, BLUE_C)
                                 scene.wait(0.3)
+
+                            else:
+                                scene.play(pointer.shift, [self.hspace, self.vspace, 0])
+                                scene.wait(0.3)
+
                     
                     else:
 
@@ -250,15 +267,25 @@ class Tree:
                         parent = current
                         current = current.left
                         dir = 'l'
-                        if show_sketch and parent.left_edge is not None:
-                            scene.play(parent.left_edge.set_color, BLUE_C)
-                            scene.play(current.node_object.set_color, BLUE_C)
-                            scene.wait(0.3)
+                        if show_sketch:
+                        
+                            if parent.left_edge is not None:
+                                scene.play(
+                                    parent.left_edge.set_color, BLUE_C,
+                                    pointer.shift, [-self.hspace, self.vspace, 0]
+                                )
+                                scene.play(current.node_object.set_color, BLUE_C)
+                                scene.wait(0.3)
+                            
+                            else:
+                                scene.play(pointer.shift, [-self.hspace, self.vspace, 0])
+                                scene.wait(0.3)
+
 
             if show_sketch:
                 scene.wait(1)
                 self.reset_colors(scene, True)
-                scene.play(FadeOut(rect))
+                scene.play(FadeOut(rect), FadeOut(pointer))
                 scene.play(FadeOut(searched))
 
         if show_sketch:
@@ -366,8 +393,17 @@ class Tree:
             # showing the process on the tree
             current = self.root
 
+            pointer = TextMobject("\^")
+            pointer.rotate(PI)
+            pointer.move_to([current.node_object.get_x(), current.node_object.get_y() + 0.5, 0])
+            pointer.set_color(ORANGE)
+            pointer.scale(2)
+
             if current is not None:
-                scene.play(current.node_object.set_color, BLUE_C)
+                scene.play(
+                    current.node_object.set_color, BLUE_C,
+                    Write(pointer)
+                )
                 
             while True:
 
@@ -412,7 +448,10 @@ class Tree:
                             scene.wait(0.5)
 
                             if current.right is not None:
-                                scene.play(current.right_edge.set_color, BLUE_C)
+                                scene.play(
+                                    current.right_edge.set_color, BLUE_C,
+                                    pointer.shift, [self.hspace, self.vspace, 0]
+                                )
                             current = current.right
 
                             if current is not None:
@@ -434,7 +473,10 @@ class Tree:
                                 scene.wait(0.5)
 
                                 if current.left is not None:
-                                    scene.play(current.left_edge.set_color, BLUE_C)
+                                    scene.play(
+                                        current.left_edge.set_color, BLUE_C,
+                                        pointer.shift, [-self.hspace, self.vspace, 0]
+                                    )
                                 current = current.left
 
                                 if current is not None:
@@ -444,7 +486,7 @@ class Tree:
 
             scene.wait(1)
             self.reset_colors(scene, True)
-            scene.play(FadeOut(rect))
+            scene.play(FadeOut(rect), FadeOut(pointer))
             scene.play(FadeOut(searched))
             scene.wait(0.3)
 
