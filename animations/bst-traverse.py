@@ -46,7 +46,7 @@ class TreeNode:
         scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
         visited_node = TextMobject(str(root.key))
         visited_node.set_color(BLUE)
-        visited_node.move_to([-7 + counter[0], -3, 0])
+        visited_node.move_to([-7 + counter[0], -2.8, 0])
         scene.play(Write(visited_node))
 
         scene.play(Restore(code[3]))
@@ -101,7 +101,7 @@ class TreeNode:
         scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
         visited_node = TextMobject(str(root.key))
         visited_node.set_color(BLUE)
-        visited_node.move_to([-7 + counter[0], -3, 0])
+        visited_node.move_to([-7 + counter[0], -2.8, 0])
         scene.play(Write(visited_node))
 
         scene.play(Restore(code[4]))
@@ -147,7 +147,7 @@ class TreeNode:
         scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
         visited_node = TextMobject(str(root.key))
         visited_node.set_color(BLUE)
-        visited_node.move_to([-7 + counter[0], -3, 0])
+        visited_node.move_to([-7 + counter[0], -2.8, 0])
         scene.play(Write(visited_node))
 
         scene.play(Restore(code[5]))
@@ -352,18 +352,18 @@ class PreOrderScene(Scene):
         self.wait(0.5)
 
         # result array
-        res_arr = Polygon([-6.5, -3.5, 0], [6.5, -3.5, 0], [6.5, -2.5, 0], [-6.5, -2.5, 0])
+        res_arr = Polygon([-6.5, -3.3, 0], [6.5, -3.3, 0], [6.5, -2.3, 0], [-6.5, -2.3, 0])
         res_arr.set_color(WHITE)
         self.play(Write(res_arr))
 
         arr_lines = VGroup()
         for i in range(1, 13):
-            line = Line([-6.5 + i, -2.5, 0], [-6.5 + i, -3.5, 0])
+            line = Line([-6.5 + i, -2.3, 0], [-6.5 + i, -3.3, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
         res_text = TextMobject("\\textrm{printed nodes}")
-        res_text.move_to([-5, -2, 0])
+        res_text.move_to([-5, -1.9, 0])
         self.play(Write(res_text))
 
         # keeping the current node in the array. starts from 1
@@ -479,18 +479,18 @@ class InOrderScene(Scene):
         self.wait(0.5)
 
         # result array
-        res_arr = Polygon([-6.5, -3.5, 0], [6.5, -3.5, 0], [6.5, -2.5, 0], [-6.5, -2.5, 0])
+        res_arr = Polygon([-6.5, -3.3, 0], [6.5, -3.3, 0], [6.5, -2.3, 0], [-6.5, -2.3, 0])
         res_arr.set_color(WHITE)
         self.play(Write(res_arr))
 
         arr_lines = VGroup()
         for i in range(1, 13):
-            line = Line([-6.5 + i, -2.5, 0], [-6.5 + i, -3.5, 0])
+            line = Line([-6.5 + i, -2.3, 0], [-6.5 + i, -3.3, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
         res_text = TextMobject("\\textrm{printed nodes}")
-        res_text.move_to([-5, -2, 0])
+        res_text.move_to([-5, -1.9, 0])
         self.play(Write(res_text))
 
         # keeping the current node in the array. starts from 1
@@ -604,18 +604,18 @@ class PostOrderScene(Scene):
         self.wait(0.5)
 
         # result array
-        res_arr = Polygon([-6.5, -3.5, 0], [6.5, -3.5, 0], [6.5, -2.5, 0], [-6.5, -2.5, 0])
+        res_arr = Polygon([-6.5, -3.3, 0], [6.5, -3.3, 0], [6.5, -2.3, 0], [-6.5, -2.3, 0])
         res_arr.set_color(WHITE)
         self.play(Write(res_arr))
 
         arr_lines = VGroup()
         for i in range(1, 13):
-            line = Line([-6.5 + i, -2.5, 0], [-6.5 + i, -3.5, 0])
+            line = Line([-6.5 + i, -2.3, 0], [-6.5 + i, -3.3, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
         res_text = TextMobject("\\textrm{printed nodes}")
-        res_text.move_to([-5, -2, 0])
+        res_text.move_to([-5, -1.9, 0])
         self.play(Write(res_text))
 
         # keeping the current node in the array. starts from 1
