@@ -42,69 +42,69 @@ class Tree:
 
     def insert(self, scene, show_sketch, *values):
 
-        # title
-        title = TextMobject("Insert:")
-        title.to_edge(LEFT, buff=0.8)
-        title.shift([0, 3, 0])
-        title.scale(1.2)
-
-        # drawing the code line
-        line = Line([-6.1, 1.65, 0], [-6.1, -2.3, 0])
-
-        # drawing the code
-        code = VGroup()
-        l1 = TextMobject("\\textrm{def}", " \\textrm{insert}", "\\textrm{(}", "\\textrm{key}", "\\textrm{,}", " \\textrm{root}", "\\textrm{):}")
-        for i,color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
-            i.set_color(color)
-        code.add(l1)
-
-        l2 = TextMobject("   \\textrm{current}", "\\textrm{ = }", "\\textrm{root}")
-        for i,color in zip(l2, [BLUE, WHITE, BLUE]):
-            i.set_color(color)
-        code.add(l2)
-
-        l3 = TextMobject("   \\textrm{while}", " \\textrm{current }", "\\textrm{!= }", "\\textrm{None}", "\\textrm{:}")
-        for i,color in zip(l3, [YELLOW_B, BLUE, WHITE, YELLOW_B, WHITE]):
-            i.set_color(color)
-        code.add(l3)
-
-        l4 = TextMobject("       \\textrm{if}",  " \\textrm{key}", "\\textrm{ >= }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
-        for i,color in zip(l4, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
-            i.set_color(color)
-        code.add(l4)
-
-        l5 = TextMobject("           \\textrm{current}", "\\textrm{ =}", " \\textrm{current}", "\\textrm{.}", "\\textrm{right}")
-        for i,color in zip(l5, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
-            i.set_color(color)
-        code.add(l5)
-
-        l6 = TextMobject("       \\textrm{elif}", " \\textrm{key} ",  "\\textrm{< }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
-        for i,color in zip(l6, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
-            i.set_color(color)
-        code.add(l6)
-
-        l7 = TextMobject("           \\textrm{current}", "\\textrm{ =}", "\\textrm{ current}", "\\textrm{.}", "\\textrm{left}")
-        for i,color in zip(l7, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
-            i.set_color(color)
-        code.add(l7)
-
-        l8 = TextMobject("   \\textrm{create\_node}", "\\textrm{(}", "\\textrm{key}", "\\textrm{)}")
-        for i,color in zip(l8, [BLUE, WHITE, BLUE, WHITE]):
-            i.set_color(color)
-        code.add(l8)
-
-        for i, l in enumerate(code):
-            l.to_edge(LEFT, buff=0.7)
-            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
-
-
-        code.scale(0.85)
-        code.shift([0, 1.6, 0])
-
         if show_sketch:
 
+            # title
+            title = TextMobject("Insert:")
+            title.to_edge(LEFT, buff=0.8)
+            title.shift([0, 3, 0])
+            title.scale(1.2)
             scene.play(Write(title))
+
+            # drawing the code line
+            line = Line([-6.1, 1.4, 0], [-6.1, -2.1, 0])
             scene.play(FadeInFromDown(line))
+
+
+            # drawing the code
+            code = VGroup()
+            l1 = TextMobject("\\textrm{def}", " \\textrm{insert}", "\\textrm{(}", "\\textrm{key}", "\\textrm{,}", " \\textrm{root}", "\\textrm{):}")
+            for i,color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
+                i.set_color(color)
+            code.add(l1)
+
+            l2 = TextMobject("   \\textrm{current}", "\\textrm{ = }", "\\textrm{root}")
+            for i,color in zip(l2, [BLUE, WHITE, BLUE]):
+                i.set_color(color)
+            code.add(l2)
+
+            l3 = TextMobject("   \\textrm{while}", " \\textrm{current }", "\\textrm{!= }", "\\textrm{None}", "\\textrm{:}")
+            for i,color in zip(l3, [YELLOW_B, BLUE, WHITE, YELLOW_B, WHITE]):
+                i.set_color(color)
+            code.add(l3)
+
+            l4 = TextMobject("       \\textrm{if}",  " \\textrm{key}", "\\textrm{ >= }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
+            for i,color in zip(l4, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
+                i.set_color(color)
+            code.add(l4)
+
+            l5 = TextMobject("           \\textrm{current}", "\\textrm{ =}", " \\textrm{current}", "\\textrm{.}", "\\textrm{right}")
+            for i,color in zip(l5, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+                i.set_color(color)
+            code.add(l5)
+
+            l6 = TextMobject("       \\textrm{elif}", " \\textrm{key} ",  "\\textrm{< }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
+            for i,color in zip(l6, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+                i.set_color(color)
+            code.add(l6)
+
+            l7 = TextMobject("           \\textrm{current}", "\\textrm{ =}", "\\textrm{ current}", "\\textrm{.}", "\\textrm{left}")
+            for i,color in zip(l7, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+                i.set_color(color)
+            code.add(l7)
+
+            l8 = TextMobject("   \\textrm{create\_node}", "\\textrm{(}", "\\textrm{key}", "\\textrm{)}")
+            for i,color in zip(l8, [BLUE, WHITE, BLUE, WHITE]):
+                i.set_color(color)
+            code.add(l8)
+
+            for i, l in enumerate(code):
+                l.to_edge(LEFT, buff=0.7)
+                l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.5 * i, 0])
+
+
+            code.scale(0.85)
+            code.shift([0, 1.4, 0])
 
             for l in code:
                 scene.play(FadeInFrom(l, LEFT), run_time=0.5)
@@ -112,8 +112,6 @@ class Tree:
 
 
         for value in values:
-
-            rect = SurroundingRectangle(l1, buff=0.06, color=WHITE)
 
             if show_sketch:
                 # drawing the searched value
@@ -123,39 +121,17 @@ class Tree:
                 scene.play(Write(searched))
                 scene.wait(0.5)
 
-                scene.play(Write(rect))
-                scene.wait(1)
-
-                new_rect = SurroundingRectangle(l2, buff=0.06, color=WHITE)
-                scene.play(ReplacementTransform(rect, new_rect))
-                rect = new_rect
-                scene.wait(0.5)
-
-                scene.wait(1)
-
 
             # showing the process on the tree
 
             if self.root is None:
-
                 node = TreeNode(self.x, self.y, value)
                 self.root = node
                 self.vertices.add(node)
                 self.edge_data_objects.add(node.data_object)
                 node.node_object.set_color(GREEN)
                 node.node_object.set_fill(GREEN, 1)
-
                 if show_sketch:
-                    new_rect = SurroundingRectangle(l2, buff=0.06, color=WHITE)
-                    scene.play(ReplacementTransform(rect, new_rect))
-                    rect = new_rect
-                    scene.wait(0.5)
-
-                    new_rect = SurroundingRectangle(l8, buff=0.06, color=GREEN)
-                    scene.play(ReplacementTransform(rect, new_rect))
-                    rect = new_rect
-                    scene.wait(0.7)
-
                     scene.play(Write(node.node_object))
                     scene.play(Write(node.data_object))
 
@@ -165,26 +141,7 @@ class Tree:
                 parent = None
                 dir = None
 
-                pointer = TextMobject("\^")
-                pointer.rotate(PI)
-                pointer.move_to([current.node_object.get_x(), current.node_object.get_y() + 0.5, 0])
-                pointer.set_color(ORANGE)
-                pointer.scale(2)
-
-                if show_sketch:
-                    scene.play(
-                        current.node_object.set_color, BLUE_C,
-                        Write(pointer)
-                    )
-                    scene.wait(0.3)
-
                 while True:
-                    
-                    if show_sketch:
-                        new_rect = SurroundingRectangle(l3, buff=0.06, color=WHITE)
-                        scene.play(ReplacementTransform(rect, new_rect))
-                        rect = new_rect
-                        scene.wait(0.5)
 
                     if current is None:
                         node = None
@@ -210,11 +167,6 @@ class Tree:
                         self.edges.add(edge)
 
                         if show_sketch:
-                            new_rect = SurroundingRectangle(l8, buff=0.06, color=GREEN)
-                            scene.play(ReplacementTransform(rect, new_rect))
-                            rect = new_rect
-                            scene.wait(0.5)
-
                             scene.play(GrowArrow(edge))
                             scene.play(Write(node.node_object))
                             scene.play(Write(node.data_object))
@@ -222,71 +174,28 @@ class Tree:
                         break
 
                     if show_sketch:
-
-                        new_rect = SurroundingRectangle(l4, buff=0.06, color=WHITE)
-                        scene.play(ReplacementTransform(rect, new_rect))
-                        rect = new_rect
-                        scene.wait(0.5)
+                        scene.play(current.node_object.set_color, BLUE_C)
+                        scene.wait(0.3)
 
                     if value >= current.data:
                         parent = current
                         current = current.right
                         dir = 'r'
-                        if show_sketch:
-                            new_rect = SurroundingRectangle(l5, buff=0.06, color=ORANGE)
-                            scene.play(ReplacementTransform(rect, new_rect))
-                            rect = new_rect
-                            scene.wait(0.7)
-
-                            if parent.right_edge is not None:
-                                scene.play(
-                                    parent.right_edge.set_color, BLUE_C,
-                                    pointer.shift, [self.hspace, self.vspace, 0]
-                                )
-                                scene.play(current.node_object.set_color, BLUE_C)
-                                scene.wait(0.3)
-
-                            else:
-                                scene.play(pointer.shift, [self.hspace, self.vspace, 0])
-                                scene.wait(0.3)
-
-                    
+                        if show_sketch and parent.right_edge is not None:
+                            scene.play(parent.right_edge.set_color, BLUE_C)
                     else:
-
-                        if show_sketch:
-                            new_rect = SurroundingRectangle(l6, buff=0.06, color=WHITE)
-                            scene.play(ReplacementTransform(rect, new_rect))
-                            rect = new_rect
-                            scene.wait(0.5)
-
-                            new_rect = SurroundingRectangle(l7, buff=0.06, color=ORANGE)
-                            scene.play(ReplacementTransform(rect, new_rect))
-                            rect = new_rect
-                            scene.wait(0.7)
-
                         parent = current
                         current = current.left
                         dir = 'l'
-                        if show_sketch:
-                        
-                            if parent.left_edge is not None:
-                                scene.play(
-                                    parent.left_edge.set_color, BLUE_C,
-                                    pointer.shift, [-self.hspace, self.vspace, 0]
-                                )
-                                scene.play(current.node_object.set_color, BLUE_C)
-                                scene.wait(0.3)
-                            
-                            else:
-                                scene.play(pointer.shift, [-self.hspace, self.vspace, 0])
-                                scene.wait(0.3)
+                        if show_sketch and parent.left_edge is not None:
+                            scene.play(parent.left_edge.set_color, BLUE_C)
 
-
-            if show_sketch:
-                scene.wait(1)
-                self.reset_colors(scene, True)
-                scene.play(FadeOut(rect), FadeOut(pointer))
-                scene.play(FadeOut(searched))
+                if show_sketch:
+                    scene.wait(1)
+                    self.reset_colors(scene, True)
+                    scene.play(
+                        FadeOut(searched)
+                    )
 
         if show_sketch:
             scene.wait(1)
@@ -303,7 +212,7 @@ class Tree:
         scene.play(Write(title))
 
         # drawing the code line
-        line = Line([-6.1, 1.85, 0], [-6.1, -2.9, 0])
+        line = Line([-6.1, 1.6, 0], [-6.1, -2.7, 0])
         scene.play(FadeInFromDown(line))
 
         # drawing the code
@@ -334,38 +243,38 @@ class Tree:
             i.set_color(color)
         code.add(l5)
 
-        l6 = TextMobject("       \\textrm{if}", " \\textrm{key} ",  "\\textrm{> }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
+        l6 = TextMobject("       \\textrm{if}", " \\textrm{key} ",  "\\textrm{< }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
         for i,color in zip(l6, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
             i.set_color(color)
         code.add(l6)
 
-        l7 = TextMobject("           \\textrm{current}", " \\textrm{=}", " \\textrm{current}", "\\textrm{.}", "\\textrm{right}")
+        l7 = TextMobject("           \\textrm{current}", " \\textrm{=}", " \\textrm{current}", "\\textrm{.}", "\\textrm{left}")
         for i,color in zip(l7, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
             i.set_color(color)
         code.add(l7)
 
-        l8 = TextMobject("       \\textrm{elif}", " \\textrm{key} ",  "\\textrm{< }", "\\textrm{current}", "\\textrm{.}", "\\textrm{key}", "\\textrm{:}")
-        for i,color in zip(l8, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
+        l8 = TextMobject("       \\textrm{else}", "\\textrm{:}",   "  \\textrm{\# key >= current.key}")
+        for i,color in zip(l8, [YELLOW_B, WHITE, GREY]):
             i.set_color(color)
         code.add(l8)
 
-        l9 = TextMobject("           \\textrm{current}", " \\textrm{=}", " \\textrm{current}", "\\textrm{.}", "\\textrm{left}")
+        l9 = TextMobject("           \\textrm{current}", " \\textrm{=}", " \\textrm{current}", "\\textrm{.}", "\\textrm{right}")
         for i,color in zip(l9, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
             i.set_color(color)
         code.add(l9)
 
-        l10 = TextMobject("   \\textrm{return}", " \\textrm{None}")
-        for i,color in zip(l10, [YELLOW_B, YELLOW_B]):
+        l10 = TextMobject("   \\textrm{return}", " \\textrm{current}")
+        for i,color in zip(l10, [YELLOW_B, BLUE]):
             i.set_color(color)
         code.add(l10)
 
         for i, l in enumerate(code):
             l.to_edge(LEFT, buff=0.7)
-            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.5 * i, 0])
 
 
         code.scale(0.85)
-        code.shift([0, 1.9, 0])
+        code.shift([0, 1.7, 0])
 
         for l in code:
             scene.play(FadeInFrom(l, LEFT), run_time=0.5)
@@ -380,135 +289,39 @@ class Tree:
             scene.play(Write(searched))
             scene.wait(0.5)
 
-            rect = SurroundingRectangle(l1, buff=0.06, color=WHITE)
-            scene.play(Write(rect))
-            scene.wait(1)
-
-            new_rect = SurroundingRectangle(l2, buff=0.06, color=WHITE)
-            scene.play(ReplacementTransform(rect, new_rect))
-            rect = new_rect
-            scene.wait(0.6)
-            
 
             # showing the process on the tree
             current = self.root
-            not_found = None
-
-            pointer = TextMobject("\^")
-            pointer.rotate(PI)
-            pointer.move_to([current.node_object.get_x(), current.node_object.get_y() + 0.5, 0])
-            pointer.set_color(ORANGE)
-            pointer.scale(2)
-
-            if current is not None:
-                scene.play(
-                    current.node_object.set_color, BLUE_C,
-                    Write(pointer)
-                )
-                
             while True:
-
-                new_rect = SurroundingRectangle(l3, buff=0.06, color=WHITE)
-                scene.play(ReplacementTransform(rect, new_rect))
-                rect = new_rect
-                scene.wait(0.6)
-
                 if current is None:
-                    new_rect = SurroundingRectangle(l10, buff=0.06, color=RED)
-                    scene.play(ReplacementTransform(rect, new_rect))
-                    rect = new_rect
-                    scene.wait(0.5)
-
-                    not_found = TextMobject("Not Found!")
-                    not_found.set_color(RED)
-                    not_found.scale(0.7)
-                    not_found.move_to([pointer.get_x(), pointer.get_y() - 0.4, 0])
-                    scene.play(Write(not_found))
-                    scene.wait(1.5)
-                    scene.play(FadeOut(not_found))
-
-                    break
-
+                    return
                 else:
-
-                    new_rect = SurroundingRectangle(l4, buff=0.06, color=WHITE)
-                    scene.play(ReplacementTransform(rect, new_rect))
-                    rect = new_rect
-                    scene.wait(0.5)
+                    scene.play(
+                        current.node_object.set_color, BLUE_C,
+                    )
 
                     if current.data == value:
-                        new_rect = SurroundingRectangle(l5, buff=0.06, color=GREEN)
-                        scene.play(ReplacementTransform(rect, new_rect))
-                        rect = new_rect
-                        scene.wait(0.7)
-
                         scene.play(
                             current.node_object.set_color, GREEN,
                             current.node_object.set_fill, GREEN, 1
                         )
-                        scene.wait(0.5)
                         break
-
+                    elif value >= current.data:
+                        if current.right is not None:
+                            scene.play(current.right_edge.set_color, BLUE_C)
+                        current = current.right
+                        
                     else:
+                        if current.left is not None:
+                            scene.play(current.left_edge.set_color, BLUE_C)
+                        current = current.left
 
-                        new_rect = SurroundingRectangle(l6, buff=0.06, color=WHITE)
-                        scene.play(ReplacementTransform(rect, new_rect))
-                        rect = new_rect
-                        scene.wait(0.5)
 
-                        if value >= current.data:
-
-                            new_rect = SurroundingRectangle(l7, buff=0.06, color=ORANGE)
-                            scene.play(ReplacementTransform(rect, new_rect))
-                            rect = new_rect
-                            scene.wait(0.7)
-
-                            if current.right is not None:
-                                scene.play(
-                                    current.right_edge.set_color, BLUE_C,
-                                    pointer.shift, [self.hspace, self.vspace, 0]
-                                )
-                            else:
-                                scene.play(pointer.shift, [self.hspace, self.vspace, 0])
-                            
-                            current = current.right
-
-                            if current is not None:
-                                scene.play(current.node_object.set_color, BLUE_C)
-                                scene.wait(0.5)
-                            
-                        else:
-
-                            new_rect = SurroundingRectangle(l8, buff=0.06, color=WHITE)
-                            scene.play(ReplacementTransform(rect, new_rect))
-                            rect = new_rect
-                            scene.wait(0.5)
-
-                            if value < current.data:
-
-                                new_rect = SurroundingRectangle(l9, buff=0.06, color=ORANGE)
-                                scene.play(ReplacementTransform(rect, new_rect))
-                                rect = new_rect
-                                scene.wait(0.7)
-
-                                if current.left is not None:
-                                    scene.play(
-                                        current.left_edge.set_color, BLUE_C,
-                                        pointer.shift, [-self.hspace, self.vspace, 0]
-                                    )
-                                else:
-                                    scene.play(pointer.shift, [-self.hspace, self.vspace, 0])
-                                
-                                current = current.left
-
-                                if current is not None:
-                                    scene.play(current.node_object.set_color, BLUE_C)
-                                    scene.wait(0.5)
-                                    
             scene.wait(1)
             self.reset_colors(scene, True)
-            scene.play(FadeOut(rect), FadeOut(pointer))
-            scene.play(FadeOut(searched))
+            scene.play(
+                FadeOut(searched)
+            )
             scene.wait(0.3)
 
 
@@ -582,7 +395,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(1.2)
+                scene.wait(1)
 
                 # step 2
                 step2 = TextMobject("Step 2: Just remove the node!")
@@ -591,7 +404,7 @@ class Tree:
                 step2.to_edge(LEFT, 1)
                 step2.shift([0, 0.4, 0])
                 scene.play(Write(step2))
-                scene.wait(0.7)
+                scene.wait(0.5)
 
                 if dir == 'r':
                     parent.right = None
@@ -616,7 +429,6 @@ class Tree:
                 if node is self.root:
                     self.root = None
 
-                scene.wait(0.7)
                 scene.play(
                     FadeOut(step1),
                     FadeOut(case),
@@ -635,7 +447,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(1.2)
+                scene.wait(1)
 
                 # step 2
                 step2 = TextMobject("Step 2: Remove the node.")
@@ -710,7 +522,7 @@ class Tree:
                 case.shift([0, 1.2, 0])
                 case_box = SurroundingRectangle(case, color=ORANGE)
                 scene.play(Write(case), Write(case_box))
-                scene.wait(1.2)
+                scene.wait(1)
 
                 # step 2
                 step2 = TextMobject("Step 2: Remove the node.")
@@ -751,14 +563,14 @@ class Tree:
                 step3_2.shift([0, -0.75, 0])
                 scene.play(Write(step3_1))
                 scene.play(Write(step3_2))
-                scene.wait(0.8)
+                scene.wait(0.5)
 
                 scene.play(
                     all_nodes_circle.shift, [delta_x, delta_y, 0],
                     all_nodes_data.shift, [delta_x, delta_y, 0],
                     all_edges.shift, [delta_x, delta_y, 0],
                 )
-                scene.wait(1.2)
+                scene.wait(0.5)
 
                 if dir == 'r':
                     parent.right = node.right
@@ -800,7 +612,7 @@ class Tree:
                 step2_2.shift([0, -0.05, 0])
                 scene.play(Write(step2_1))
                 scene.play(Write(step2_2))
-                scene.wait(0.7)
+                scene.wait(0.5)
 
                 # finding the smallest node in the right subtree
                 depth = 0
@@ -817,7 +629,7 @@ class Tree:
                         smallest.node_object.set_color, BLUE_C,
                         smallest.data_object.set_color, BLUE_C
                     )
-                scene.wait(0.6)
+                scene.wait(0.5)
 
                 node.left.parent = smallest
                 smallest.left = node.left
@@ -835,7 +647,7 @@ class Tree:
                 step3_2.shift([0, -1.3, 0])
                 scene.play(Write(step3_1))
                 scene.play(Write(step3_2))
-                scene.wait(0.8)
+                scene.wait(0.5)
 
                 # moving the left subtree
                 all_nodes_circle = VGroup()
@@ -852,7 +664,6 @@ class Tree:
                     all_nodes_data.shift, [delta_x, delta_y, 0],
                     all_edges.shift, [delta_x, delta_y, 0],
                 )
-                scene.wait(0.2)
 
                 self.edges.remove(node.left_edge)
 
@@ -865,22 +676,27 @@ class Tree:
                 edge.set_color(BLUE_C)
                 self.edges.add(edge)
                 scene.play(Write(edge))
-                scene.wait(0.7)
 
                 # step 4
                 step4_1 = TextMobject("Step 4: Remove the node and put")
                 step4_2 = TextMobject("the right subtree in its place.")
+                # step4_3 = TextMobject("")
                 step4_1.set_color(BLUE)
                 step4_2.set_color(BLUE)
+                # step4_3.set_color(BLUE)
                 step4_1.scale(0.85)
                 step4_2.scale(0.85)
+                # step4_3.scale(0.85)
                 step4_1.to_edge(LEFT, 1)
                 step4_2.to_edge(LEFT, 1)
+                # step4_3.to_edge(LEFT, 1)
                 step4_1.shift([0, -2.1, 0])
                 step4_2.shift([0, -2.55, 0])
+                # step4_3.shift([0, -3, 0])
                 scene.play(Write(step4_1))
                 scene.play(Write(step4_2))
-                scene.wait(0.7)
+                # scene.play(Write(step4_3))
+                scene.wait(0.5)
 
                 # removing the node
                 node.right.parent = node.parent
@@ -911,7 +727,6 @@ class Tree:
                 else:
                     parent.left = node.left
 
-                scene.wait(1)
                 scene.play(
                     FadeOut(step1),
                     FadeOut(case),
@@ -929,59 +744,10 @@ class Tree:
             self.vertices.remove(node)
             self.edge_data_objects.remove(node.data_object)
 
+            scene.wait(1)
             self.reset_colors(scene, True)
+
             scene.play(FadeOut(searched))
-        
-        # case 1
-        case1 = TextMobject("Case 1: The node is a leaf.")
-        case1.set_color(ORANGE)
-        case1.scale(0.85)
-        case1.to_edge(LEFT, 1)
-        case1.shift([0, 1.4, 0])
-        case_box1 = SurroundingRectangle(case1, color=ORANGE)
-        case_exp1 = TextMobject("Just remove.")
-        case_exp1.set_color(BLUE)
-        case_exp1.scale(0.85)
-        case_exp1.to_edge(LEFT, 1)
-        case_exp1.shift([0, 0.7, 0])
-
-        # case 2
-        case2 = TextMobject("Case 2: The node has 1 child.")
-        case2.set_color(ORANGE)
-        case2.scale(0.85)
-        case2.to_edge(LEFT, 1)
-        case2.shift([0, 0, 0])
-        case_box2 = SurroundingRectangle(case2, color=ORANGE)
-        case_exp2 = TextMobject("Replace with child.")
-        case_exp2.set_color(BLUE)
-        case_exp2.scale(0.85)
-        case_exp2.to_edge(LEFT, 1)
-        case_exp2.shift([0, -0.7, 0])
-
-        # case 3
-        case3 = TextMobject("Case 3: The node has 2 children.")
-        case3.set_color(ORANGE)
-        case3.scale(0.85)
-        case3.to_edge(LEFT, 1)
-        case3.shift([0, -1.4, 0])
-        case_box3 = SurroundingRectangle(case3, color=ORANGE)
-        case_exp3 = TextMobject("Merge subtrees and replace.")
-        case_exp3.set_color(BLUE)
-        case_exp3.scale(0.85)
-        case_exp3.to_edge(LEFT, 1)
-        case_exp3.shift([0, -2.1, 0])
-
-        scene.play(
-            FadeIn(case1),
-            FadeIn(case2),
-            FadeIn(case3),
-            FadeIn(case_exp1),
-            FadeIn(case_exp2),
-            FadeIn(case_exp3),
-            FadeIn(case_box1),
-            FadeIn(case_box2),
-            FadeIn(case_box3),
-        )
 
 
     def sketch_tree(self, scene):
@@ -1035,69 +801,11 @@ class Tree:
                 e.set_color(WHITE)
             for edo in self.edge_data_objects:
                 edo.set_color(WHITE)
-
-
-class Insert(Scene):
-
-    def construct(self):
-
-        # Introduction
-        title_l1 = TextMobject("Binary Search Tree")
-        title_l2 = TextMobject("Insert")
-        title_l1.scale(1.8)
-        title_l2.scale(1.3)
-        title_l1.shift([0, 0.5, 0])
-        title_l2.shift([0, -0.35, 0])
-        line = Line([-3.8, 0, 0], [3.8, 0, 0])
-        line.set_stroke(WHITE, 1.1, 1)
-        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
-        creators.scale(0.4)
-        creators.move_to([5, -3.7, 0])
-        self.add(title_l1)
-        self.add(title_l2)
-        self.add(line)
-        self.wait(2)
-        self.play(Write(creators), run_time=0.7)
-        self.wait(2)
-        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
-        self.wait(1.5)
-
-        tree = Tree(3.3, 2)
-        tree.insert(self, False, 5, 4, 7, 6, -1, 12, 2, 10, 11)
-        tree.reset_colors(self)
-        self.wait(1)
-
-        tree.sketch_tree(self)
-        self.wait(1)
-
-        tree.insert(self, True, 1, 12)
-        self.wait(2)
-
+            
 
 class Search(Scene):
 
     def construct(self):
-
-        # Introduction
-        title_l1 = TextMobject("Binary Search Tree")
-        title_l2 = TextMobject("Search")
-        title_l1.scale(1.8)
-        title_l2.scale(1.3)
-        title_l1.shift([0, 0.5, 0])
-        title_l2.shift([0, -0.35, 0])
-        line = Line([-3.8, 0, 0], [3.8, 0, 0])
-        line.set_stroke(WHITE, 1.1, 1)
-        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
-        creators.scale(0.4)
-        creators.move_to([5, -3.7, 0])
-        self.add(title_l1)
-        self.add(title_l2)
-        self.add(line)
-        self.wait(2)
-        self.play(Write(creators), run_time=0.7)
-        self.wait(2)
-        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
-        self.wait(1.5)
 
         tree = Tree(3.7, 2.5)
         tree.insert(self, False, 5, 3, 7, 6, -1, 12, 2, 10, 1, 8, 11, 9)
@@ -1107,7 +815,23 @@ class Search(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.search(self, 11, -4)
+        tree.search(self, 11, 2)
+        self.wait(2)
+
+
+class Insert(Scene):
+
+    def construct(self):
+
+        tree = Tree(3.3, 2)
+        tree.insert(self, False, 5, 4, 7, 6, -1, 12, 2, 10, 1, 11)
+        tree.reset_colors(self)
+        self.wait(1)
+
+        tree.sketch_tree(self)
+        self.wait(1)
+
+        tree.insert(self, True, 3, 12)
         self.wait(2)
 
 
@@ -1115,29 +839,9 @@ class Delete(Scene):
 
     def construct(self):
 
-        # Introduction
-        title_l1 = TextMobject("Binary Search Tree")
-        title_l2 = TextMobject("Delete")
-        title_l1.scale(1.8)
-        title_l2.scale(1.3)
-        title_l1.shift([0, 0.5, 0])
-        title_l2.shift([0, -0.35, 0])
-        line = Line([-3.8, 0, 0], [3.8, 0, 0])
-        line.set_stroke(WHITE, 1.1, 1)
-        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
-        creators.scale(0.4)
-        creators.move_to([5, -3.7, 0])
-        self.add(title_l1)
-        self.add(title_l2)
-        self.add(line)
-        self.wait(2)
-        self.play(Write(creators), run_time=0.7)
-        self.wait(2)
-        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
-        self.wait(1.5)
-
         tree = Tree(3.1, 1.7)
-        tree.insert(self, False, 3, 2, 7, 6, 5, -1, 12, 9, 8, 15, 10)
+        for v in [3, 2, 7, 6, 5, -1, 12, 9, 8, 15, 10]:
+            tree.insert(self, v)
         tree.reset_colors(self)
         self.wait(1)
 

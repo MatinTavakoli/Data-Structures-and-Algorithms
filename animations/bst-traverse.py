@@ -51,7 +51,6 @@ class TreeNode:
 
         scene.play(Restore(code[3]))
 
-        print(root.key)
         counter[0] = counter[0] + 1
 
         scene.wait(0.75)
@@ -107,7 +106,6 @@ class TreeNode:
 
         scene.play(Restore(code[4]))
 
-        print(root.key)
         counter[0] = counter[0] + 1
 
         scene.wait(0.75)
@@ -154,7 +152,6 @@ class TreeNode:
 
         scene.play(Restore(code[5]))
 
-        print(root.key)
         counter[0] = counter[0] + 1
 
         scene.wait(0.75)
@@ -220,65 +217,6 @@ class Tree:
                     current = current.left
                     dir = 'l'
 
-    def delete(self, value):
-
-        # finding the node
-        current = self.root
-        node = None
-        parent = None
-        dir = None
-
-        while True:
-            if current is None:
-                return
-            elif current.key == value:
-                node = current
-                break
-            elif value >= current.key:
-                parent = current
-                current = current.right
-                dir = 'r'
-            else:
-                parent = current
-                current = current.left
-                dir = 'l'
-
-        # deleting the node
-        if node.parent is None:
-            self.root = None
-        elif node.right is None and node.left is None:
-            if dir == 'r':
-                parent.right = None
-            else:
-                parent.left = None
-        elif node.right is None:
-            node.left.parent = node.parent
-            if dir == 'r':
-                parent.right = node.left
-            else:
-                parent.left = node.left
-        elif node.left is None:
-            node.right.parent = node.parent
-            if dir == 'r':
-                parent.right = node.right
-            else:
-                parent.left = node.right
-
-        else:
-            smallest = node.right
-            while smallest.left is not None:
-                smallest = smallest.left
-            node.left.parent = smallest
-            smallest.left = node.left
-            node.right.parent = parent
-            if dir == 'r':
-                parent.right = node.right
-            else:
-                parent.left = node.right
-
-        # deleting the node's graphics
-        self.vertices.remove(node)
-        self.vertice_key_objects.remove(node.key_object)
 
     def sketch_tree(self, scene):
         scene.play(
@@ -287,6 +225,7 @@ class Tree:
             run_time=1.5
         )
         scene.play(*[GrowArrow(e) for e in self.edges], run_time=1.5)
+
 
     def reset_colors(self, scene, show_sketch=False):
         if show_sketch:
@@ -324,17 +263,20 @@ class PreOrderScene(Scene):
         title_l1.scale(1.8)
         title_l2.scale(1.3)
         title_l1.shift([0,0.5,0])
-        title_l2.shift([0,-0.3,0])
+        title_l2.shift([0,-0.35,0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
         creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
         creators.scale(0.4)
         creators.move_to([5, -3.7, 0])
         self.add(title_l1)
         self.add(title_l2)
+        self.add(line)
         self.wait(2)
         self.play(Write(creators), run_time=0.7)
         self.wait(2)
-        self.play(FadeOut(title_l1), FadeOut(title_l2))
-        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
 
         # tree construction
         tree = Tree(2.5, 2.5)
@@ -398,11 +340,6 @@ class PreOrderScene(Scene):
             i.set_color(color)
         pre_order_code.add(l6)
 
-        # for line in in_order_code:
-        #     for part in line:
-        #         print(part)
-        #         print(dir(part))
-        #         part = part.become("\\textrm{}".format(part.tex_string))
 
         for i, l in enumerate(pre_order_code):
             l.to_edge(LEFT, buff=0.2)
@@ -439,6 +376,7 @@ class PreOrderScene(Scene):
 
         self.wait(0.5)
         tree.reset_colors(self, True)
+        self.wait(2)
 
 
 class InOrderScene(Scene):
@@ -451,17 +389,20 @@ class InOrderScene(Scene):
         title_l1.scale(1.8)
         title_l2.scale(1.3)
         title_l1.shift([0, 0.5, 0])
-        title_l2.shift([0, -0.3, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
         creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
         creators.scale(0.4)
         creators.move_to([5, -3.7, 0])
         self.add(title_l1)
         self.add(title_l2)
+        self.add(line)
         self.wait(2)
         self.play(Write(creators), run_time=0.7)
         self.wait(2)
-        self.play(FadeOut(title_l1), FadeOut(title_l2))
-        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
 
         # tree construction
         tree = Tree(2.5, 2.5)
@@ -526,11 +467,6 @@ class InOrderScene(Scene):
             i.set_color(color)
         in_order_code.add(l6)
 
-        # for line in in_order_code:
-        #     for part in line:
-        #         print(part)
-        #         print(dir(part))
-        #         part = part.become("\\textrm{}".format(part.tex_string))
 
         for i, l in enumerate(in_order_code):
             l.to_edge(LEFT, buff=0.2)
@@ -567,6 +503,7 @@ class InOrderScene(Scene):
 
         self.wait(0.5)
         tree.reset_colors(self, True)
+        self.wait(2)
 
 
 class PostOrderScene(Scene):
@@ -578,17 +515,20 @@ class PostOrderScene(Scene):
         title_l1.scale(1.8)
         title_l2.scale(1.3)
         title_l1.shift([0, 0.5, 0])
-        title_l2.shift([0, -0.3, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
         creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
         creators.scale(0.4)
         creators.move_to([5, -3.7, 0])
         self.add(title_l1)
         self.add(title_l2)
+        self.add(line)
         self.wait(2)
         self.play(Write(creators), run_time=0.7)
         self.wait(2)
-        self.play(FadeOut(title_l1), FadeOut(title_l2))
-        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
 
         # tree construction
         tree = Tree(2.5, 2.5)
@@ -653,12 +593,6 @@ class PostOrderScene(Scene):
             i.set_color(color)
         post_order_code.add(l6)
 
-        # for line in in_order_code:
-        #     for part in line:
-        #         print(part)
-        #         print(dir(part))
-        #         part = part.become("\\textrm{}".format(part.tex_string))
-
         for i, l in enumerate(post_order_code):
             l.to_edge(LEFT, buff=0.2)
             l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
@@ -694,3 +628,5 @@ class PostOrderScene(Scene):
 
         self.wait(0.5)
         tree.reset_colors(self, True)
+        self.wait(2)
+
