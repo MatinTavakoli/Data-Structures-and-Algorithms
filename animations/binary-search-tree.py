@@ -1174,7 +1174,6 @@ class Tree:
         code.add(l12)
 
         
-
         for i, l in enumerate(code):
             l.to_edge(LEFT, buff=0.7)
             l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
@@ -1228,8 +1227,24 @@ class Tree:
             scene.wait(1)
 
 
+            # rectangle
+            rect = SurroundingRectangle(l1, buff=0.06, color=WHITE)
+            scene.play(Write(rect))
+            scene.wait(1)
+
+            new_rect = SurroundingRectangle(l2, buff=0.06, color=WHITE)
+            scene.play(ReplacementTransform(rect, new_rect))
+            rect = new_rect
+            scene.wait(0.6)
+
             # case 1: the node has right child
             if node.right is not None:
+
+                new_rect = SurroundingRectangle(l3, buff=0.06, color=BLUE_C)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+                
 
                 # finding the smallest node in the right subtree
                 smallest = node.right
@@ -1237,6 +1252,7 @@ class Tree:
                     smallest.node_object.set_color, BLUE_C,
                     smallest.key_object.set_color, BLUE_C
                 )
+
                 while smallest.left is not None:
                     scene.play(smallest.left_edge.set_color, BLUE_C)
                     smallest = smallest.left
@@ -1246,29 +1262,108 @@ class Tree:
                     )
 
                 scene.wait(0.5)
+                new_rect = SurroundingRectangle(l3, buff=0.06, color=ORANGE)
                 scene.play(
                     smallest.node_object.set_fill, ORANGE, 1,
                     smallest.node_object.set_color, ORANGE,
-                    smallest.key_object.set_color, WHITE
+                    smallest.key_object.set_color, WHITE,
+                    ReplacementTransform(rect, new_rect)
                 )
+                rect = new_rect
+
+                scene.wait(1)
+                scene.play(FadeOut(new_rect))
 
             else:  # case 2: the node hasn't a right child
 
-                # going up left in tree
+                new_rect = SurroundingRectangle(l4, buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.4)
+
+                new_rect = SurroundingRectangle(l5, buff=0.06, color=TEAL_D)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
                 current = node
-                parent = node.parent
-                while parent is not None:
-                    if current != parent.right:
-                        break
-                    scene.play(parent.right_edge.set_color, BLUE_C)
-                    scene.play(
-                        parent.node_object.set_color, BLUE_C,
-                        parent.key_object.set_color, BLUE_C
-                    )
-                    current = parent
-                    parent = parent.parent
-                
+                c_pointer = TextMobject("\^")
+                c_pointer.rotate(PI)
+                c_pointer.move_to([current.node_object.get_x(), current.node_object.get_y() + 0.5, 0])
+                c_pointer.set_color(TEAL_D)
+                c_pointer.scale(2)
+                scene.play(Write(c_pointer))
                 scene.wait(0.5)
+
+                new_rect = SurroundingRectangle(l6, buff=0.06, color=PURPLE_E)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                parent = node.parent
+                p_pointer = TextMobject("\^")
+                p_pointer.rotate(PI)
+                p_pointer.move_to([parent.node_object.get_x(), parent.node_object.get_y() + 0.5, 0])
+                p_pointer.set_color(PURPLE_C)
+                p_pointer.scale(2)
+                scene.play(Write(p_pointer))
+                scene.wait(0.5)
+
+                new_rect = SurroundingRectangle(l7, buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                # going up left in tree
+
+                while parent is not None:
+
+                    new_rect = SurroundingRectangle(l8, buff=0.06, color=WHITE)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.wait(0.6)
+
+                    if current != parent.right:
+                        new_rect = SurroundingRectangle(l9, buff=0.06, color=WHITE)
+                        scene.play(ReplacementTransform(rect, new_rect))
+                        rect = new_rect
+                        scene.wait(0.6)
+                        break
+
+
+                    new_rect = SurroundingRectangle(l10, buff=0.06, color=TEAL_D)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.6)
+                    rect = new_rect
+                    scene.play(c_pointer.shift, [-self.hspace, self.hspace, 0])
+                    scene.wait(0.6)
+
+
+                    new_rect = SurroundingRectangle(l11, buff=0.06, color=PURPLE_E) 
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.6)
+
+                    if parent == parent.parent.right:
+                        scene.play(p_pointer.shift, [-self.hspace, self.hspace, 0])
+                    else:
+                        scene.play(p_pointer.shift, [self.hspace, self.hspace, 0])
+
+                    scene.wait(0.6)
+                    parent = parent.parent
+                    current = current.parent
+
+                    new_rect = SurroundingRectangle(l7, buff=0.06, color=WHITE)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.wait(0.6)
+                
+
+                new_rect = SurroundingRectangle(l12, buff=0.06, color=ORANGE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
 
                 scene.play(
                     parent.node_object.set_fill, ORANGE, 1,
@@ -1276,7 +1371,10 @@ class Tree:
                     parent.key_object.set_color, WHITE
                 )
 
-            scene.wait(1)
+                scene.wait(1)
+                scene.play(FadeOut(new_rect), FadeOut(c_pointer), FadeOut(p_pointer))
+
+
             scene.play(FadeOut(searched))
             self.reset_colors(scene, True)
 
@@ -1431,7 +1529,7 @@ class Delete(Scene):
         self.play(Write(creators), run_time=0.7)
         self.wait(2)
         self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
-        self.wait(1.5)
+        self.wait(1)
 
         tree = Tree(3.1, 1.7)
         tree.insert(self, False, 3, 2, 7, 6, 5, -1, 12, 9, 8, 15, 10)
@@ -1449,8 +1547,30 @@ class InOrderSuccessor(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("In-order Successor")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1)
+
+
         tree = Tree(3.1, 2)
-        tree.insert(self, False, 9, 10, 11, 16, 14, 13, 15, 4, 6, 5, 8, 7, 3)
+        tree.insert(self, False, 9, 10, 11, 16, 14, 13, 15, 2, 1, 6, 4, 8, 7)
         tree.reset_colors(self)
         self.wait(1)
 
