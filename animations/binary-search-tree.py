@@ -1100,10 +1100,10 @@ class Tree:
         )
 
     
-    def successor(self, scene, *keys):
+    def inorder_successor(self, scene, *keys):
 
         # title
-        title = TextMobject("Successor:")
+        title = TextMobject("In-Order Successor:")
         title.to_edge(LEFT, buff=0.8)
         title.shift([0, 3, 0])
         title.scale(1.2)
@@ -1113,7 +1113,7 @@ class Tree:
 
         # drawing the code
         code = VGroup()
-        l1 = TextMobject("\\textrm{def}", " \\textrm{successor}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
+        l1 = TextMobject("\\textrm{def}", " \\textrm{in\_order\_successor}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
         for i,color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
             i.set_color(color)
         code.add(l1)
@@ -1195,7 +1195,7 @@ class Tree:
 
             # drawing the searched key
             searched = TextMobject(f"What's the successor of {key}?")
-            searched.shift([0, title.get_y(), 0])
+            searched.shift([2.5, title.get_y(), 0])
             searched.set_color(GREEN)
             scene.play(Write(searched))
             scene.wait(0.5)
@@ -1445,7 +1445,7 @@ class Delete(Scene):
         self.wait(2)
 
 
-class Successor(Scene):
+class InOrderSuccessor(Scene):
 
     def construct(self):
 
@@ -1457,7 +1457,7 @@ class Successor(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.successor(self, 11, 8, 5)
+        tree.inorder_successor(self, 11, 8, 5)
 
         self.wait(2)
 
