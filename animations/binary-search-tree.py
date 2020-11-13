@@ -1099,6 +1099,187 @@ class Tree:
             FadeIn(case_box3),
         )
 
+    
+    def successor(self, scene, *keys):
+
+        # title
+        title = TextMobject("Successor:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+
+        # drawing the code line
+        line = Line([-6.1, 2.2, 0], [-6.1, -3.5, 0])
+
+        # drawing the code
+        code = VGroup()
+        l1 = TextMobject("\\textrm{def}", " \\textrm{successor}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
+        for i,color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l1)
+
+        l2 = TextMobject("   \\textrm{if}",  " \\textrm{node}", "\\textrm{.}", "\\textrm{right}", " \\textrm{is not None}", "\\textrm{:}")
+        for i,color in zip(l2, [YELLOW_B, BLUE, WHITE, PURPLE_C, YELLOW_B, WHITE]):
+            i.set_color(color)
+        code.add(l2)
+
+        l3 = TextMobject("      \\textrm{return}", " \\textrm{min}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{right}", "\\textrm{)}")
+        for i,color in zip(l3, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
+            i.set_color(color)
+        code.add(l3)
+
+        l4 = TextMobject("   \\textrm{else}", "\\textrm{:}")
+        for i,color in zip(l4, [YELLOW_B, WHITE]):
+            i.set_color(color)
+        code.add(l4)
+
+        l5 = TextMobject("        \\textrm{current}", "\\textrm{ =}", " \\textrm{node}")
+        for i,color in zip(l5, [BLUE, WHITE, BLUE]):
+            i.set_color(color)
+        code.add(l5)
+
+        l6 = TextMobject("        \\textrm{parent}", "\\textrm{ =}", " \\textrm{node}", "\\textrm{.}", "\\textrm{parent}")
+        for i,color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+            i.set_color(color)
+        code.add(l6)
+
+        l7 = TextMobject("        \\textrm{while}", "\\textrm{ p}", " \\textrm{ is not None}", "\\textrm{:}")
+        for i,color in zip(l7, [YELLOW_B, BLUE, YELLOW_B, WHITE]):
+            i.set_color(color)
+        code.add(l7)
+
+        l8 = TextMobject("           \\textrm{if}", " \\textrm{current}", "\\textrm{ != }", "\\textrm{parent}", "\\textrm{.}", "\\textrm{right}", "\\textrm{:}")
+        for i,color in zip(l8, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
+            i.set_color(color)
+        code.add(l8)
+
+        l9 = TextMobject("              \\textrm{break}")
+        for i,color in zip(l9, [YELLOW_B]):
+            i.set_color(color)
+        code.add(l9)
+
+        l10 = TextMobject("           \\textrm{current}", "\\textrm{ =}", " \\textrm{parent}")
+        for i,color in zip(l10, [BLUE, WHITE, BLUE]):
+            i.set_color(color)
+        code.add(l10)
+
+        l11 = TextMobject("           \\textrm{parent}", "\\textrm{ =}", " \\textrm{parent}", "\\textrm{.}", "\\textrm{parent}")
+        for i,color in zip(l11, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+            i.set_color(color)
+        code.add(l11)
+
+        l12 = TextMobject("        \\textrm{return}", "\\textrm{ parent}")
+        for i,color in zip(l12, [YELLOW_B, BLUE]):
+            i.set_color(color)
+        code.add(l12)
+
+        
+
+        for i, l in enumerate(code):
+            l.to_edge(LEFT, buff=0.7)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
+
+
+        code.scale(0.85)
+        code.shift([0, 2.4, 0])
+
+        scene.play(Write(title))
+        scene.play(FadeInFromDown(line))
+
+        for l in code:
+            scene.play(FadeInFrom(l, LEFT), run_time=0.5)
+        scene.wait(1)
+
+
+        for key in keys:
+
+            # drawing the searched key
+            searched = TextMobject(f"What's the successor of {key}?")
+            searched.shift([0, title.get_y(), 0])
+            searched.set_color(GREEN)
+            scene.play(Write(searched))
+            scene.wait(0.5)
+
+            # finding the node
+            current = self.root
+            node = None
+            parent = None
+            dir = None
+
+            while True:
+                if current is None:
+                    return
+                elif current.key == key:
+                    node = current
+                    break
+                elif key >= current.key:
+                    parent = current
+                    current = current.right
+                    dir = 'r'
+                else:
+                    parent = current
+                    current = current.left
+                    dir = 'l'
+
+            scene.play(
+                node.node_object.set_color, GREEN,
+                node.node_object.set_fill, GREEN, 1
+            )
+            scene.wait(1)
+
+
+            # case 1: the node has right child
+            if node.right is not None:
+
+                # finding the smallest node in the right subtree
+                smallest = node.right
+                scene.play(
+                    smallest.node_object.set_color, BLUE_C,
+                    smallest.key_object.set_color, BLUE_C
+                )
+                while smallest.left is not None:
+                    scene.play(smallest.left_edge.set_color, BLUE_C)
+                    smallest = smallest.left
+                    scene.play(
+                        smallest.node_object.set_color, BLUE_C,
+                        smallest.key_object.set_color, BLUE_C
+                    )
+
+                scene.wait(0.5)
+                scene.play(
+                    smallest.node_object.set_fill, ORANGE, 1,
+                    smallest.node_object.set_color, ORANGE,
+                    smallest.key_object.set_color, WHITE
+                )
+
+            else:  # case 2: the node hasn't a right child
+
+                # going up left in tree
+                current = node
+                parent = node.parent
+                while parent is not None:
+                    if current != parent.right:
+                        break
+                    scene.play(parent.right_edge.set_color, BLUE_C)
+                    scene.play(
+                        parent.node_object.set_color, BLUE_C,
+                        parent.key_object.set_color, BLUE_C
+                    )
+                    current = parent
+                    parent = parent.parent
+                
+                scene.wait(0.5)
+
+                scene.play(
+                    parent.node_object.set_fill, ORANGE, 1,
+                    parent.node_object.set_color, ORANGE,
+                    parent.key_object.set_color, WHITE
+                )
+
+            scene.wait(1)
+            scene.play(FadeOut(searched))
+            self.reset_colors(scene, True)
+
 
     def sketch_tree(self, scene):
         scene.play(
@@ -1261,6 +1442,23 @@ class Delete(Scene):
         self.wait(1)
 
         tree.delete(self, 15, 12, 7)
+        self.wait(2)
+
+
+class Successor(Scene):
+
+    def construct(self):
+
+        tree = Tree(3.1, 2)
+        tree.insert(self, False, 9, 10, 11, 16, 14, 13, 15, 4, 6, 5, 8, 7, 3)
+        tree.reset_colors(self)
+        self.wait(1)
+
+        tree.sketch_tree(self)
+        self.wait(1)
+
+        tree.successor(self, 11, 8, 5)
+
         self.wait(2)
 
     
