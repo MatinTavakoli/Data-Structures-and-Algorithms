@@ -4,27 +4,143 @@ from manimlib.imports import *
 
 class TreeNode:
 
-    def __init__(self, x, y, node_data, scaling_factor=0.3, node_color=RED):
+    def __init__(self, x, y, node_key, scaling_factor=0.3, node_color=RED):
         self.parent = None
         self.left = None
         self.right = None
-        self.data = node_data
+        self.key = node_key
 
         self.x = x
         self.y = y
         self.right_edge = None
         self.left_edge = None
         self.node_object = Circle()
-        self.data_object = TextMobject(str(node_data))
-        self.data_object.move_to([x, y, 0])
+        self.key_object = TextMobject(str(node_key))
+        self.key_object.move_to([x, y, 0])
         self.node_object.move_to([x, y, 0])
         self.node_object.scale(scaling_factor)
         self.node_object.set_color(node_color)
 
-    def set_data(self, node_data):
-        self.data_object = TextMobject(str(node_data))
-        self.data_object.move_to([self.node_object.get_x(), self.node_object.get_y(), 0])
-        self.data = node_data
+
+    # tree traverses
+    def pre_order(self, scene, root, counter, code):
+
+        if root is None:
+            return
+
+        scene.play(root.node_object.set_color, GREEN, run_time=0.5)
+        scene.wait(0.75)
+
+        code[3].save_state()
+        scene.play(code[3].scale, 1.25, code[3].move_to, [code[3].get_x() + 0.35, code[3].get_y(), 0],
+                   code[3].set_color,
+                   YELLOW, run_time=1.5)
+        scene.wait(0.4)
+
+        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
+        visited_node = TextMobject(str(root.key))
+        visited_node.set_color(BLUE)
+        visited_node.move_to([-7 + counter[0], -2.8, 0])
+        scene.play(Write(visited_node))
+
+        scene.play(Restore(code[3]))
+
+        counter[0] = counter[0] + 1
+
+        scene.wait(0.75)
+
+        # color new edge
+        if root.left_edge is not None:
+            scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
+            scene.wait(0.75)
+
+        root.pre_order(scene, root.left, counter, code)
+
+        # color new edge
+        if root.right_edge is not None:
+            scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
+            scene.wait(0.75)
+
+        root.pre_order(scene, root.right, counter, code)
+
+    def in_order(self, scene, root, counter, code):
+
+        if root is None:
+            return
+
+        scene.play(root.node_object.set_color, GREEN, run_time=0.5)
+        scene.wait(0.75)
+
+        # color new edge
+        if root.left_edge is not None:
+            scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
+            scene.wait(0.75)
+
+        root.in_order(scene, root.left, counter, code)
+
+        code[4].save_state()
+        scene.play(code[4].scale, 1.25, code[4].move_to, [code[4].get_x() + 0.35, code[4].get_y(), 0],
+                   code[4].set_color,
+                   YELLOW, run_time=1.5)
+        scene.wait(0.4)
+
+        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
+        visited_node = TextMobject(str(root.key))
+        visited_node.set_color(BLUE)
+        visited_node.move_to([-7 + counter[0], -2.8, 0])
+        scene.play(Write(visited_node))
+
+        scene.play(Restore(code[4]))
+
+        counter[0] = counter[0] + 1
+
+        scene.wait(0.75)
+
+        # color new edge
+        if root.right_edge is not None:
+            scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
+            scene.wait(0.75)
+
+        root.in_order(scene, root.right, counter, code)
+
+    def post_order(self, scene, root, counter, code):
+        if root is None:
+            return
+
+        scene.play(root.node_object.set_color, GREEN, run_time=0.5)
+        scene.wait(0.75)
+
+        # color new edge
+        if root.left_edge is not None:
+            scene.play(root.left_edge.set_color, GREEN, run_time=0.5)
+            scene.wait(0.75)
+
+        root.post_order(scene, root.left, counter, code)
+
+        # color new edge
+        if root.right_edge is not None:
+            scene.play(root.right_edge.set_color, GREEN, run_time=0.5)
+            scene.wait(0.75)
+
+        root.post_order(scene, root.right, counter, code)
+
+        code[5].save_state()
+        scene.play(code[5].scale, 1.25, code[5].move_to, [code[5].get_x() + 0.35, code[5].get_y(), 0],
+                   code[5].set_color,
+                   YELLOW, run_time=1.5)
+        scene.wait(0.4)
+
+        scene.play(root.node_object.set_color, GREEN, root.node_object.set_fill, GREEN, 1, run_time=0.25)
+        visited_node = TextMobject(str(root.key))
+        visited_node.set_color(BLUE)
+        visited_node.move_to([-7 + counter[0], -2.8, 0])
+        scene.play(Write(visited_node))
+
+        scene.play(Restore(code[5]))
+
+        counter[0] = counter[0] + 1
+
+        scene.wait(0.75)
 
 
 class Tree:
@@ -37,10 +153,10 @@ class Tree:
 
         self.vertices = VGroup()
         self.edges = VGroup()
-        self.edge_data_objects = VGroup()
+        self.edge_key_objects = VGroup()
         self.root = None
 
-    def insert(self, scene, show_sketch, *values):
+    def insert(self, scene, show_sketch, *keys):
 
         # title
         title = TextMobject("Insert:")
@@ -111,13 +227,13 @@ class Tree:
             scene.wait(1)
 
 
-        for value in values:
+        for key in keys:
 
             rect = SurroundingRectangle(l1, buff=0.06, color=WHITE)
 
             if show_sketch:
-                # drawing the searched value
-                searched = TextMobject(f"Let's insert {value}.")
+                # drawing the searched key
+                searched = TextMobject(f"Let's insert {key}.")
                 searched.shift([0, title.get_y(), 0])
                 searched.set_color(GREEN)
                 scene.play(Write(searched))
@@ -138,10 +254,10 @@ class Tree:
 
             if self.root is None:
 
-                node = TreeNode(self.x, self.y, value)
+                node = TreeNode(self.x, self.y, key)
                 self.root = node
                 self.vertices.add(node)
-                self.edge_data_objects.add(node.data_object)
+                self.edge_key_objects.add(node.key_object)
                 node.node_object.set_color(GREEN)
                 node.node_object.set_fill(GREEN, 1)
 
@@ -157,7 +273,7 @@ class Tree:
                     scene.wait(0.7)
 
                     scene.play(Write(node.node_object))
-                    scene.play(Write(node.data_object))
+                    scene.play(Write(node.key_object))
 
             else:
 
@@ -190,12 +306,12 @@ class Tree:
                         node = None
                         edge = None
                         if dir == 'r':
-                            node = TreeNode(parent.x + self.hspace, parent.y + self.vspace, value)
+                            node = TreeNode(parent.x + self.hspace, parent.y + self.vspace, key)
                             parent.right = node
                             edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
                             parent.right_edge = edge
                         else:
-                            node = TreeNode(parent.x - self.hspace, parent.y + self.vspace, value)
+                            node = TreeNode(parent.x - self.hspace, parent.y + self.vspace, key)
                             parent.left = node
                             edge = Arrow([parent.x, parent.y, 0], [node.x, node.y, 0])
                             parent.left_edge = edge
@@ -204,7 +320,7 @@ class Tree:
                         node.node_object.set_fill(GREEN, 1)
                         node.parent = parent
                         self.vertices.add(node)
-                        self.edge_data_objects.add(node.data_object)
+                        self.edge_key_objects.add(node.key_object)
                         edge.scale(0.93)
                         edge.set_color(GREEN)
                         self.edges.add(edge)
@@ -217,7 +333,7 @@ class Tree:
 
                             scene.play(GrowArrow(edge))
                             scene.play(Write(node.node_object))
-                            scene.play(Write(node.data_object))
+                            scene.play(Write(node.key_object))
 
                         break
 
@@ -228,7 +344,7 @@ class Tree:
                         rect = new_rect
                         scene.wait(0.5)
 
-                    if value >= current.data:
+                    if key >= current.key:
                         parent = current
                         current = current.right
                         dir = 'r'
@@ -293,7 +409,7 @@ class Tree:
             self.reset_colors(scene, True)
 
     
-    def search(self, scene, *values):
+    def search(self, scene, *keys):
 
         # title
         title = TextMobject("Search:")
@@ -371,10 +487,10 @@ class Tree:
             scene.play(FadeInFrom(l, LEFT), run_time=0.5)
         scene.wait(1)
 
-        for value in values:
+        for key in keys:
 
-            # drawing the searched value
-            searched = TextMobject(f"Let's search for {value}.")
+            # drawing the searched key
+            searched = TextMobject(f"Let's search for {key}.")
             searched.shift([0, title.get_y(), 0])
             searched.set_color(GREEN)
             scene.play(Write(searched))
@@ -436,7 +552,7 @@ class Tree:
                     rect = new_rect
                     scene.wait(0.5)
 
-                    if current.data == value:
+                    if current.key == key:
                         new_rect = SurroundingRectangle(l5, buff=0.06, color=GREEN)
                         scene.play(ReplacementTransform(rect, new_rect))
                         rect = new_rect
@@ -456,7 +572,7 @@ class Tree:
                         rect = new_rect
                         scene.wait(0.5)
 
-                        if value >= current.data:
+                        if key >= current.key:
 
                             new_rect = SurroundingRectangle(l7, buff=0.06, color=ORANGE)
                             scene.play(ReplacementTransform(rect, new_rect))
@@ -484,7 +600,7 @@ class Tree:
                             rect = new_rect
                             scene.wait(0.5)
 
-                            if value < current.data:
+                            if key < current.key:
 
                                 new_rect = SurroundingRectangle(l9, buff=0.06, color=ORANGE)
                                 scene.play(ReplacementTransform(rect, new_rect))
@@ -512,7 +628,7 @@ class Tree:
             scene.wait(0.3)
 
 
-    def delete(self, scene, *values):
+    def delete(self, scene, *keys):
 
         # title
         title = TextMobject("Delete:")
@@ -522,10 +638,10 @@ class Tree:
         scene.play(Write(title))
         scene.wait(1)
 
-        for value in values:
+        for key in keys:
 
-            # drawing the searched value
-            searched = TextMobject(f"Let's delete {value}.")
+            # drawing the searched key
+            searched = TextMobject(f"Let's delete {key}.")
             searched.shift([0, title.get_y(), 0])
             searched.set_color(GREEN)
             scene.play(Write(searched))
@@ -550,10 +666,10 @@ class Tree:
             while True:
                 if current is None:
                     return
-                elif current.data == value:
+                elif current.key == key:
                     node = current
                     break
-                elif value >= current.data:
+                elif key >= current.key:
                     parent = current
                     current = current.right
                     dir = 'r'
@@ -599,7 +715,7 @@ class Tree:
                     scene.play(
                         FadeOut(parent.right_edge),
                         FadeOut(node.node_object),
-                        FadeOut(node.data_object)
+                        FadeOut(node.key_object)
                     )
                     parent.right_edge = None
 
@@ -609,7 +725,7 @@ class Tree:
                     scene.play(
                         FadeOut(parent.left_edge),
                         FadeOut(node.node_object),
-                        FadeOut(node.data_object)
+                        FadeOut(node.key_object)
                     )
                     parent.left_edge = None
 
@@ -649,17 +765,17 @@ class Tree:
                 node.left.parent = node.parent
 
                 all_nodes_circle = VGroup()
-                all_nodes_data = VGroup()
+                all_nodes_key = VGroup()
                 all_edges = VGroup()
                 delta_x = self.hspace
                 delta_y = -self.vspace
-                self.get_all_subtree(all_nodes_circle, all_nodes_data, all_edges, node.left, delta_x, delta_y)
+                self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, node.left, delta_x, delta_y)
 
                 self.edges.remove(node.left_edge)
                 scene.play(
                     FadeOut(node.left_edge),
                     FadeOut(node.node_object),
-                    FadeOut(node.data_object)
+                    FadeOut(node.key_object)
                 )
                 scene.wait(1)
 
@@ -680,7 +796,7 @@ class Tree:
 
                 scene.play(
                     all_nodes_circle.shift, [delta_x, delta_y, 0],
-                    all_nodes_data.shift, [delta_x, delta_y, 0],
+                    all_nodes_key.shift, [delta_x, delta_y, 0],
                     all_edges.shift, [delta_x, delta_y, 0],
                 )
                 scene.wait(0.5)
@@ -724,17 +840,17 @@ class Tree:
                 node.right.parent = node.parent
 
                 all_nodes_circle = VGroup()
-                all_nodes_data = VGroup()
+                all_nodes_key = VGroup()
                 all_edges = VGroup()
                 delta_x = -self.hspace
                 delta_y = -self.vspace
-                self.get_all_subtree(all_nodes_circle, all_nodes_data, all_edges, node.right, delta_x, delta_y)
+                self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, node.right, delta_x, delta_y)
 
                 self.edges.remove(node.right_edge)
                 scene.play(
                     FadeOut(node.right_edge),
                     FadeOut(node.node_object),
-                    FadeOut(node.data_object)
+                    FadeOut(node.key_object)
                 )
                 scene.wait(1)
 
@@ -755,7 +871,7 @@ class Tree:
 
                 scene.play(
                     all_nodes_circle.shift, [delta_x, delta_y, 0],
-                    all_nodes_data.shift, [delta_x, delta_y, 0],
+                    all_nodes_key.shift, [delta_x, delta_y, 0],
                     all_edges.shift, [delta_x, delta_y, 0],
                 )
                 scene.wait(1.2)
@@ -807,7 +923,7 @@ class Tree:
                 smallest = node.right
                 scene.play(
                     smallest.node_object.set_color, BLUE_C,
-                    smallest.data_object.set_color, BLUE_C
+                    smallest.key_object.set_color, BLUE_C
                 )
                 while smallest.left is not None:
                     depth += 1
@@ -815,7 +931,7 @@ class Tree:
                     smallest = smallest.left
                     scene.play(
                         smallest.node_object.set_color, BLUE_C,
-                        smallest.data_object.set_color, BLUE_C
+                        smallest.key_object.set_color, BLUE_C
                     )
                 scene.wait(0.6)
 
@@ -839,17 +955,17 @@ class Tree:
 
                 # moving the left subtree
                 all_nodes_circle = VGroup()
-                all_nodes_data = VGroup()
+                all_nodes_key = VGroup()
                 all_edges = VGroup()
                 delta_x = 1 - depth * self.hspace
                 delta_y = -1 + depth *self.vspace
-                self.get_all_subtree(all_nodes_circle, all_nodes_data, all_edges, node.left, delta_x, delta_y)
+                self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, node.left, delta_x, delta_y)
 
                 self.edges.remove(node.left_edge)
                 scene.play(
                     FadeOut(node.left_edge),
                     all_nodes_circle.shift, [delta_x, delta_y, 0],
-                    all_nodes_data.shift, [delta_x, delta_y, 0],
+                    all_nodes_key.shift, [delta_x, delta_y, 0],
                     all_edges.shift, [delta_x, delta_y, 0],
                 )
                 scene.wait(0.2)
@@ -886,23 +1002,23 @@ class Tree:
                 node.right.parent = node.parent
 
                 all_nodes_circle = VGroup()
-                all_nodes_data = VGroup()
+                all_nodes_key = VGroup()
                 all_edges = VGroup()
                 delta_x = -self.hspace
                 delta_y = -self.vspace
-                self.get_all_subtree(all_nodes_circle, all_nodes_data, all_edges, node.right, delta_x, delta_y)
+                self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, node.right, delta_x, delta_y)
 
                 scene.play(
                     FadeOut(node.right_edge),
                     FadeOut(node.node_object),
-                    FadeOut(node.data_object)
+                    FadeOut(node.key_object)
                 )
                 scene.wait(1)
 
                 self.edges.remove(node.right_edge)
                 scene.play(
                     all_nodes_circle.shift, [delta_x, delta_y, 0],
-                    all_nodes_data.shift, [delta_x, delta_y, 0],
+                    all_nodes_key.shift, [delta_x, delta_y, 0],
                     all_edges.shift, [delta_x, delta_y, 0],
                 )
 
@@ -927,7 +1043,7 @@ class Tree:
 
             # deleting the node from the lists
             self.vertices.remove(node)
-            self.edge_data_objects.remove(node.data_object)
+            self.edge_key_objects.remove(node.key_object)
 
             self.reset_colors(scene, True)
             scene.play(FadeOut(searched))
@@ -987,13 +1103,13 @@ class Tree:
     def sketch_tree(self, scene):
         scene.play(
             *[Write(v.node_object) for v in self.vertices],
-            *[Write(do) for do in self.edge_data_objects],
+            *[Write(do) for do in self.edge_key_objects],
             run_time=1.5
         )
         scene.play(*[GrowArrow(e) for e in self.edges], run_time=1.5)
 
 
-    def get_all_subtree(self, all_nodes_circle, all_nodes_data, all_edges, root, delta_x=0, delta_y=0):
+    def get_all_subtree(self, all_nodes_circle, all_nodes_key, all_edges, root, delta_x=0, delta_y=0):
         # if delta_x and delta_y are set, nodes' x and y field will be updated
         # this doesn't actully move the nodes!
 
@@ -1002,14 +1118,14 @@ class Tree:
         
         if root.left_edge is not None:
             all_edges.add(root.left_edge)
-        self.get_all_subtree(all_nodes_circle, all_nodes_data,  all_edges, root.left, delta_x, delta_y)
+        self.get_all_subtree(all_nodes_circle, all_nodes_key,  all_edges, root.left, delta_x, delta_y)
         all_nodes_circle.add(root.node_object)
-        all_nodes_data.add(root.data_object)
+        all_nodes_key.add(root.key_object)
         root.x += delta_x
         root.y += delta_y
         if root.right_edge is not None:
             all_edges.add(root.right_edge)
-        self.get_all_subtree(all_nodes_circle, all_nodes_data,  all_edges, root.right, delta_x, delta_y)
+        self.get_all_subtree(all_nodes_circle, all_nodes_key,  all_edges, root.right, delta_x, delta_y)
 
     def reset_colors(self, scene, show_sketch=False):
         if show_sketch:
@@ -1023,7 +1139,7 @@ class Tree:
             for e in self.edges:
                 changes.append(e.set_color)
                 changes.append(WHITE)
-            for edo in self.edge_data_objects:
+            for edo in self.edge_key_objects:
                 changes.append(edo.set_color)
                 changes.append(WHITE)
             scene.play(*changes)
@@ -1033,7 +1149,7 @@ class Tree:
                 v.node_object.set_fill(RED, 0)
             for e in self.edges:
                 e.set_color(WHITE)
-            for edo in self.edge_data_objects:
+            for edo in self.edge_key_objects:
                 edo.set_color(WHITE)
 
 
@@ -1147,3 +1263,344 @@ class Delete(Scene):
         tree.delete(self, 15, 12, 7)
         self.wait(2)
 
+    
+class PreOrderScene(Scene):
+
+    def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Pre-order Traversal")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0,0.5,0])
+        title_l2.shift([0,-0.35,0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
+        # tree construction
+        tree = Tree(2.5, 2.5)
+        tree.insert(self, False, 5, 3, 7, -1, 12, 6, 2, 10, 14, -2, 1, 8, 11) 
+        tree.reset_colors(self)
+        tree.sketch_tree(self)
+        self.wait(1.5)
+
+        # pre-order
+
+        # title
+        title = TextMobject("Pre-order:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        self.play(Write(title))
+        pre_order_code = VGroup()
+
+        # drawing the code
+        l1 = TextMobject("\\textrm{def} ", "\\textrm{preOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
+        for i, color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        pre_order_code.add(l1)
+
+        l2 = TextMobject("    \\textrm{if} ", "\\textrm{node}", " \\textrm{==} ", "\\textrm{None}", "\\textrm{:}")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, YELLOW_B, WHITE]):
+            i.set_color(color)
+        pre_order_code.add(l2)
+
+        l3 = TextMobject("        \\textrm{return}")
+        l3.set_color(YELLOW_B)
+        pre_order_code.add(l3)
+
+        l4 = TextMobject("    \\textrm{print}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{key}",
+                         "\\textrm{)}")
+        for i, color in zip(l4, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        pre_order_code.add(l4)
+
+        l5 = TextMobject("    \\textrm{preOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{left}",
+                         "\\textrm{)}")
+        for i, color in zip(l5, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        pre_order_code.add(l5)
+
+        l6 = TextMobject("    \\textrm{preOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{right}",
+                         "\\textrm{)}")
+        for i, color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        pre_order_code.add(l6)
+
+
+        for i, l in enumerate(pre_order_code):
+            l.to_edge(LEFT, buff=0.2)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
+
+        pre_order_code.scale(0.85)
+        pre_order_code.shift([0, 1.7, 0])
+
+        self.play(Write(pre_order_code), run_time=2)
+        self.wait(0.5)
+
+        # result array
+        res_arr = Polygon([-6.5, -3.3, 0], [6.5, -3.3, 0], [6.5, -2.3, 0], [-6.5, -2.3, 0])
+        res_arr.set_color(WHITE)
+        self.play(Write(res_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 13):
+            line = Line([-6.5 + i, -2.3, 0], [-6.5 + i, -3.3, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{printed nodes}")
+        res_text.move_to([-5, -1.9, 0])
+        self.play(Write(res_text))
+
+        # keeping the current node in the array. starts from 1
+        counter = [1]
+
+        self.wait(1.2)
+
+        # applying the traverse
+        tree.root.pre_order(self, tree.root, counter, pre_order_code)
+
+        self.wait(0.5)
+        tree.reset_colors(self, True)
+        self.wait(2)
+
+
+class InOrderScene(Scene):
+
+    def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("In-order Traversal")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
+        # tree construction
+        tree = Tree(2.5, 2.5)
+        tree.insert(self, False, 5, 3, 7, -1, 12, 6, 2, 10, 14, -2, 1, 8, 11) 
+        tree.reset_colors(self)
+        tree.sketch_tree(self)
+        self.wait(1.5)
+
+        # in-order
+
+        # title
+        title = TextMobject("In-order:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        self.play(Write(title))
+
+        in_order_code = VGroup()
+
+        # drawing the code
+        l1 = TextMobject("\\textrm{def} ", "\\textrm{inOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
+        for i, color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l1)
+
+        l2 = TextMobject("    \\textrm{if} ", "\\textrm{node}", " \\textrm{==} ", "\\textrm{None}", "\\textrm{:}")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, YELLOW_B, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l2)
+
+        l3 = TextMobject("        \\textrm{return}")
+        l3.set_color(YELLOW_B)
+        in_order_code.add(l3)
+
+        l4 = TextMobject("    \\textrm{inOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{left}",
+                         "\\textrm{)}")
+        for i, color in zip(l4, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l4)
+
+        l5 = TextMobject("    \\textrm{print}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{key}",
+                         "\\textrm{)}")
+        for i, color in zip(l5, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l5)
+
+        l6 = TextMobject("    \\textrm{inOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{right}",
+                         "\\textrm{)}")
+        for i, color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        in_order_code.add(l6)
+
+
+        for i, l in enumerate(in_order_code):
+            l.to_edge(LEFT, buff=0.2)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
+
+        in_order_code.scale(0.85)
+        in_order_code.shift([0, 1.7, 0])
+
+        self.play(Write(in_order_code), run_time=2)
+        self.wait(0.5)
+
+        # result array
+        res_arr = Polygon([-6.5, -3.3, 0], [6.5, -3.3, 0], [6.5, -2.3, 0], [-6.5, -2.3, 0])
+        res_arr.set_color(WHITE)
+        self.play(Write(res_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 13):
+            line = Line([-6.5 + i, -2.3, 0], [-6.5 + i, -3.3, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{printed nodes}")
+        res_text.move_to([-5, -1.9, 0])
+        self.play(Write(res_text))
+
+        # keeping the current node in the array. starts from 1
+        counter = [1]
+
+        self.wait(1.2)
+
+        # applying the traverse
+        tree.root.in_order(self, tree.root, counter, in_order_code)
+
+        self.wait(0.5)
+        tree.reset_colors(self, True)
+        self.wait(2)
+
+
+class PostOrderScene(Scene):
+    def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("Post-order Traversal")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
+        # tree construction
+        tree = Tree(2.5, 2.5)
+        tree.insert(self, False, 5, 3, 7, -1, 12, 6, 2, 10, 14, -2, 1, 8, 11) 
+        tree.reset_colors(self)
+        tree.sketch_tree(self)
+        self.wait(1.5)
+
+        # post-order
+
+        # title
+        title = TextMobject("Post-order:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        self.play(Write(title))
+
+        post_order_code = VGroup()
+
+        # drawing the code
+        l1 = TextMobject("\\textrm{def} ", "\\textrm{postOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{):}")
+        for i, color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        post_order_code.add(l1)
+
+        l2 = TextMobject("    \\textrm{if} ", "\\textrm{node}", " \\textrm{==} ", "\\textrm{None}", "\\textrm{:}")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, YELLOW_B, WHITE]):
+            i.set_color(color)
+        post_order_code.add(l2)
+
+        l3 = TextMobject("        \\textrm{return}")
+        l3.set_color(YELLOW_B)
+        post_order_code.add(l3)
+
+        l4 = TextMobject("    \\textrm{postOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{left}",
+                         "\\textrm{)}")
+        for i, color in zip(l4, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        post_order_code.add(l4)
+
+        l5 = TextMobject("    \\textrm{postOrder}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{right}",
+                         "\\textrm{)}")
+        for i, color in zip(l5, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        post_order_code.add(l5)
+
+        l6 = TextMobject("    \\textrm{print}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}", "\\textrm{key}",
+                         "\\textrm{)}")
+        for i, color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE, WHITE]):
+            i.set_color(color)
+        post_order_code.add(l6)
+
+        for i, l in enumerate(post_order_code):
+            l.to_edge(LEFT, buff=0.2)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
+
+        post_order_code.scale(0.85)
+        post_order_code.shift([0, 1.7, 0])
+
+        self.play(Write(post_order_code), run_time=2)
+        self.wait(0.5)
+
+        # result array
+        res_arr = Polygon([-6.5, -3.3, 0], [6.5, -3.3, 0], [6.5, -2.3, 0], [-6.5, -2.3, 0])
+        res_arr.set_color(WHITE)
+        self.play(Write(res_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 13):
+            line = Line([-6.5 + i, -2.3, 0], [-6.5 + i, -3.3, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{printed nodes}")
+        res_text.move_to([-5, -1.9, 0])
+        self.play(Write(res_text))
+
+        # keeping the current node in the array. starts from 1
+        counter = [1]
+
+        self.wait(1.2)
+
+        # applying the traverse
+        tree.root.post_order(self, tree.root, counter, post_order_code)
+
+        self.wait(0.5)
+        tree.reset_colors(self, True)
+        self.wait(2)
