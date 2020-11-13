@@ -1378,6 +1378,62 @@ class Tree:
             scene.play(FadeOut(searched))
             self.reset_colors(scene, True)
 
+        all_nodes_circle = VGroup()
+        all_nodes_key = VGroup()
+        all_edges = VGroup()
+        self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, self.root)
+        all = VGroup(*all_nodes_circle, *all_nodes_key, *all_edges)
+
+        scene.play(FadeOut(line), FadeOut(code), all.shift, [0, 0.5, 0])
+        scene.wait(2)
+
+        # case 1
+        case1 = TextMobject("Case 1: The node has a right child.")
+        case1.set_color(ORANGE)
+        case1.scale(0.8)
+        case1.to_edge(LEFT, 1)
+        case1.shift([0, 1.4, 0])
+        case_box1 = SurroundingRectangle(case1, color=ORANGE)
+        case_exp1_1 = TextMobject("Find the smallest node in the")
+        case_exp1_2 = TextMobject("right subtree.")
+        case_exp1_1.set_color(BLUE)
+        case_exp1_2.set_color(BLUE)
+        case_exp1_1.scale(0.8)
+        case_exp1_2.scale(0.8)
+        case_exp1_1.to_edge(LEFT, 1)
+        case_exp1_2.to_edge(LEFT, 1)
+        case_exp1_1.shift([0, 0.7, 0])
+        case_exp1_2.shift([0, 0.25, 0])
+
+        # case 2
+        case2 = TextMobject("Case 2: The node doesn't have a right child.")
+        case2.set_color(ORANGE)
+        case2.scale(0.8)
+        case2.to_edge(LEFT, 1)
+        case2.shift([0, -1.4, 0])
+        case_box2 = SurroundingRectangle(case2, color=ORANGE)
+        case_exp2_1 = TextMobject("Go up the tree until you are a left child.")
+        case_exp2_2 = TextMobject("Select parent of that node.")
+        case_exp2_1.set_color(BLUE)
+        case_exp2_2.set_color(BLUE)
+        case_exp2_1.scale(0.8)
+        case_exp2_2.scale(0.8)
+        case_exp2_1.to_edge(LEFT, 1)
+        case_exp2_2.to_edge(LEFT, 1)
+        case_exp2_1.shift([0, -2.1, 0])
+        case_exp2_2.shift([0, -2.55, 0])
+
+        scene.play(
+            FadeIn(case1),
+            FadeIn(case2),
+            FadeIn(case_exp1_1),
+            FadeIn(case_exp1_2),
+            FadeIn(case_exp2_1),
+            FadeIn(case_exp2_2),
+            FadeIn(case_box1),
+            FadeIn(case_box2),
+        )
+
 
     def sketch_tree(self, scene):
         scene.play(
