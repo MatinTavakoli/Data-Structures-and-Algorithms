@@ -1283,7 +1283,7 @@ class Tree:
                 scene.play(FadeOut(searched), FadeOut(answer))
 
 
-            else:  # case 2: the node hasn't a right child
+            else:  # case 2: the node doesn't have a right child
 
                 new_rect = SurroundingRectangle(l4, buff=0.06, color=WHITE)
                 scene.play(ReplacementTransform(rect, new_rect))
@@ -1447,6 +1447,352 @@ class Tree:
             FadeIn(case_box1),
             FadeIn(case_box2),
         )
+
+    ######################
+    def inorder_predecessor(self, scene, *keys):
+
+        # title
+        title = TextMobject("In-Order Predecessor:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+
+        # drawing the code line
+        line = Line([-6.1, 2.2, 0], [-6.1, -3.5, 0])
+
+        # drawing the code
+        code = VGroup()
+        l1 = TextMobject("\\textrm{def}", " \\textrm{in\_order\_predecessor}", "\\textrm{(}", "\\textrm{node}",
+                         "\\textrm{):}")
+        for i, color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l1)
+
+        l2 = TextMobject("   \\textrm{if}", " \\textrm{node}", "\\textrm{.}", "\\textrm{left}",
+                         " \\textrm{is not None}", "\\textrm{:}")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, PURPLE_C, YELLOW_B, WHITE]):
+            i.set_color(color)
+        code.add(l2)
+
+        l3 = TextMobject("      \\textrm{return}", " \\textrm{max}", "\\textrm{(}", "\\textrm{node}", "\\textrm{.}",
+                         "\\textrm{left}", "\\textrm{)}")
+        for i, color in zip(l3, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
+            i.set_color(color)
+        code.add(l3)
+
+        l4 = TextMobject("   \\textrm{else}", "\\textrm{:}")
+        for i, color in zip(l4, [YELLOW_B, WHITE]):
+            i.set_color(color)
+        code.add(l4)
+
+        l5 = TextMobject("      \\textrm{current}", "\\textrm{ =}", " \\textrm{node}")
+        for i, color in zip(l5, [BLUE, WHITE, BLUE]):
+            i.set_color(color)
+        code.add(l5)
+
+        l6 = TextMobject("      \\textrm{parent}", "\\textrm{ =}", " \\textrm{node}", "\\textrm{.}", "\\textrm{parent}")
+        for i, color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+            i.set_color(color)
+        code.add(l6)
+
+        l7 = TextMobject("      \\textrm{while}", "\\textrm{ parent}", " \\textrm{ is not None}", "\\textrm{:}")
+        for i, color in zip(l7, [YELLOW_B, BLUE, YELLOW_B, WHITE]):
+            i.set_color(color)
+        code.add(l7)
+
+        l8 = TextMobject("         \\textrm{if}", " \\textrm{current}", "\\textrm{ != }", "\\textrm{parent}",
+                         "\\textrm{.}", "\\textrm{left}", "\\textrm{:}")
+        for i, color in zip(l8, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
+            i.set_color(color)
+        code.add(l8)
+
+        l9 = TextMobject("            \\textrm{break}")
+        for i, color in zip(l9, [YELLOW_B]):
+            i.set_color(color)
+        code.add(l9)
+
+        l10 = TextMobject("         \\textrm{current}", "\\textrm{ =}", " \\textrm{parent}")
+        for i, color in zip(l10, [BLUE, WHITE, BLUE]):
+            i.set_color(color)
+        code.add(l10)
+
+        l11 = TextMobject("         \\textrm{parent}", "\\textrm{ =}", " \\textrm{parent}", "\\textrm{.}",
+                          "\\textrm{parent}")
+        for i, color in zip(l11, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
+            i.set_color(color)
+        code.add(l11)
+
+        l12 = TextMobject("      \\textrm{return}", "\\textrm{ parent}")
+        for i, color in zip(l12, [YELLOW_B, BLUE]):
+            i.set_color(color)
+        code.add(l12)
+
+        for i, l in enumerate(code):
+            l.to_edge(LEFT, buff=0.7)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i, 0])
+
+        code.scale(0.85)
+        code.shift([0, 2.4, 0])
+
+        scene.play(Write(title))
+        scene.play(FadeInFromDown(line))
+
+        for l in code:
+            scene.play(FadeInFrom(l, LEFT), run_time=0.5)
+        scene.wait(1)
+
+        for key in keys:
+
+            # drawing the searched key
+            searched = TextMobject(f"What's the predecessor of {key}?")
+            searched.shift([2.5, title.get_y(), 0])
+            searched.set_color(GREEN)
+            scene.play(Write(searched))
+            scene.wait(0.5)
+
+            # finding the node
+            current = self.root
+            node = None
+            parent = None
+            dir = None
+
+            while True:
+                if current is None:
+                    return
+                elif current.key == key:
+                    node = current
+                    break
+                elif key >= current.key:
+                    parent = current
+                    current = current.right
+                    dir = 'r'
+                else:
+                    parent = current
+                    current = current.left
+                    dir = 'l'
+
+            scene.play(
+                node.node_object.set_color, GREEN,
+                node.node_object.set_fill, GREEN, 1
+            )
+            scene.wait(1)
+
+            # rectangle
+            rect = SurroundingRectangle(l1, buff=0.06, color=WHITE)
+            scene.play(Write(rect))
+            scene.wait(1)
+
+            new_rect = SurroundingRectangle(l2, buff=0.06, color=WHITE)
+            scene.play(ReplacementTransform(rect, new_rect))
+            rect = new_rect
+            scene.wait(0.6)
+
+            # case 1: the node has left child
+            if node.left is not None:
+
+                new_rect = SurroundingRectangle(l3, buff=0.06, color=BLUE_C)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                # finding the biggest node in the left subtree
+                biggest = node.left
+                scene.play(
+                    biggest.node_object.set_color, BLUE_C,
+                    biggest.key_object.set_color, BLUE_C
+                )
+
+                while biggest.right is not None:
+                    scene.play(biggest.right_edge.set_color, BLUE_C)
+                    biggest = biggest.right
+                    scene.play(
+                        biggest.node_object.set_color, BLUE_C,
+                        biggest.key_object.set_color, BLUE_C
+                    )
+
+                scene.wait(0.5)
+                new_rect = SurroundingRectangle(l3, buff=0.06, color=ORANGE)
+                scene.play(
+                    biggest.node_object.set_fill, ORANGE, 1,
+                    biggest.node_object.set_color, ORANGE,
+                    biggest.key_object.set_color, WHITE,
+                    ReplacementTransform(rect, new_rect)
+                )
+                rect = new_rect
+                scene.wait(0.6)
+
+                answer = TextMobject(biggest.key_object.get_tex_string())
+                answer.set_color(ORANGE)
+                answer.next_to(searched, RIGHT, buff=0.25)
+                scene.play(TransformFromCopy(biggest.key_object, answer))
+
+                scene.wait(1)
+                scene.play(FadeOut(new_rect))
+                self.reset_colors(scene, True)
+                scene.play(FadeOut(searched), FadeOut(answer))
+
+
+            else:  # case 2: the node doesn't have a left child
+
+                new_rect = SurroundingRectangle(l4, buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.4)
+
+                new_rect = SurroundingRectangle(l5, buff=0.06, color=TEAL_D)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                current = node
+                c_pointer = TextMobject("\^")
+                c_pointer.rotate(PI)
+                c_pointer.move_to([current.node_object.get_x(), current.node_object.get_y() + 0.5, 0])
+                c_pointer.set_color(TEAL_D)
+                c_pointer.scale(2)
+                scene.play(Write(c_pointer))
+                scene.wait(0.5)
+
+                new_rect = SurroundingRectangle(l6, buff=0.06, color=PURPLE_C)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                parent = node.parent
+                p_pointer = TextMobject("\^")
+                p_pointer.rotate(PI)
+                p_pointer.move_to([parent.node_object.get_x(), parent.node_object.get_y() + 0.5, 0])
+                p_pointer.set_color(PURPLE_B)
+                p_pointer.scale(2)
+                scene.play(Write(p_pointer))
+                scene.wait(0.5)
+
+                new_rect = SurroundingRectangle(l7, buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                # going up right in tree
+
+                while parent is not None:
+
+                    new_rect = SurroundingRectangle(l8, buff=0.06, color=WHITE)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.wait(0.6)
+
+                    if current != parent.left:
+                        new_rect = SurroundingRectangle(l9, buff=0.06, color=WHITE)
+                        scene.play(ReplacementTransform(rect, new_rect))
+                        rect = new_rect
+                        scene.wait(0.6)
+                        break
+
+                    new_rect = SurroundingRectangle(l10, buff=0.06, color=TEAL_D)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.6)
+                    rect = new_rect
+                    scene.play(c_pointer.shift, [self.hspace, self.hspace, 0])
+                    scene.wait(0.6)
+
+                    new_rect = SurroundingRectangle(l11, buff=0.06, color=PURPLE_C)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.6)
+
+                    if parent == parent.parent.left:
+                        scene.play(p_pointer.shift, [self.hspace, self.hspace, 0])
+                    else:
+                        scene.play(p_pointer.shift, [-self.hspace, self.hspace, 0])
+
+                    scene.wait(0.6)
+                    parent = parent.parent
+                    current = current.parent
+
+                    new_rect = SurroundingRectangle(l7, buff=0.06, color=WHITE)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    rect = new_rect
+                    scene.wait(0.6)
+
+                new_rect = SurroundingRectangle(l12, buff=0.06, color=ORANGE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.6)
+
+                scene.play(
+                    parent.node_object.set_fill, ORANGE, 1,
+                    parent.node_object.set_color, ORANGE,
+                    parent.key_object.set_color, WHITE
+                )
+                scene.wait(0.6)
+
+                answer = TextMobject(parent.key_object.get_tex_string())
+                answer.set_color(ORANGE)
+                answer.next_to(searched, RIGHT, buff=0.25)
+                scene.play(TransformFromCopy(parent.key_object, answer))
+
+                scene.wait(1)
+                scene.play(FadeOut(new_rect), FadeOut(c_pointer), FadeOut(p_pointer))
+                self.reset_colors(scene, True)
+                scene.play(FadeOut(searched), FadeOut(answer))
+
+        all_nodes_circle = VGroup()
+        all_nodes_key = VGroup()
+        all_edges = VGroup()
+        self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, self.root)
+        all_tree = VGroup(*all_nodes_circle, *all_nodes_key, *all_edges)
+
+        scene.play(FadeOut(line), FadeOut(code), all_tree.shift, [0.3, 0.5, 0])
+        scene.wait(2)
+
+        # case 1
+        case1 = TextMobject("Case 1: The node has a left child.")
+        case1.set_color(ORANGE)
+        case1.scale(0.8)
+        case1.to_edge(LEFT, 0.4)
+        case1.shift([0, 1.4, 0])
+        case_box1 = SurroundingRectangle(case1, color=ORANGE)
+        case_exp1_1 = TextMobject("Find the biggest node in the")
+        case_exp1_2 = TextMobject("left subtree.")
+        case_exp1_1.set_color(BLUE)
+        case_exp1_2.set_color(BLUE)
+        case_exp1_1.scale(0.8)
+        case_exp1_2.scale(0.8)
+        case_exp1_1.to_edge(LEFT, 0.4)
+        case_exp1_2.to_edge(LEFT, 0.4)
+        case_exp1_1.shift([0, 0.7, 0])
+        case_exp1_2.shift([0, 0.25, 0])
+
+        # case 2
+        case2 = TextMobject("Case 2: The node doesn't have a left child.")
+        case2.set_color(ORANGE)
+        case2.scale(0.8)
+        case2.to_edge(LEFT, 0.4)
+        case2.shift([0, -0.9, 0])
+        case_box2 = SurroundingRectangle(case2, color=ORANGE)
+        case_exp2_1 = TextMobject("Go up the tree until you are a right child.")
+        case_exp2_2 = TextMobject("Select parent of that node.")
+        case_exp2_1.set_color(BLUE)
+        case_exp2_2.set_color(BLUE)
+        case_exp2_1.scale(0.8)
+        case_exp2_2.scale(0.8)
+        case_exp2_1.to_edge(LEFT, 0.4)
+        case_exp2_2.to_edge(LEFT, 0.4)
+        case_exp2_1.shift([0, -1.6, 0])
+        case_exp2_2.shift([0, -2.05, 0])
+
+        scene.play(
+            FadeIn(case1),
+            FadeIn(case2),
+            FadeIn(case_exp1_1),
+            FadeIn(case_exp1_2),
+            FadeIn(case_exp2_1),
+            FadeIn(case_exp2_2),
+            FadeIn(case_box1),
+            FadeIn(case_box2),
+        )
+    ######################
 
 
     def sketch_tree(self, scene):
@@ -1648,6 +1994,44 @@ class InOrderSuccessor(Scene):
         self.wait(1)
 
         tree.inorder_successor(self, 11, 8, 4)
+
+        self.wait(2)
+
+class InOrderPredecessor(Scene):
+
+    def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Search Tree")
+        title_l2 = TextMobject("In-order Predecessor")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1)
+
+
+        tree = Tree(3, 2)
+        tree.insert(self, False, 2, 1, 12, 10, 5, 3, 8, 6, 9, 14, 13, 20, 17, 18)
+        tree.reset_colors(self)
+        self.wait(1)
+
+        tree.sketch_tree(self)
+        self.wait(1)
+
+        tree.inorder_predecessor(self, 10, 3, 14)
 
         self.wait(2)
 
