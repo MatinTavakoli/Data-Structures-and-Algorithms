@@ -2031,7 +2031,7 @@ class InOrderPredecessor(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.inorder_predecessor(self, 10, 3, 14)
+        tree.inorder_predecessor(self, 10, 3, 18)
 
         self.wait(2)
 
