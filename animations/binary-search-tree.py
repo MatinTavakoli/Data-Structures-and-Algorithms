@@ -1133,42 +1133,42 @@ class Tree:
             i.set_color(color)
         code.add(l4)
 
-        l5 = TextMobject("        \\textrm{current}", "\\textrm{ =}", " \\textrm{node}")
+        l5 = TextMobject("      \\textrm{current}", "\\textrm{ =}", " \\textrm{node}")
         for i,color in zip(l5, [BLUE, WHITE, BLUE]):
             i.set_color(color)
         code.add(l5)
 
-        l6 = TextMobject("        \\textrm{parent}", "\\textrm{ =}", " \\textrm{node}", "\\textrm{.}", "\\textrm{parent}")
+        l6 = TextMobject("      \\textrm{parent}", "\\textrm{ =}", " \\textrm{node}", "\\textrm{.}", "\\textrm{parent}")
         for i,color in zip(l6, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
             i.set_color(color)
         code.add(l6)
 
-        l7 = TextMobject("        \\textrm{while}", "\\textrm{ p}", " \\textrm{ is not None}", "\\textrm{:}")
+        l7 = TextMobject("      \\textrm{while}", "\\textrm{ parent}", " \\textrm{ is not None}", "\\textrm{:}")
         for i,color in zip(l7, [YELLOW_B, BLUE, YELLOW_B, WHITE]):
             i.set_color(color)
         code.add(l7)
 
-        l8 = TextMobject("           \\textrm{if}", " \\textrm{current}", "\\textrm{ != }", "\\textrm{parent}", "\\textrm{.}", "\\textrm{right}", "\\textrm{:}")
+        l8 = TextMobject("         \\textrm{if}", " \\textrm{current}", "\\textrm{ != }", "\\textrm{parent}", "\\textrm{.}", "\\textrm{right}", "\\textrm{:}")
         for i,color in zip(l8, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE]):
             i.set_color(color)
         code.add(l8)
 
-        l9 = TextMobject("              \\textrm{break}")
+        l9 = TextMobject("            \\textrm{break}")
         for i,color in zip(l9, [YELLOW_B]):
             i.set_color(color)
         code.add(l9)
 
-        l10 = TextMobject("           \\textrm{current}", "\\textrm{ =}", " \\textrm{parent}")
+        l10 = TextMobject("         \\textrm{current}", "\\textrm{ =}", " \\textrm{parent}")
         for i,color in zip(l10, [BLUE, WHITE, BLUE]):
             i.set_color(color)
         code.add(l10)
 
-        l11 = TextMobject("           \\textrm{parent}", "\\textrm{ =}", " \\textrm{parent}", "\\textrm{.}", "\\textrm{parent}")
+        l11 = TextMobject("         \\textrm{parent}", "\\textrm{ =}", " \\textrm{parent}", "\\textrm{.}", "\\textrm{parent}")
         for i,color in zip(l11, [BLUE, WHITE, BLUE, WHITE, PURPLE_C]):
             i.set_color(color)
         code.add(l11)
 
-        l12 = TextMobject("        \\textrm{return}", "\\textrm{ parent}")
+        l12 = TextMobject("      \\textrm{return}", "\\textrm{ parent}")
         for i,color in zip(l12, [YELLOW_B, BLUE]):
             i.set_color(color)
         code.add(l12)
@@ -1270,9 +1270,18 @@ class Tree:
                     ReplacementTransform(rect, new_rect)
                 )
                 rect = new_rect
+                scene.wait(0.6)
+
+                answer = TextMobject(smallest.key_object.get_tex_string())
+                answer.set_color(ORANGE)
+                answer.next_to(searched, RIGHT, buff=0.25)
+                scene.play(TransformFromCopy(smallest.key_object, answer))
 
                 scene.wait(1)
                 scene.play(FadeOut(new_rect))
+                self.reset_colors(scene, True)
+                scene.play(FadeOut(searched), FadeOut(answer))
+
 
             else:  # case 2: the node hasn't a right child
 
@@ -1295,7 +1304,7 @@ class Tree:
                 scene.play(Write(c_pointer))
                 scene.wait(0.5)
 
-                new_rect = SurroundingRectangle(l6, buff=0.06, color=PURPLE_E)
+                new_rect = SurroundingRectangle(l6, buff=0.06, color=PURPLE_C)
                 scene.play(ReplacementTransform(rect, new_rect))
                 rect = new_rect
                 scene.wait(0.6)
@@ -1304,7 +1313,7 @@ class Tree:
                 p_pointer = TextMobject("\^")
                 p_pointer.rotate(PI)
                 p_pointer.move_to([parent.node_object.get_x(), parent.node_object.get_y() + 0.5, 0])
-                p_pointer.set_color(PURPLE_C)
+                p_pointer.set_color(PURPLE_B)
                 p_pointer.scale(2)
                 scene.play(Write(p_pointer))
                 scene.wait(0.5)
@@ -1339,7 +1348,7 @@ class Tree:
                     scene.wait(0.6)
 
 
-                    new_rect = SurroundingRectangle(l11, buff=0.06, color=PURPLE_E) 
+                    new_rect = SurroundingRectangle(l11, buff=0.06, color=PURPLE_C) 
                     scene.play(ReplacementTransform(rect, new_rect))
                     rect = new_rect
                     scene.play(ReplacementTransform(rect, new_rect))
@@ -1370,21 +1379,26 @@ class Tree:
                     parent.node_object.set_color, ORANGE,
                     parent.key_object.set_color, WHITE
                 )
+                scene.wait(0.6)
+
+                answer = TextMobject(parent.key_object.get_tex_string())
+                answer.set_color(ORANGE)
+                answer.next_to(searched, RIGHT, buff=0.25)
+                scene.play(TransformFromCopy(parent.key_object, answer))
 
                 scene.wait(1)
                 scene.play(FadeOut(new_rect), FadeOut(c_pointer), FadeOut(p_pointer))
-
-
-            scene.play(FadeOut(searched))
-            self.reset_colors(scene, True)
+                self.reset_colors(scene, True)
+                scene.play(FadeOut(searched), FadeOut(answer))
+                
 
         all_nodes_circle = VGroup()
         all_nodes_key = VGroup()
         all_edges = VGroup()
         self.get_all_subtree(all_nodes_circle, all_nodes_key, all_edges, self.root)
-        all = VGroup(*all_nodes_circle, *all_nodes_key, *all_edges)
+        all_tree = VGroup(*all_nodes_circle, *all_nodes_key, *all_edges)
 
-        scene.play(FadeOut(line), FadeOut(code), all.shift, [0, 0.5, 0])
+        scene.play(FadeOut(line), FadeOut(code), all_tree.shift, [0, 0.5, 0])
         scene.wait(2)
 
         # case 1
@@ -1625,7 +1639,7 @@ class InOrderSuccessor(Scene):
         self.wait(1)
 
 
-        tree = Tree(3.1, 2)
+        tree = Tree(3, 2)
         tree.insert(self, False, 9, 10, 11, 16, 14, 13, 15, 2, 1, 6, 4, 8, 7)
         tree.reset_colors(self)
         self.wait(1)
@@ -1633,7 +1647,7 @@ class InOrderSuccessor(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.inorder_successor(self, 11, 8, 5)
+        tree.inorder_successor(self, 11, 8, 4)
 
         self.wait(2)
 
