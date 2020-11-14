@@ -1448,7 +1448,7 @@ class Tree:
             FadeIn(case_box2),
         )
 
-    ######################
+
     def inorder_predecessor(self, scene, *keys):
 
         # title
@@ -1995,7 +1995,7 @@ class InOrderSuccessor(Scene):
 
         tree.inorder_successor(self, 11, 8, 4)
 
-        self.wait(2)
+        self.wait(3)
 
 class InOrderPredecessor(Scene):
 
@@ -2031,9 +2031,9 @@ class InOrderPredecessor(Scene):
         tree.sketch_tree(self)
         self.wait(1)
 
-        tree.inorder_predecessor(self, 10, 3, 14)
+        tree.inorder_predecessor(self, 10, 3, 18)
 
-        self.wait(2)
+        self.wait(3)
 
     
 class PreOrderScene(Scene):
