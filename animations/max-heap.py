@@ -7,6 +7,9 @@ class Node:
         self.key = key
         self.index = index
 
+        self.left_edge = None
+        self.right_edge = None
+
         self.node_obj = Circle()
         self.node_obj.move_to([x, y, 0])
         self.node_obj.scale(scaling_factor)
@@ -60,6 +63,11 @@ class MaxHeap:
                 edge = Arrow([node_parent.node_obj.get_x(), node_parent.node_obj.get_y(), 0],
                              [node.node_obj.get_x(), node.node_obj.get_y(), 0])
                 edge.scale(0.93)
+                if self.left(node_parent.index) == i:
+                    node_parent.left_edge = edge
+                else:
+                    node_parent.right_edge = edge
+
                 self.edges.add(edge)
 
             self.arr.append(node)
@@ -82,6 +90,16 @@ class MaxHeap:
         self.arr[j].key_obj.set_x(child_x)
         self.arr[j].key_obj.set_y(child_y)
 
+        i_left = self.arr[i].left_edge
+        i_right = self.arr[i].right_edge
+
+        self.arr[i].left_edge = self.arr[j].left_edge
+        self.arr[i].right_edge = self.arr[j].right_edge
+
+        self.arr[j].left_edge = i_left
+        self.arr[j].right_edge = i_right
+
+
     def parent(self, index):
         return (index - 1) // 2
 
@@ -92,7 +110,7 @@ class MaxHeap:
             return None
 
     def right(self, index):
-        if 2 * index + 1 < self.size:
+        if 2 * index + 2 < self.size:
             return 2 * index + 2
         else:
             return None
@@ -123,6 +141,10 @@ class MaxHeap:
                          [node.node_obj.get_x(), node.node_obj.get_y(), 0])
             edge.scale(0.93)
             self.edges.add(edge)
+            if self.left(node_parent.index) == i:
+                    node_parent.left_edge = edge
+            else:
+                node_parent.right_edge = edge
 
 
         self.arr.append(node)
@@ -140,22 +162,32 @@ class MaxHeap:
                 parent_index = self.parent(child_index)
 
     def pop(self):
-        node = self.arr[0]
-        self.arr[0] = self.arr[self.size - 1]
-        self.size = self.size - 1
-        self.height = math.floor(math.log2(self.size))
-        self.heapify(0)
-        return node
+        return self.delete(0)
 
     def delete(self, index):
-        node = self.arr[index]
-        self.arr[index] = self.arr[self.size - 1]
+        
+        node_parent = self.parent(self.size - 1)
+        if self.left(node_parent) == self.size - 1:
+            self.edges.remove(self.arr[node_parent].left_edge)
+            self.arr[node_parent].left_edge = None
+        else:
+            self.edges.remove(self.arr[node_parent].right_edge)
+            self.arr[node_parent].right_edge = None
+
+        self.swap_nodes(index, self.size - 1)
+        node = self.arr[self.size - 1]
+        self.nodes.remove(node)
+
         self.size = self.size - 1
-        self.height = math.floor(math.log2(self.size))
+        if self.size != 0:
+            self.height = math.floor(math.log2(self.size))
+        else:
+            self.height = 0
         self.heapify(index)
         return node
 
     def heapify(self, index):
+
         left = self.left(index)
         right = self.right(index)
 
@@ -186,8 +218,10 @@ class MaxHeap:
 
         for i in range(size):
             node = self.pop()
-            self.arr[size - i - 1] = node
+            # self.arr[size - i - 1] = node
             res_arr.append(node.key)
+        
+        return res_arr
 
     def print_heap(self):
         for i in range(self.size):
@@ -201,21 +235,33 @@ class MaxHeap:
         )
         scene.play(*[GrowArrow(e) for e in self.edges], run_time=1.5)
 
+    # def add_heap(self, scene):
+    #     scene.add()
+    #     scene.add(
+    #         *[Write(node.node_obj) for node in self.nodes],
+    #         *[Write(node.key_obj) for node in self.nodes],
+    #         *[GrowArrow(e) for e in self.edges]
+    #     )
+
+    def clear_heap(self, scene):
+        scene.remove(
+            *[node.node_obj for node in self.nodes],
+            *[node.key_obj for node in self.nodes],
+            *[e for e in self.edges]
+        )
+
 
 class Intro(Scene):
 
     def construct(self):
         # arr = [4, 7, -1, 2, 0, 3, 5]
         # arr = [3, 5, 0, 8, 5, -1, -2, 10, 1]
-        max_heap = MaxHeap([], 2.5, 2)
         arr = [10, 8, 0, 5, 5, -1, -2, 3, 1, 2, 4, -3, -1, -4, -6]
+        # arr = [-4, 3, 0, 1, 2, -1, -2, -6, -3, -1]
+        max_heap = MaxHeap(arr, 2.5, 2)
         # max_heap.build()
-        for key in arr:
-            max_heap.insert(key)
-        # max_heap.insert(9)
-        # max_heap.insert(10)
-        max_heap.insert(12)
         max_heap.sketch_heap(self)
-        max_heap.print_heap()
+        max_heap.delete(0)
+        # print(max_heap.heap_sort())
 
         self.wait(2)
