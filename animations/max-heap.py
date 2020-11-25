@@ -3,7 +3,7 @@ import math
 
 
 class Node:
-    def __init__(self, index, key, x, y, scaling_factor=0.3, node_color=RED):
+    def __init__(self, index, key, x, y, scaling_factor=0.3, node_color=TEAL_E):
         self.key = key
         self.index = index
 
@@ -99,7 +99,6 @@ class MaxHeap:
         self.arr[j].left_edge = i_left
         self.arr[j].right_edge = i_right
 
-
     def parent(self, index):
         return (index - 1) // 2
 
@@ -142,10 +141,9 @@ class MaxHeap:
             edge.scale(0.93)
             self.edges.add(edge)
             if self.left(node_parent.index) == i:
-                    node_parent.left_edge = edge
+                node_parent.left_edge = edge
             else:
                 node_parent.right_edge = edge
-
 
         self.arr.append(node)
 
@@ -165,7 +163,7 @@ class MaxHeap:
         return self.delete(0)
 
     def delete(self, index):
-        
+
         node_parent = self.parent(self.size - 1)
         if self.left(node_parent) == self.size - 1:
             self.edges.remove(self.arr[node_parent].left_edge)
@@ -220,7 +218,7 @@ class MaxHeap:
             node = self.pop()
             # self.arr[size - i - 1] = node
             res_arr.append(node.key)
-        
+
         return res_arr
 
     def print_heap(self):
@@ -254,14 +252,180 @@ class MaxHeap:
 class Intro(Scene):
 
     def construct(self):
-        # arr = [4, 7, -1, 2, 0, 3, 5]
-        # arr = [3, 5, 0, 8, 5, -1, -2, 10, 1]
-        arr = [10, 8, 0, 5, 5, -1, -2, 3, 1, 2, 4, -3, -1, -4, -6]
-        # arr = [-4, 3, 0, 1, 2, -1, -2, -6, -3, -1]
-        max_heap = MaxHeap(arr, 2.5, 2)
-        # max_heap.build()
-        max_heap.sketch_heap(self)
-        max_heap.delete(0)
-        # print(max_heap.heap_sort())
 
-        self.wait(2)
+        # part 1: heap invariant
+
+        # title
+        title = TextMobject("Binary Max Heap:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        self.play(Write(title))
+
+        arr = [4, 7, -1, 2, 0, 3, 5, 1]
+        # arr = [3, 5, 0, 8, 5, -1, -2, 10, 1]
+        # arr = [10, 8, 0, 5, 5, -1, -2, 3, 1, 2, 4, -3, -1, -4, -6]
+        # arr = [-4, 3, 0, 1, 2, -1, -2, -6, -3, -1]
+        max_heap = MaxHeap(arr, 3.8, 3, hspace=3, node_color=TEAL_E)
+        max_heap.build()
+        max_heap.sketch_heap(self)
+
+        # part 1: definition
+        def_1 = TextMobject("A Binary Max Heap is a data structure")
+        def_2 = TextMobject("which follows an", " invariant/rule:")
+        def_3 = TextMobject("\"Each node must be greater than")
+        def_4 = TextMobject("or equal to its children.\"")
+        def_1.set_color(GOLD_B)
+        def_2[0].set_color(GOLD_B)
+        def_2[1].set_color(RED)
+        def_3.set_color(GOLD_B)
+        def_4.set_color(GOLD_B)
+        def_1.scale(0.85)
+        def_2.scale(0.85)
+        def_3.scale(0.85)
+        def_4.scale(0.85)
+        def_1.to_edge(LEFT, 0.5)
+        def_2.to_edge(LEFT, 0.5)
+        def_3.to_edge(LEFT, 0.5)
+        def_4.to_edge(LEFT, 0.5)
+        def_1.shift([0, 1.7, 0])
+        def_2.shift([0, 1.25, 0])
+        def_3.shift([0, 0.6, 0])
+        def_4.shift([0, 0.15, 0])
+        self.play(Write(def_1))
+        self.play(Write(def_2))
+        self.play(Write(def_3))
+        self.play(Write(def_4))
+        self.wait(0.5)
+
+        self.play(FadeOut(def_1), FadeOut(def_2), FadeOut(def_3), FadeOut(def_4), run_time=1.5)
+
+        # part 2: implementation
+        def_1 = TextMobject("A Binary Max Heap can be implemented")
+        def_2 = TextMobject("using a simple array.")
+        def_3 = TextMobject("We traverse through the heap, line by")
+        def_4 = TextMobject("line and store the values in the array.")
+        def_1.set_color(GOLD_B)
+        def_2.set_color(GOLD_B)
+        def_3.set_color(GOLD_B)
+        def_4.set_color(GOLD_B)
+        def_1.scale(0.85)
+        def_2.scale(0.85)
+        def_3.scale(0.85)
+        def_4.scale(0.85)
+        def_1.to_edge(LEFT, 0.5)
+        def_2.to_edge(LEFT, 0.5)
+        def_3.to_edge(LEFT, 0.5)
+        def_4.to_edge(LEFT, 0.5)
+        def_1.shift([0, 1.7, 0])
+        def_2.shift([0, 1.25, 0])
+        def_3.shift([0, 0.6, 0])
+        def_4.shift([0, 0.15, 0])
+        self.play(Write(def_1))
+        self.play(Write(def_2))
+        self.play(Write(def_3))
+        self.play(Write(def_4))
+        self.wait(0.5)
+
+        # result array
+        heap_arr = Polygon([-3.5, -2.3, 0], [4.5, -2.3, 0], [4.5, -1.3, 0], [-3.5, -1.3, 0])
+        heap_arr.set_color(WHITE)
+        self.play(Write(heap_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 8):
+            line = Line([-3.5 + i, -1.3, 0], [-3.5 + i, -2.3, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{values}")
+        res_text.move_to([-4.5, -1.8, 0])
+        self.play(Write(res_text))
+
+        rect = SurroundingRectangle(max_heap.arr[0].node_obj, buff=0.06, color=YELLOW)
+
+        values = VMobject()
+
+        for i, node in enumerate(max_heap.arr):
+            if i != 0:
+                new_rect = SurroundingRectangle(node.node_obj, buff=0.06, color=YELLOW)
+                self.play(Transform(rect, new_rect))
+            else:
+                self.play(Write(rect))
+            self.wait(1)
+            val = TextMobject(str(node.key))
+            val.set_color(PURPLE)
+            val.move_to([-3 + i, -1.8, 0])
+            self.play(TransformFromCopy(node.key_obj, val))
+            values.add(val)
+
+        self.play(FadeOut(def_1), FadeOut(def_2), FadeOut(def_3), FadeOut(def_4))
+
+        # part 3: pointers
+        def_1 = TextMobject("parent(i): (i - 1) / 2")
+        def_2 = TextMobject("left(i): 2 * i + 1")
+        def_3 = TextMobject("right(i): 2 * i + 2")
+        def_1.set_color(GOLD_B)
+        def_2.set_color(GOLD_B)
+        def_3.set_color(GOLD_B)
+        def_1.scale(0.85)
+        def_2.scale(0.85)
+        def_3.scale(0.85)
+        def_1.to_edge(LEFT, 0.5)
+        def_2.to_edge(LEFT, 0.5)
+        def_3.to_edge(LEFT, 0.5)
+        def_1.shift([0, 1.7, 0])
+        def_2.shift([0, 1.25, 0])
+        def_3.shift([0, 0.6, 0])
+        self.play(Write(def_1))
+        self.play(Write(def_2))
+        self.play(Write(def_3))
+        self.wait(0.5)
+
+        res_text = TextMobject("\\textrm{indices}")
+        res_text.move_to([-4.5, -2.8, 0])
+        self.play(Write(res_text))
+
+        for i, value in enumerate(values):
+            val = TextMobject(str(i))
+            val.set_color(RED)
+            val.move_to([-3 + i, -2.8, 0])
+            self.play(TransformFromCopy(value, val), run_time=0.3)
+
+        self.wait(0.5)
+
+        index = 0
+
+        arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
+                      [values[index].get_x(), values[index].get_y() - 1.1, 0])
+        arrow.set_color(ORANGE)
+        self.play(Write(arrow))
+        self.wait(1)
+
+        pointer = TextMobject("\^")
+        pointer.rotate(PI)
+        pointer.move_to([max_heap.arr[index].node_obj.get_x(), max_heap.arr[index].node_obj.get_y() + 0.5, 0])
+        pointer.set_color(ORANGE)
+        pointer.scale(2)
+        self.play(Write(pointer))
+        self.wait(1)
+
+        for i in range(3):
+            if max_heap.left(index) is not None:
+                new_arrow = Arrow([values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 2.2, 0],
+                                  [values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 1.1, 0])
+                new_arrow.set_color(ORANGE)
+                self.wait(1)
+
+                new_pointer = TextMobject("\^")
+                new_pointer.rotate(PI)
+                new_pointer.move_to([max_heap.arr[max_heap.left(index)].node_obj.get_x(),
+                                     max_heap.arr[max_heap.left(index)].node_obj.get_y() + 0.5, 0])
+                new_pointer.set_color(ORANGE)
+                new_pointer.scale(2)
+                self.play(Transform(pointer, new_pointer), Transform(arrow, new_arrow))
+                self.wait(1)
+
+                index = max_heap.left(index)
+
+        self.play(FadeOut(def_1), FadeOut(def_2), FadeOut(def_3))
