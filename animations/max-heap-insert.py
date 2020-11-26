@@ -215,7 +215,7 @@ class MaxHeap:
 
         for i, node in enumerate(self.arr):
             val = TextMobject(str(node.key))
-            val.set_color(PURPLE)
+            val.set_color(TEAL_E)
             val.scale(0.7)
             val.move_to([-4.2 + 0.7 * i, -2.95, 0])
             values.add(val)
@@ -249,7 +249,7 @@ class MaxHeap:
                 scene.wait(0.5)
 
                 val = TextMobject(str(node.key))
-                val.set_color(PURPLE)
+                val.set_color(TEAL_E)
                 val.scale(0.7)
                 val.move_to([-4.2 + 0.7 * len(values), -2.95, 0])
                 scene.play(Write(val))
@@ -291,7 +291,7 @@ class MaxHeap:
                 scene.wait(0.5)
 
                 val = TextMobject(str(node.key))
-                val.set_color(PURPLE)
+                val.set_color(TEAL_E)
                 val.scale(0.7)
                 val.move_to([-4.2 + 0.7 * len(values), -2.95, 0])
                 scene.play(Write(val))
@@ -401,7 +401,7 @@ class MaxHeap:
 
                     scene.wait(0.7)
 
-                    scene.play(values[child_index].set_color, PURPLE, values[parent_index].set_color, PURPLE)
+                    scene.play(values[child_index].set_color, TEAL_E, values[parent_index].set_color, TEAL_E)
 
                     rect = new_rect
                     new_rect = SurroundingRectangle(l8, buff=0.04, color=GREEN)
@@ -655,7 +655,7 @@ class Intro(Scene):
                 self.play(Write(rect))
             self.wait(0.4)
             val = TextMobject(str(node.key))
-            val.set_color(PURPLE)
+            val.set_color(TEAL_E)
             val.move_to([-3 + i, -1.8, 0])
             self.play(TransformFromCopy(node.key_obj, val))
             values.add(val)

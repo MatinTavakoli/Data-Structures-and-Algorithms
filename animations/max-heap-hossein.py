@@ -25,6 +25,7 @@ class Node:
         self.index_obj.scale(0.7)
         self.index_obj.shift([-0.5, 0, 0])
 
+
 class MaxHeap:
 
     def __init__(self, arr, x, y, hspace=4, vspace=-1, scaling_factor=0.3, node_color=RED):
@@ -80,10 +81,7 @@ class MaxHeap:
 
             self.arr.append(node)
 
-<<<<<<< HEAD:animations/max-heap.py
-    def swap_nodes(self, i, j, scene):
-=======
-    def swap_nodes(self, i, j, scene=None, show_sketch=False, extra_anims=[]):
+    def swap_nodes(self, i, j, scene=None, show_sketch=False):
 
         i_x = self.arr[i].node_obj.get_x()
         i_y = self.arr[i].node_obj.get_y()
@@ -92,7 +90,7 @@ class MaxHeap:
 
         # swapping the nodes positions
         if not show_sketch:
-            
+
             # the not-visual way
             self.arr[i].node_obj.set_x(j_x)
             self.arr[i].node_obj.set_y(j_y)
@@ -103,19 +101,16 @@ class MaxHeap:
             self.arr[j].node_obj.set_y(i_y)
             self.arr[j].key_obj.set_x(i_x)
             self.arr[j].key_obj.set_y(i_y)
-            
-        else: 
-            
+
+        else:
+
             # the visual way
             scene.play(
                 self.arr[i].node_obj.move_to, [j_x, j_y, 0],
                 self.arr[i].key_obj.move_to, [j_x, j_y, 0],
                 self.arr[j].node_obj.move_to, [i_x, i_y, 0],
                 self.arr[j].key_obj.move_to, [i_x, i_y, 0],
-                *extra_anims
             )
-
->>>>>>> 27c6d8049a4f12eadf50127648896b8ff46720f9:animations/max-heap-hossein.py
 
         # swapping the edges between the 2 nodes (not visual)
         i_left = self.arr[i].left_edge
@@ -417,10 +412,9 @@ class MaxHeap:
                         values[parent_index].move_to,
                         [values[child_index].get_x(), values[child_index].get_y(), 0])
 
-
-                    #just dirty code:)
+                    # just dirty code:)
                     new_values = VGroup()
-                    for i,val in enumerate(values):
+                    for i, val in enumerate(values):
                         if i == child_index:
                             new_values.add(values[parent_index])
                         elif i == parent_index:
@@ -428,10 +422,6 @@ class MaxHeap:
                         else:
                             new_values.add(values[i])
                     values = new_values
-
-                    # tmp = values[child_index]
-                    # values.set(values[parent_index])
-                    # values[parent_index].set(tmp)
 
                     scene.wait(0.7)
 
@@ -496,15 +486,10 @@ class MaxHeap:
         self.heapify(index, scene)
         return node
 
-<<<<<<< HEAD:animations/max-heap.py
-    def heapify(self, index, scene):
-=======
     def heapify(self, scene, index, code, prev_rect=None):
->>>>>>> 27c6d8049a4f12eadf50127648896b8ff46720f9:animations/max-heap-hossein.py
 
-        root = self.arr[index]
         left = self.left(index)
-        right = self.right(index)     
+        right = self.right(index)
 
         rect = SurroundingRectangle(code[0], buff=0.06, color=RED)
         if prev_rect is None:
@@ -530,6 +515,9 @@ class MaxHeap:
         else:
             big = index
 
+        if self.arr[big].key <= self.arr[index].key:
+            big = index
+
         big_pointer = TextMobject("\^")
         big_pointer.rotate(PI)
         big_pointer.move_to([self.arr[big].node_obj.get_x(), self.arr[big].node_obj.get_y() + 0.5, 0])
@@ -544,38 +532,26 @@ class MaxHeap:
         scene.wait(0.7)
 
         if self.arr[big].key > self.arr[index].key:
-<<<<<<< HEAD:animations/max-heap.py
-            self.swap_nodes(big, index, scene)
-            self.heapify(big, scene)
-=======
-           
+
             new_rect = SurroundingRectangle(code[4], buff=0.06, color=WHITE)
             scene.play(ReplacementTransform(rect, new_rect))
             rect = new_rect
             scene.wait(0.5)
 
-            extra_anims = [
-                big_pointer.shift,
-                [
-                    -self.arr[big].node_obj.get_x() + root.node_obj.get_x(),
-                    -self.arr[big].node_obj.get_y() + root.node_obj.get_y(),
-                    0
-                ],
-            ]
-
-            self.swap_nodes(big, index, scene, True, extra_anims)
+            self.swap_nodes(big, index, scene, True)
             scene.wait(0.5)
 
-            scene.play(FadeOut(big_pointer))
             scene.wait(0.3)
-               
+
             new_rect = SurroundingRectangle(code[5], buff=0.06, color=WHITE)
             scene.play(ReplacementTransform(rect, new_rect))
             rect = new_rect
             scene.wait(0.5)
 
+            scene.play(FadeOut(big_pointer))
+
             self.heapify(scene, big, code, rect)
-        
+
         else:
             new_rect = SurroundingRectangle(code[6], buff=0.06, color=WHITE)
             scene.play(ReplacementTransform(rect, new_rect))
@@ -587,10 +563,6 @@ class MaxHeap:
                 self.arr[index].node_obj.set_color, TEAL_E
             )
             scene.wait(0.5)
-
-            
-
->>>>>>> 27c6d8049a4f12eadf50127648896b8ff46720f9:animations/max-heap-hossein.py
 
     def build(self, scene):
         for i in range(self.size // 2 - 1, -1, -1):
@@ -653,6 +625,27 @@ class MaxHeap:
 class Intro(Scene):
 
     def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Introduction")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
 
         # part 1: heap invariant
 
@@ -869,7 +862,7 @@ class Intro(Scene):
 
         for i, index in enumerate(indices):
             self.play(TransformFromCopy(index, max_heap.arr[i].index_obj), run_time=0.3)
-        
+
         self.wait(1.2)
 
         question = TextMobject("Let's look at the node with index '", "1", "'.")
@@ -1020,53 +1013,16 @@ class Intro(Scene):
             *[b for b in unblur_list],
         )
 
-<<<<<<< HEAD:animations/max-heap.py
         self.wait(2)
 
-        # draw arrow and ^ pointers
-        # index = 0
 
-        # arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
-        #               [values[index].get_x(), values[index].get_y() - 1.1, 0])
-        # arrow.set_color(ORANGE)
-        # self.play(Write(arrow))
-        # self.wait(1)
-
-        # pointer = TextMobject("\^")
-        # pointer.rotate(PI)
-        # pointer.move_to([max_heap.arr[index].node_obj.get_x(), max_heap.arr[index].node_obj.get_y() + 0.5, 0])
-        # pointer.set_color(ORANGE)
-        # pointer.scale(2)
-        # self.play(Write(pointer))
-        # self.wait(1)
-
-        # for i in range(3):
-        #     if max_heap.left(index) is not None:
-        #         new_arrow = Arrow([values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 2.2, 0],
-        #                           [values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 1.1, 0])
-        #         new_arrow.set_color(ORANGE)
-        #         self.wait(1)
-
-        #         new_pointer = TextMobject("\^")
-        #         new_pointer.rotate(PI)
-        #         new_pointer.move_to([max_heap.arr[max_heap.left(index)].node_obj.get_x(),
-        #                              max_heap.arr[max_heap.left(index)].node_obj.get_y() + 0.5, 0])
-        #         new_pointer.set_color(ORANGE)
-        #         new_pointer.scale(2)
-        #         self.play(Transform(pointer, new_pointer), Transform(arrow, new_arrow))
-        #         self.wait(1)
-
-        #         index = max_heap.left(index)
-
-        # self.play(FadeOut(def_3), FadeOut(def_4), FadeOut(def_5), FadeOut(formulas_rect))
-
-
-class Insert(Scene):
+class Heapify(Scene):
 
     def construct(self):
+
         # Introduction
         title_l1 = TextMobject("Binary Max Heap")
-        title_l2 = TextMobject("Insert")
+        title_l2 = TextMobject("Heapify")
         title_l1.scale(1.8)
         title_l2.scale(1.3)
         title_l1.shift([0, 0.5, 0])
@@ -1084,73 +1040,6 @@ class Insert(Scene):
         self.wait(2)
         self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
         self.wait(1.5)
-
-        # arr = [-4, 5, 0, 1, 2, -1, -2, -6, -3, -1]
-        arr = [5, 2, 0, 1, -1, -1, -2, -6, -3, -4]
-        max_heap = MaxHeap(arr, 3.8, 1.7, hspace=3, node_color=TEAL_E)
-        max_heap.sketch_heap(self)
-        max_heap.insert(6, self, 4, 6, -3)
-        self.wait(1)
-=======
-        params.add(param, param2)
-
-        self.wait(1)
-
-        self.play(
-            ReplacementTransform(params[0], def_3[1]),
-            ReplacementTransform(params[1], def_3[3]),
-            ReplacementTransform(params[2], def_4[1]),
-            ReplacementTransform(params[3], def_4[3]),
-            ReplacementTransform(params[4], def_5[1]),
-            ReplacementTransform(params[5], def_5[3]),
-            FadeOut(question)
-        )
-        max_heap.blur_heap(self, 1)
-        self.wait(1)
-
-        self.play(
-            formulas.shift, [-1.6, -1, 0],
-            formulas.scale, 0.9,
-            FadeOut(formulas_rect)
-        )
-
-        rev_1 = TextMobject("Binary Max Heap is a data structure which is")
-        rev_2 = TextMobject("implemented with an array, and follows a rule:")
-        rev_3 = TextMobject("\"Each node must be greater than or equal")
-        rev_4 = TextMobject(" to its children.\"")
-
-        rev_1.set_color(GOLD_B)
-        rev_2.set_color(GOLD_B)
-        rev_3.set_color(MAROON_D)
-        rev_4.set_color(MAROON_D)
-
-        rev_1.scale(0.75)
-        rev_2.scale(0.75)
-        rev_3.scale(0.75)
-        rev_4.scale(0.75)
-
-        rev_1.to_edge(LEFT, 0.5)
-        rev_2.to_edge(LEFT, 0.5)
-        rev_3.to_edge(LEFT, 0.5)
-        rev_4.to_edge(LEFT, 0.65)
-
-        rev_1.shift([0, 1.9, 0])
-        rev_2.shift([0, 1.45, 0])
-        rev_3.shift([0, 0.95, 0])
-        rev_4.shift([0, 0.55, 0])
-
-        self.play(
-            FadeIn(rev_1),
-            FadeIn(rev_2),
-            FadeIn(rev_3),
-            FadeIn(rev_4),
-        )
-
-        self.wait(2)
-
-class Heapify(Scene):
-
-    def construct(self):
 
         # title
         title = TextMobject("Max Heapify:")
@@ -1187,14 +1076,14 @@ class Heapify(Scene):
         self.wait(1)
 
         # drawing the tree
-        arr = [2, 5, 6, 1, 4, 3, -1]
+        arr = [4, 5, 6, 1, 4, 3, -1]
         max_heap = MaxHeap(arr, 3.8, 1, hspace=3, node_color=TEAL_E)
         max_heap.arr[0].node_obj.set_color(RED)
         max_heap.sketch_heap(self)
         self.wait(0.7)
 
         # left triangle
-        left_root = [max_heap.x -1.5, max_heap.y - 0.38, 0]
+        left_root = [max_heap.x - 1.5, max_heap.y - 0.38, 0]
         left_tri = Polygon(
             left_root,
             [left_root[0] - 1.47, left_root[1] - 2, 0],
@@ -1235,7 +1124,7 @@ class Heapify(Scene):
         # drawing the code line
         line = Line([-6.1, 1.45, 0], [-6.1, -2.2, 0])
         self.play(
-            FadeOutAndShiftDown(ask, 2*DOWN),
+            FadeOutAndShiftDown(ask, 2 * DOWN),
             FadeInFromDown(line)
         )
 
@@ -1256,14 +1145,14 @@ class Heapify(Scene):
         code.add(l2)
 
         l3 = TextMobject(
-            "      root", ", ",  "left", "(", "root", "), ", "right", "(", "root", "))"
+            "      root", ", ", "left", "(", "root", "), ", "right", "(", "root", "))"
         )
         for i, color in zip(l3, [BLUE, WHITE, PURPLE_C, WHITE, BLUE, WHITE, PURPLE_C, WHITE, BLUE, WHITE, WHITE]):
             i.set_color(color)
         code.add(l3)
 
         l4 = TextMobject(
-            "   if ", "index\\_max ",  "!= ", "root", ":"
+            "   if ", "index\\_max ", "!= ", "root", ":"
         )
         for i, color in zip(l4, [YELLOW_B, BLUE, WHITE, BLUE]):
             i.set_color(color)
@@ -1312,7 +1201,6 @@ class Heapify(Scene):
         max_heap.clear_heap(self)
         self.wait(0.5)
 
-
         # another example
         another = TextMobject("Let's look at another exmaple.")
         another.set_color(GOLD_B)
@@ -1335,4 +1223,3 @@ class Heapify(Scene):
         max_heap.heapify(self, 0, code)
 
         self.wait(3)
->>>>>>> 27c6d8049a4f12eadf50127648896b8ff46720f9:animations/max-heap-hossein.py
