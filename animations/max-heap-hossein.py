@@ -81,7 +81,7 @@ class MaxHeap:
 
             self.arr.append(node)
 
-    def swap_nodes(self, i, j, scene=None, show_sketch=False, extra_anims=[]):
+    def swap_nodes(self, i, j, scene=None, show_sketch=False):
 
         i_x = self.arr[i].node_obj.get_x()
         i_y = self.arr[i].node_obj.get_y()
@@ -110,7 +110,6 @@ class MaxHeap:
                 self.arr[i].key_obj.move_to, [j_x, j_y, 0],
                 self.arr[j].node_obj.move_to, [i_x, i_y, 0],
                 self.arr[j].key_obj.move_to, [i_x, i_y, 0],
-                *extra_anims
             )
 
 
@@ -216,7 +215,6 @@ class MaxHeap:
 
     def heapify(self, scene, index, code, prev_rect=None):
 
-        root = self.arr[index]
         left = self.left(index)
         right = self.right(index)     
 
@@ -244,6 +242,9 @@ class MaxHeap:
         else:
             big = index
 
+        if self.arr[big].key <= self.arr[index].key:
+            big = index
+
         big_pointer = TextMobject("\^")
         big_pointer.rotate(PI)
         big_pointer.move_to([self.arr[big].node_obj.get_x(), self.arr[big].node_obj.get_y() + 0.5, 0])
@@ -257,32 +258,24 @@ class MaxHeap:
         rect = new_rect
         scene.wait(0.7)
 
-        if self.arr[big].key > self.arr[index].key:
+        if index != big:
            
             new_rect = SurroundingRectangle(code[4], buff=0.06, color=WHITE)
             scene.play(ReplacementTransform(rect, new_rect))
             rect = new_rect
             scene.wait(0.5)
 
-            extra_anims = [
-                big_pointer.shift,
-                [
-                    -self.arr[big].node_obj.get_x() + root.node_obj.get_x(),
-                    -self.arr[big].node_obj.get_y() + root.node_obj.get_y(),
-                    0
-                ],
-            ]
-
-            self.swap_nodes(big, index, scene, True, extra_anims)
+            self.swap_nodes(big, index, scene, True)
             scene.wait(0.5)
 
-            scene.play(FadeOut(big_pointer))
             scene.wait(0.3)
                
             new_rect = SurroundingRectangle(code[5], buff=0.06, color=WHITE)
             scene.play(ReplacementTransform(rect, new_rect))
             rect = new_rect
             scene.wait(0.5)
+
+            scene.play(FadeOut(big_pointer))
 
             self.heapify(scene, big, code, rect)
         
@@ -297,9 +290,6 @@ class MaxHeap:
                 self.arr[index].node_obj.set_color, TEAL_E
             )
             scene.wait(0.5)
-
-            
-
 
     def build(self):
         for i in range(self.size // 2 - 1, -1, -1):
@@ -362,6 +352,27 @@ class MaxHeap:
 class Intro(Scene):
 
     def construct(self):
+
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Introduction")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
 
         # part 1: heap invariant
 
@@ -789,6 +800,27 @@ class Heapify(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Heapify")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
         # title
         title = TextMobject("Max Heapify:")
         title.to_edge(LEFT, buff=0.8)
@@ -824,7 +856,7 @@ class Heapify(Scene):
         self.wait(1)
 
         # drawing the tree
-        arr = [2, 5, 6, 1, 4, 3, -1]
+        arr = [4, 5, 6, 1, 4, 3, -1]
         max_heap = MaxHeap(arr, 3.8, 1, hspace=3, node_color=TEAL_E)
         max_heap.arr[0].node_obj.set_color(RED)
         max_heap.sketch_heap(self)
