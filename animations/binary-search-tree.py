@@ -1792,7 +1792,6 @@ class Tree:
             FadeIn(case_box1),
             FadeIn(case_box2),
         )
-    ######################
 
 
     def sketch_tree(self, scene):
