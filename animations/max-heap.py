@@ -14,8 +14,17 @@ class Node:
         self.node_obj.move_to([x, y, 0])
         self.node_obj.scale(scaling_factor)
         self.node_obj.set_color(node_color)
+
         self.key_obj = TextMobject(str(key))
         self.key_obj.move_to([x, y, 0])
+
+        # TODO this shit must be set and updated in heap operations
+        self.index_obj = TextMobject(str(index))
+        self.index_obj.set_color(RED)
+        self.index_obj.move_to([x, y, 0])
+        self.index_obj.scale(0.7)
+        self.index_obj.shift([-0.5, 0, 0])
+        
 
 
 class MaxHeap:
@@ -56,8 +65,9 @@ class MaxHeap:
                     delta_x *= -1
 
                 delta_y = self.vspace
-
+                node = None
                 node = Node(i, key, node_parent.node_obj.get_x() + delta_x, node_parent.node_obj.get_y() + delta_y)
+                
                 self.nodes.add(node)
 
                 edge = Arrow([node_parent.node_obj.get_x(), node_parent.node_obj.get_y(), 0],
@@ -248,6 +258,28 @@ class MaxHeap:
             *[e for e in self.edges]
         )
 
+    def blur_heap(self, scene, *skip_list):
+        blur_list = []
+        for node in self.nodes:
+            if node not in skip_list:
+                blur_list.append(node.node_obj.set_opacity)
+                blur_list.append(0.4)
+                blur_list.append(node.node_obj.set_fill)
+                blur_list.append(RED)
+                blur_list.append(0)
+                blur_list.append(node.key_obj.set_opacity)
+                blur_list.append(0.4)
+                blur_list.append(node.index_obj.set_opacity)
+                blur_list.append(0.4)
+        for edge in self.edges:
+            if edge not in skip_list:
+                blur_list.append(edge.set_opacity)
+                blur_list.append(0.4)
+
+        scene.play(
+            *[b for b in blur_list],
+        )	
+
 
 class Intro(Scene):
 
@@ -262,12 +294,13 @@ class Intro(Scene):
         title.scale(1.2)
         self.play(Write(title))
 
-        arr = [4, 7, -1, 2, 0, 3, 5, 1]
+        # arr = [4, 7, -1, 2, 0, 3, 5, 1]
+        arr = [7, 4, 5, 2, 0, 3, -1, 1]
         # arr = [3, 5, 0, 8, 5, -1, -2, 10, 1]
         # arr = [10, 8, 0, 5, 5, -1, -2, 3, 1, 2, 4, -3, -1, -4, -6]
         # arr = [-4, 3, 0, 1, 2, -1, -2, -6, -3, -1]
         max_heap = MaxHeap(arr, 3.8, 3, hspace=3, node_color=TEAL_E)
-        max_heap.build()
+        # max_heap.build()
         max_heap.sketch_heap(self)
 
         # part 1: definition
@@ -367,9 +400,9 @@ class Intro(Scene):
         def_1 = TextMobject("and children?", " Suppose a node is in index", " i")
         def_21 = TextMobject("of the array.", " Then we can access its parent")
         def_22 = TextMobject("and children using the following formulas:")
-        def_3 = TextMobject("left(i): 2 * i + 1")
-        def_4 = TextMobject("right(i): 2 * i + 2")
-        def_5 = TextMobject("parent(i): (i - 1) / 2")
+        def_3 = TextMobject("left(", "i", ") = 2 * ", "i", " + 1")
+        def_4 = TextMobject("right(", "i", ") =  2 * ", "i", " + 2")
+        def_5 = TextMobject("parent(", "i", ") = [(", "i", " - 1) / 2]")
 
         def_0.set_color(GOLD_B)
         def_1[0].set_color(GOLD_B)
@@ -422,7 +455,7 @@ class Intro(Scene):
 
         # fade instructions. draw rectangle
         self.play(FadeOut(def_0), FadeOut(def_1), FadeOut(def_21), FadeOut(def_22))
-        self.play(def_3.shift, [0, 1.95, 0], def_4.shift, [0, 1.95, 0], def_5.shift, [0, 1.95, 0], run_time=1.5)
+        self.play(def_3.shift, [0, 1, 0], def_4.shift, [0, 1, 0], def_5.shift, [0, 1, 0], run_time=1.5)
 
         formulas = VGroup()
         formulas.add(def_3)
@@ -436,47 +469,197 @@ class Intro(Scene):
         res_text.move_to([-4.5, -2.8, 0])
         self.play(Write(res_text))
 
+        indices = VGroup()
         for i, value in enumerate(values):
             val = TextMobject(str(i))
+            indices.add(val)
             val.set_color(RED)
             val.move_to([-3 + i, -2.8, 0])
             self.play(TransformFromCopy(value, val), run_time=0.3)
 
         self.wait(0.5)
 
+        for i, index in enumerate(indices):
+            self.play(TransformFromCopy(index, max_heap.arr[i].index_obj), run_time=0.3)
+
+        question = TextMobject("Let's look at index '", "1", "'")
+        question.set_color(BLUE)
+        question.scale(0.75)
+        question.to_edge(LEFT, 0.5)
+        question.shift([0, 2, 0])
+        self.play(Write(question))
+        self.wait(1)
+
+        max_heap.blur_heap(self, max_heap.arr[1])
+        self.wait(1)
+
+        # LEFT
+        param = TextMobject("1")
+        param.set_color(BLUE)
+        param.scale(0.75)
+        param.move_to([def_3[1].get_x(), def_3[1].get_y(), 0])
+
+        self.play(
+            FadeOut(def_3[1]),
+            TransformFromCopy(question[1], param)
+        )
+        self.wait(0.5)
+
+        param2 = TextMobject("1")
+        param2.set_color(BLUE)
+        param2.scale(0.75)
+        param2.move_to([def_3[3].get_x(), def_3[3].get_y(), 0])
+
+        self.play(
+            FadeOut(def_3[3]),
+            TransformFromCopy(param, param2)
+        )
+        self.wait(1)
+
+        left_node = max_heap.arr[3]
+        unblur_list = []
+        unblur_list.append(left_node.node_obj.set_opacity)
+        unblur_list.append(1)
+        unblur_list.append(left_node.node_obj.set_fill)
+        unblur_list.append(RED)
+        unblur_list.append(0)
+        unblur_list.append(left_node.key_obj.set_opacity)
+        unblur_list.append(1)
+        unblur_list.append(left_node.index_obj.set_opacity)
+        unblur_list.append(1)
+
+        left_edge = max_heap.arr[1].left_edge
+        unblur_list.append(left_edge.set_opacity)
+        unblur_list.append(1)
+
+        self.play(
+            *[b for b in unblur_list],
+        )
+
+        self.wait(1)
+
+        # RIGHT
+        param = TextMobject("1")
+        param.set_color(BLUE)
+        param.scale(0.75)
+        param.move_to([def_4[1].get_x(), def_4[1].get_y(), 0])
+
+        self.play(
+            FadeOut(def_4[1]),
+            TransformFromCopy(question[1], param)
+        )
+        self.wait(0.5)
+
+        param2 = TextMobject("1")
+        param2.set_color(BLUE)
+        param2.scale(0.75)
+        param2.move_to([def_4[3].get_x(), def_4[3].get_y(), 0])
+
+        self.play(
+            FadeOut(def_4[3]),
+            TransformFromCopy(param, param2)
+        )
+        self.wait(1)
+
+        right_node = max_heap.arr[4]
+        unblur_list = []
+        unblur_list.append(right_node.node_obj.set_opacity)
+        unblur_list.append(1)
+        unblur_list.append(right_node.node_obj.set_fill)
+        unblur_list.append(RED)
+        unblur_list.append(0)
+        unblur_list.append(right_node.key_obj.set_opacity)
+        unblur_list.append(1)
+        unblur_list.append(right_node.index_obj.set_opacity)
+        unblur_list.append(1)
+
+        right_edge = max_heap.arr[1].right_edge
+        unblur_list.append(right_edge.set_opacity)
+        unblur_list.append(1)
+
+        self.play(
+            *[b for b in unblur_list],
+        )
+
+        # PARENT
+        param = TextMobject("1")
+        param.set_color(BLUE)
+        param.scale(0.75)
+        param.move_to([def_5[1].get_x(), def_5[1].get_y(), 0])
+
+        self.play(
+            FadeOut(def_5[1]),
+            TransformFromCopy(question[1], param)
+        )
+        self.wait(0.5)
+
+        param2 = TextMobject("1")
+        param2.set_color(BLUE)
+        param2.scale(0.75)
+        param2.move_to([def_5[3].get_x(), def_5[3].get_y(), 0])
+
+        self.play(
+            FadeOut(def_5[3]),
+            TransformFromCopy(param, param2)
+        )
+        self.wait(1)
+
+        parent_node = max_heap.arr[0]
+        unblur_list = []
+        unblur_list.append(parent_node.node_obj.set_opacity)
+        unblur_list.append(1)
+        unblur_list.append(parent_node.node_obj.set_fill)
+        unblur_list.append(RED)
+        unblur_list.append(0)
+        unblur_list.append(parent_node.key_obj.set_opacity)
+        unblur_list.append(1)
+        unblur_list.append(parent_node.index_obj.set_opacity)
+        unblur_list.append(1)
+
+        parent_edge = max_heap.arr[0].left_edge
+        unblur_list.append(parent_edge.set_opacity)
+        unblur_list.append(1)
+
+        self.play(
+            *[b for b in unblur_list],
+        )
+
+
+        self.wait(2)
+
         #draw arrow and ^ pointers
-        index = 0
+        # index = 0
 
-        arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
-                      [values[index].get_x(), values[index].get_y() - 1.1, 0])
-        arrow.set_color(ORANGE)
-        self.play(Write(arrow))
-        self.wait(1)
+        # arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
+        #               [values[index].get_x(), values[index].get_y() - 1.1, 0])
+        # arrow.set_color(ORANGE)
+        # self.play(Write(arrow))
+        # self.wait(1)
 
-        pointer = TextMobject("\^")
-        pointer.rotate(PI)
-        pointer.move_to([max_heap.arr[index].node_obj.get_x(), max_heap.arr[index].node_obj.get_y() + 0.5, 0])
-        pointer.set_color(ORANGE)
-        pointer.scale(2)
-        self.play(Write(pointer))
-        self.wait(1)
+        # pointer = TextMobject("\^")
+        # pointer.rotate(PI)
+        # pointer.move_to([max_heap.arr[index].node_obj.get_x(), max_heap.arr[index].node_obj.get_y() + 0.5, 0])
+        # pointer.set_color(ORANGE)
+        # pointer.scale(2)
+        # self.play(Write(pointer))
+        # self.wait(1)
 
-        for i in range(3):
-            if max_heap.left(index) is not None:
-                new_arrow = Arrow([values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 2.2, 0],
-                                  [values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 1.1, 0])
-                new_arrow.set_color(ORANGE)
-                self.wait(1)
+        # for i in range(3):
+        #     if max_heap.left(index) is not None:
+        #         new_arrow = Arrow([values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 2.2, 0],
+        #                           [values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 1.1, 0])
+        #         new_arrow.set_color(ORANGE)
+        #         self.wait(1)
 
-                new_pointer = TextMobject("\^")
-                new_pointer.rotate(PI)
-                new_pointer.move_to([max_heap.arr[max_heap.left(index)].node_obj.get_x(),
-                                     max_heap.arr[max_heap.left(index)].node_obj.get_y() + 0.5, 0])
-                new_pointer.set_color(ORANGE)
-                new_pointer.scale(2)
-                self.play(Transform(pointer, new_pointer), Transform(arrow, new_arrow))
-                self.wait(1)
+        #         new_pointer = TextMobject("\^")
+        #         new_pointer.rotate(PI)
+        #         new_pointer.move_to([max_heap.arr[max_heap.left(index)].node_obj.get_x(),
+        #                              max_heap.arr[max_heap.left(index)].node_obj.get_y() + 0.5, 0])
+        #         new_pointer.set_color(ORANGE)
+        #         new_pointer.scale(2)
+        #         self.play(Transform(pointer, new_pointer), Transform(arrow, new_arrow))
+        #         self.wait(1)
 
-                index = max_heap.left(index)
+        #         index = max_heap.left(index)
 
-        self.play(FadeOut(def_3), FadeOut(def_4), FadeOut(def_5), FadeOut(formulas_rect))
+        # self.play(FadeOut(def_3), FadeOut(def_4), FadeOut(def_5), FadeOut(formulas_rect))
