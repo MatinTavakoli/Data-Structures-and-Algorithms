@@ -24,7 +24,6 @@ class Node:
         self.index_obj.move_to([x, y, 0])
         self.index_obj.scale(0.7)
         self.index_obj.shift([-0.5, 0, 0])
-        
 
 
 class MaxHeap:
@@ -67,7 +66,7 @@ class MaxHeap:
                 delta_y = self.vspace
                 node = None
                 node = Node(i, key, node_parent.node_obj.get_x() + delta_x, node_parent.node_obj.get_y() + delta_y)
-                
+
                 self.nodes.add(node)
 
                 edge = Arrow([node_parent.node_obj.get_x(), node_parent.node_obj.get_y(), 0],
@@ -82,24 +81,9 @@ class MaxHeap:
 
             self.arr.append(node)
 
-    def swap_nodes(self, i, j):
-        tmp = self.arr[i]
-        self.arr[i] = self.arr[j]
-        self.arr[j] = tmp
+    def swap_nodes(self, i, j, scene):
 
-        child_x = self.arr[i].node_obj.get_x()
-        child_y = self.arr[i].node_obj.get_y()
-
-        self.arr[i].node_obj.set_x(self.arr[j].node_obj.get_x())
-        self.arr[i].node_obj.set_y(self.arr[j].node_obj.get_y())
-        self.arr[i].key_obj.set_x(self.arr[j].key_obj.get_x())
-        self.arr[i].key_obj.set_y(self.arr[j].key_obj.get_y())
-
-        self.arr[j].node_obj.set_x(child_x)
-        self.arr[j].node_obj.set_y(child_y)
-        self.arr[j].key_obj.set_x(child_x)
-        self.arr[j].key_obj.set_y(child_y)
-
+        # swapping the edges between the 2 nodes (not visual)
         i_left = self.arr[i].left_edge
         i_right = self.arr[i].right_edge
 
@@ -108,6 +92,11 @@ class MaxHeap:
 
         self.arr[j].left_edge = i_left
         self.arr[j].right_edge = i_right
+
+        # swapping the nodes in array (not visual)
+        tmp = self.arr[i]
+        self.arr[i] = self.arr[j]
+        self.arr[j] = tmp
 
     def parent(self, index):
         return (index - 1) // 2
@@ -124,55 +113,334 @@ class MaxHeap:
         else:
             return None
 
-    def insert(self, key):
+    def insert(self, key, scene, *keys):
 
-        if self.size == 0:
-            node = Node(0, key, self.x, self.y)
-            self.nodes.add(node)
+        # title
+        title = TextMobject("Insert:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
 
-        else:
-            index = self.size
+        # drawing the code line
+        line = Line([-6.1, 2.2, 0], [-6.1, -2.15, 0])
 
-            node_height = math.floor(math.log2(index + 1))
-            delta_x = 0.5 ** node_height * self.hspace
-            node_parent = self.parent(index)
+        # drawing the code
+        code = VGroup()
+        l1 = TextMobject("\\textrm{def}", " \\textrm{insert}", "\\textrm{(}", "\\textrm{key}", "\\textrm{):}")
+        for i, color in zip(l1, [YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l1)
 
-            if 2 * node_parent + 1 == index:
-                delta_x *= -1
+        l2 = TextMobject("    \\textrm{arr}", "\\textrm{[}", "\\textrm{arr}", "\\textrm{.}", "\\textrm{size}",
+                         "\\textrm{] = }", "\\textrm{key}")
+        for i, color in zip(l2, [BLUE, WHITE, BLUE, WHITE, PURPLE_C, WHITE, BLUE]):
+            i.set_color(color)
+        code.add(l2)
 
-            delta_y = self.vspace
+        l3 = TextMobject("    \\textrm{c}", " \\textrm{= }", "\\textrm{arr}", "\\textrm{.}", "\\textrm{size}",
+                         "\\textrm{ \# child index}")
+        for i, color in zip(l3, [BLUE, WHITE, BLUE, WHITE, PURPLE_C, GREY]):
+            i.set_color(color)
+        code.add(l3)
 
-            node = Node(index, key, self.arr[node_parent].node_obj.get_x() + delta_x,
-                        self.arr[node_parent].node_obj.get_y() + delta_y)
-            self.nodes.add(node)
+        l4 = TextMobject("    \\textrm{arr}", "\\textrm{.}", "\\textrm{size}", "\\textrm{ =}", " \\textrm{arr}",
+                         "\\textrm{.}", "\\textrm{size}", "\\textrm{ + }", "\\textrm{1}")
+        for i, color in zip(l4, [BLUE, WHITE, PURPLE_C, WHITE, BLUE, WHITE, PURPLE_C, WHITE, WHITE]):
+            i.set_color(color)
+        code.add(l4)
 
-            edge = Arrow([self.arr[node_parent].node_obj.get_x(), self.arr[node_parent].node_obj.get_y(), 0],
-                         [node.node_obj.get_x(), node.node_obj.get_y(), 0])
-            edge.scale(0.93)
-            self.edges.add(edge)
-            if self.left(node_parent.index) == i:
-                node_parent.left_edge = edge
+        l5 = TextMobject("    \\textrm{p}", "\\textrm{ = }", "\\textrm{parent}", "\\textrm{(}", "\\textrm{c}",
+                         "\\textrm{)}", " \\textrm{\# parent index}")
+        for i, color in zip(l5, [BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, GREY]):
+            i.set_color(color)
+        code.add(l5)
+
+        l6 = TextMobject("    \\textrm{while}", " \\textrm{arr}", "\\textrm{[}", "\\textrm{c}", "\\textrm{] > }",
+                         "\\textrm{arr}", "\\textrm{[}",
+                         "\\textrm{p}",
+                         "\\textrm{]:}")
+        for i, color in zip(l6, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l6)
+
+        l7 = TextMobject("        \\textrm{swap}", "\\textrm{(}", "\\textrm{arr}", "\\textrm{[}", "\\textrm{c}",
+                         "\\textrm{], }",
+                         "\\textrm{arr}", "\\textrm{[}", "\\textrm{p}", "\\textrm{])}")
+        for i, color in zip(l7, [BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l7)
+
+        l8 = TextMobject("        \\textrm{c}", "\\textrm{ = }", "\\textrm{p}")
+        for i, color in zip(l8, [BLUE, WHITE, BLUE]):
+            i.set_color(color)
+        code.add(l8)
+
+        l9 = TextMobject("        \\textrm{p}", "\\textrm{ = }", "\\textrm{parent}", "\\textrm{(}", "\\textrm{c}",
+                         "\\textrm{)}")
+        for i, color in zip(l9, [BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l9)
+
+        for i, l in enumerate(code):
+            l.to_edge(LEFT, buff=0.7)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i + 0.65, 0])
+
+        code.scale(0.85)
+        code.shift([0, 1.6, 0])
+
+        scene.play(Write(title))
+        scene.play(FadeInFromDown(line))
+
+        for l in code:
+            scene.play(FadeInFrom(l, LEFT), run_time=0.5)
+        scene.wait(1)
+
+        # result array
+        heap_arr = Polygon([-4.55, -3.3, 0], [4.55, -3.3, 0], [4.55, -2.6, 0], [-4.55, -2.6, 0])
+        heap_arr.set_color(WHITE)
+        scene.play(Write(heap_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, 11):
+            line = Line([-4.55 + 0.7 * i, -2.6, 0], [-4.55 + 0.7 * i, -3.3, 0])
+            arr_lines.add(line)
+            scene.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{values}")
+        res_text.scale(0.7)
+        res_text.move_to([-5.25, -2.95, 0])
+        scene.play(Write(res_text))
+
+        values = VMobject()
+
+        for i, node in enumerate(self.arr):
+            val = TextMobject(str(node.key))
+            val.set_color(PURPLE)
+            val.scale(0.7)
+            val.move_to([-4.2 + 0.7 * i, -2.95, 0])
+            values.add(val)
+
+        scene.play(*[Write(value) for value in values])
+
+        for key in keys:
+
+            rect = SurroundingRectangle(l1, buff=0.04, color=WHITE)
+
+            # drawing the searched key
+            new_insert = TextMobject(f"Let's insert {key}.")
+            new_insert.shift([0, title.get_y(), 0])
+            new_insert.set_color(GREEN)
+            scene.play(Write(new_insert))
+            scene.wait(0.5)
+
+            scene.play(Write(rect))
+            scene.wait(0.7)
+
+            if self.size == 0:
+                new_rect = SurroundingRectangle(l2, buff=0.04, color=TEAL_E)
+                scene.play(ReplacementTransform(rect, new_rect))
+                scene.wait(0.7)
+
+                node = Node(0, key, self.x, self.y)
+                self.nodes.add(node)
+
+                scene.play(Write(node.node_obj))
+                scene.play(Write(node.key_obj))
+                scene.wait(0.5)
+
+                val = TextMobject(str(node.key))
+                val.set_color(PURPLE)
+                val.scale(0.7)
+                val.move_to([-4.2 + 0.7 * len(values), -2.95, 0])
+                scene.play(Write(val))
+                values.add(val)
+                scene.wait(0.7)
+
             else:
-                node_parent.right_edge = edge
+                new_rect = SurroundingRectangle(l2, buff=0.04, color=TEAL_E)
+                scene.play(ReplacementTransform(rect, new_rect))
+                scene.wait(0.7)
 
-        self.arr.append(node)
+                index = self.size
 
-        self.size = self.size + 1
-        self.height = math.floor(math.log2(self.size))
-        child_index = self.size - 1
-        if child_index != 0:
-            parent_index = self.parent(child_index)
-            while self.arr[child_index].key > self.arr[parent_index].key:
-                self.swap_nodes(parent_index, child_index)
-                child_index = parent_index
-                if child_index == 0:
-                    break
+                node_height = math.floor(math.log2(index + 1))
+                delta_x = 0.5 ** node_height * self.hspace
+                node_parent = self.parent(index)
+
+                if 2 * node_parent + 1 == index:
+                    delta_x *= -1
+
+                delta_y = self.vspace
+
+                node = Node(index, key, self.arr[node_parent].node_obj.get_x() + delta_x,
+                            self.arr[node_parent].node_obj.get_y() + delta_y)
+                self.nodes.add(node)
+
+                edge = Arrow([self.arr[node_parent].node_obj.get_x(), self.arr[node_parent].node_obj.get_y(), 0],
+                             [node.node_obj.get_x(), node.node_obj.get_y(), 0])
+                edge.scale(0.93)
+                self.edges.add(edge)
+                if self.left(node_parent) == index:
+                    self.arr[node_parent].left_edge = edge
+                else:
+                    self.arr[node_parent].right_edge = edge
+
+                scene.play(Write(node.node_obj))
+                scene.play(Write(node.key_obj))
+                scene.play(Write(edge))
+                scene.wait(0.5)
+
+                val = TextMobject(str(node.key))
+                val.set_color(PURPLE)
+                val.scale(0.7)
+                val.move_to([-4.2 + 0.7 * len(values), -2.95, 0])
+                scene.play(Write(val))
+                values.add(val)
+                scene.wait(0.7)
+
+            self.arr.append(node)
+
+            self.size = self.size + 1
+            self.height = math.floor(math.log2(self.size))
+
+            rect = new_rect
+            new_rect = SurroundingRectangle(l3, buff=0.04, color=WHITE)
+            scene.play(ReplacementTransform(rect, new_rect))
+            scene.wait(0.7)
+
+            child_pointer = TextMobject("\^")
+            child_pointer.rotate(PI)
+            child_pointer.move_to([node.node_obj.get_x(), node.node_obj.get_y() + 0.5, 0])
+            child_pointer.set_color(ORANGE)
+            child_pointer.scale(2)
+            scene.play(Write(child_pointer))
+
+            scene.wait(0.5)
+
+            rect = new_rect
+            new_rect = SurroundingRectangle(l4, buff=0.04, color=WHITE)
+            scene.play(ReplacementTransform(rect, new_rect))
+            scene.wait(0.7)
+
+            child_index = self.size - 1
+
+            line = Line([-4.55 + 0.7 * (len(arr_lines) + 1), -2.6, 0], [-4.55 + 0.7 * (len(arr_lines) + 1), -3.3, 0])
+            arr_lines.add(line)
+            scene.play(Write(line), rate_func=smooth, run_time=0.2)
+            scene.wait(0.7)
+
+            if child_index != 0:
+
+                rect = new_rect
+                new_rect = SurroundingRectangle(l5, buff=0.04, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                scene.wait(0.7)
+
                 parent_index = self.parent(child_index)
+
+                parent_pointer = TextMobject("\^")
+                parent_pointer.rotate(PI)
+                parent_pointer.move_to(
+                    [self.arr[parent_index].node_obj.get_x(), self.arr[parent_index].node_obj.get_y() + 0.5, 0])
+                parent_pointer.set_color(PURPLE_B)
+                parent_pointer.scale(2)
+                scene.play(Write(parent_pointer))
+
+                rect = new_rect
+                new_rect = SurroundingRectangle(l6, buff=0.04, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                scene.wait(0.7)
+
+                while self.arr[child_index].key > self.arr[parent_index].key:
+
+                    rect = new_rect
+                    new_rect = SurroundingRectangle(l7, buff=0.04, color=GREEN)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.7)
+
+                    self.swap_nodes(parent_index, child_index, scene)
+
+                    scene.play(values[child_index].set_color, RED, values[parent_index].set_color, RED)
+
+                    scene.wait(0.7)
+
+                    i, j = parent_index, child_index
+
+                    i_x = self.arr[i].node_obj.get_x()
+                    i_y = self.arr[i].node_obj.get_y()
+                    j_x = self.arr[j].node_obj.get_x()
+                    j_y = self.arr[j].node_obj.get_y()
+
+                    # swapping the nodes positions
+                    # the visual way
+                    scene.play(
+                        self.arr[i].node_obj.move_to, [j_x, j_y, 0],
+                        self.arr[i].key_obj.move_to, [j_x, j_y, 0],
+                        self.arr[j].node_obj.move_to, [i_x, i_y, 0],
+                        self.arr[j].key_obj.move_to, [i_x, i_y, 0],
+                        values[child_index].move_to,
+                        [values[parent_index].get_x(), values[parent_index].get_y(), 0],
+                        values[parent_index].move_to,
+                        [values[child_index].get_x(), values[child_index].get_y(), 0])
+
+
+                    #just dirty code:)
+                    new_values = VGroup()
+                    for i,val in enumerate(values):
+                        if i == child_index:
+                            new_values.add(values[parent_index])
+                        elif i == parent_index:
+                            new_values.add(values[child_index])
+                        else:
+                            new_values.add(values[i])
+                    values = new_values
+
+                    # tmp = values[child_index]
+                    # values.set(values[parent_index])
+                    # values[parent_index].set(tmp)
+
+                    scene.wait(0.7)
+
+                    scene.play(values[child_index].set_color, PURPLE, values[parent_index].set_color, PURPLE)
+
+                    rect = new_rect
+                    new_rect = SurroundingRectangle(l8, buff=0.04, color=GREEN)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.7)
+
+                    scene.play(child_pointer.move_to,
+                               [self.arr[parent_index].node_obj.get_x(),
+                                self.arr[parent_index].node_obj.get_y() + 0.5, 0])
+
+                    child_index = parent_index
+
+                    if child_index == 0:
+                        break
+
+                    rect = new_rect
+                    new_rect = SurroundingRectangle(l9, buff=0.04, color=GREEN)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.7)
+
+                    scene.play(parent_pointer.move_to,
+                               [self.arr[self.parent(child_index)].node_obj.get_x(),
+                                self.arr[self.parent(child_index)].node_obj.get_y() + 0.5, 0])
+
+                    parent_index = self.parent(child_index)
+
+                    rect = new_rect
+                    new_rect = SurroundingRectangle(l6, buff=0.04, color=WHITE)
+                    scene.play(ReplacementTransform(rect, new_rect))
+                    scene.wait(0.7)
+
+                scene.wait(0.7)
+                scene.play(FadeOut(rect), FadeOut(new_rect), FadeOut(child_pointer), FadeOut(parent_pointer),
+                           FadeOut(new_insert))
 
     def pop(self):
         return self.delete(0)
 
-    def delete(self, index):
+    def delete(self, index, scene):
 
         node_parent = self.parent(self.size - 1)
         if self.left(node_parent) == self.size - 1:
@@ -191,10 +459,10 @@ class MaxHeap:
             self.height = math.floor(math.log2(self.size))
         else:
             self.height = 0
-        self.heapify(index)
+        self.heapify(index, scene)
         return node
 
-    def heapify(self, index):
+    def heapify(self, index, scene):
 
         left = self.left(index)
         right = self.right(index)
@@ -213,12 +481,12 @@ class MaxHeap:
             return
 
         if self.arr[big].key > self.arr[index].key:
-            self.swap_nodes(big, index)
-            self.heapify(big)
+            self.swap_nodes(big, index, scene)
+            self.heapify(big, scene)
 
-    def build(self):
+    def build(self, scene):
         for i in range(self.size // 2 - 1, -1, -1):
-            self.heapify(i)
+            self.heapify(i, scene)
 
     def heap_sort(self):
         size = self.size
@@ -278,7 +546,7 @@ class MaxHeap:
 
         scene.play(
             *[b for b in blur_list],
-        )	
+        )
 
 
 class Intro(Scene):
@@ -624,10 +892,9 @@ class Intro(Scene):
             *[b for b in unblur_list],
         )
 
-
         self.wait(2)
 
-        #draw arrow and ^ pointers
+        # draw arrow and ^ pointers
         # index = 0
 
         # arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
@@ -663,3 +930,35 @@ class Intro(Scene):
         #         index = max_heap.left(index)
 
         # self.play(FadeOut(def_3), FadeOut(def_4), FadeOut(def_5), FadeOut(formulas_rect))
+
+
+class Insert(Scene):
+
+    def construct(self):
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Insert")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
+        # arr = [-4, 5, 0, 1, 2, -1, -2, -6, -3, -1]
+        arr = [5, 2, 0, 1, -1, -1, -2, -6, -3, -4]
+        max_heap = MaxHeap(arr, 3.8, 1.7, hspace=3, node_color=TEAL_E)
+        max_heap.sketch_heap(self)
+        max_heap.insert(6, self, 4, 6, -3)
+        self.wait(1)
