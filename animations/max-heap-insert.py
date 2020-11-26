@@ -163,10 +163,10 @@ class MaxHeap:
             i.set_color(color)
         code.add(l6)
 
-        l7 = TextMobject("        \\textrm{swap}", "\\textrm{(}", "\\textrm{arr}", "\\textrm{[}", "\\textrm{c}",
-                         "\\textrm{], }",
-                         "\\textrm{arr}", "\\textrm{[}", "\\textrm{p}", "\\textrm{])}")
-        for i, color in zip(l7, [BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
+        l7 = TextMobject("        \\textrm{swap}", "\\textrm{(}", "\\textrm{c}",
+                         "\\textrm{, }",
+                         "\\textrm{p}", "\\textrm{)}")
+        for i, color in zip(l7, [BLUE, WHITE, BLUE, WHITE, BLUE, WHITE]):
             i.set_color(color)
         code.add(l7)
 
@@ -206,9 +206,9 @@ class MaxHeap:
             arr_lines.add(line)
             scene.play(Write(line), rate_func=smooth, run_time=0.2)
 
-        res_text = TextMobject("\\textrm{values}")
+        res_text = TextMobject("\\textrm{arr}")
         res_text.scale(0.7)
-        res_text.move_to([-5.25, -2.95, 0])
+        res_text.move_to([-5, -2.95, 0])
         scene.play(Write(res_text))
 
         values = VMobject()
@@ -304,7 +304,7 @@ class MaxHeap:
             self.height = math.floor(math.log2(self.size))
 
             rect = new_rect
-            new_rect = SurroundingRectangle(l3, buff=0.04, color=WHITE)
+            new_rect = SurroundingRectangle(l3, buff=0.04, color=ORANGE)
             scene.play(ReplacementTransform(rect, new_rect))
             scene.wait(0.7)
 
@@ -332,7 +332,7 @@ class MaxHeap:
             if child_index != 0:
 
                 rect = new_rect
-                new_rect = SurroundingRectangle(l5, buff=0.04, color=WHITE)
+                new_rect = SurroundingRectangle(l5, buff=0.04, color=PURPLE)
                 scene.play(ReplacementTransform(rect, new_rect))
                 scene.wait(0.7)
 
@@ -354,7 +354,7 @@ class MaxHeap:
                 while self.arr[child_index].key > self.arr[parent_index].key:
 
                     rect = new_rect
-                    new_rect = SurroundingRectangle(l7, buff=0.04, color=GREEN)
+                    new_rect = SurroundingRectangle(l7, buff=0.04, color=RED)
                     scene.play(ReplacementTransform(rect, new_rect))
                     scene.wait(0.7)
 
@@ -383,10 +383,9 @@ class MaxHeap:
                         values[parent_index].move_to,
                         [values[child_index].get_x(), values[child_index].get_y(), 0])
 
-
-                    #just dirty code:)
+                    # just dirty code:)
                     new_values = VGroup()
-                    for i,val in enumerate(values):
+                    for i, val in enumerate(values):
                         if i == child_index:
                             new_values.add(values[parent_index])
                         elif i == parent_index:
@@ -404,7 +403,7 @@ class MaxHeap:
                     scene.play(values[child_index].set_color, TEAL_E, values[parent_index].set_color, TEAL_E)
 
                     rect = new_rect
-                    new_rect = SurroundingRectangle(l8, buff=0.04, color=GREEN)
+                    new_rect = SurroundingRectangle(l8, buff=0.04, color=ORANGE)
                     scene.play(ReplacementTransform(rect, new_rect))
                     scene.wait(0.7)
 
@@ -418,7 +417,7 @@ class MaxHeap:
                         break
 
                     rect = new_rect
-                    new_rect = SurroundingRectangle(l9, buff=0.04, color=GREEN)
+                    new_rect = SurroundingRectangle(l9, buff=0.04, color=PURPLE)
                     scene.play(ReplacementTransform(rect, new_rect))
                     scene.wait(0.7)
 
@@ -504,11 +503,12 @@ class MaxHeap:
             print(self.arr[i].key)
 
     def sketch_heap(self, scene):
-        scene.play(
-            *[Write(node.node_obj) for node in self.nodes],
-            *[Write(node.key_obj) for node in self.nodes],
-            run_time=1.5
-        )
+        for node in self.nodes:
+            scene.play(
+                Write(node.node_obj),
+                Write(node.key_obj),
+                run_time=0.3
+            )
         scene.play(*[GrowArrow(e) for e in self.edges], run_time=1.5)
 
     # def add_heap(self, scene):
@@ -961,4 +961,4 @@ class Insert(Scene):
         max_heap = MaxHeap(arr, 3.8, 1.7, hspace=3, node_color=TEAL_E)
         max_heap.sketch_heap(self)
         max_heap.insert(6, self, 4, 6, -3)
-        self.wait(1)
+        self.wait(3)

@@ -532,7 +532,11 @@ class MaxHeap:
         scene.wait(0.7)
 
         if self.arr[big].key > self.arr[index].key:
+<<<<<<< HEAD:animations/max-heap-hossein.py
 
+=======
+           
+>>>>>>> 032d945dffbab8b4eebea2c28b8556c03f636f0a:animations/max-heap-intro-heapify.py
             new_rect = SurroundingRectangle(code[4], buff=0.06, color=WHITE)
             scene.play(ReplacementTransform(rect, new_rect))
             rect = new_rect
@@ -657,26 +661,22 @@ class Intro(Scene):
         self.play(Write(title))
         self.wait(0.5)
 
-        # arr = [4, 7, -1, 2, 0, 3, 5, 1]
         arr = [7, 4, 5, 2, 0, 3, -1, 1]
-        # arr = [3, 5, 0, 8, 5, -1, -2, 10, 1]
-        # arr = [10, 8, 0, 5, 5, -1, -2, 3, 1, 2, 4, -3, -1, -4, -6]
-        # arr = [-4, 3, 0, 1, 2, -1, -2, -6, -3, -1]
         max_heap = MaxHeap(arr, 3.8, 2.2, hspace=3, node_color=TEAL_E)
-        # max_heap.build()
         max_heap.sketch_heap(self)
         self.wait(0.7)
 
         # part 1: definition
         def_1 = TextMobject("A Binary Max Heap is a data structure")
-        def_2 = TextMobject("which follows an", " invariant/rule:")
+        def_2 = TextMobject("which follows an", " invariant/rule", ":")
         def_3 = TextMobject("\"Each node must be greater than")
-        def_4 = TextMobject("or equal to its children.\"")
-        def_1.set_color(GOLD_B)
-        def_2[0].set_color(GOLD_B)
+        def_4 = TextMobject("  or equal to its children.\"")
+        def_1.set_color(BLUE)
+        def_2[0].set_color(BLUE)
         def_2[1].set_color(RED)
-        def_3.set_color(MAROON_D)
-        def_4.set_color(MAROON_D)
+        def_2[2].set_color(BLUE)
+        def_3.set_color(GREEN)
+        def_4.set_color(GREEN)
         def_1.scale(0.85)
         def_2.scale(0.85)
         def_3.scale(0.85)
@@ -684,7 +684,7 @@ class Intro(Scene):
         def_1.to_edge(LEFT, 0.5)
         def_2.to_edge(LEFT, 0.5)
         def_3.to_edge(LEFT, 0.5)
-        def_4.to_edge(LEFT, 0.5)
+        def_4.to_edge(LEFT, 0.65)
         def_1.shift([0, 1.7, 0])
         def_2.shift([0, 1.25, 0])
         def_3.shift([0, 0.6, 0])
@@ -703,10 +703,10 @@ class Intro(Scene):
         def_2 = TextMobject("using a simple array.")
         def_3 = TextMobject("We store the nodes, line by line,")
         def_4 = TextMobject("inside an array.")
-        def_1.set_color(GOLD_B)
-        def_2.set_color(GOLD_B)
-        def_3.set_color(GOLD_B)
-        def_4.set_color(GOLD_B)
+        def_1.set_color(BLUE)
+        def_2.set_color(BLUE)
+        def_3.set_color(BLUE)
+        def_4.set_color(BLUE)
         def_1.scale(0.85)
         def_2.scale(0.85)
         def_3.scale(0.85)
@@ -729,19 +729,19 @@ class Intro(Scene):
         # result array
         heap_arr = Polygon([-3.5, -2.3, 0], [4.5, -2.3, 0], [4.5, -1.3, 0], [-3.5, -1.3, 0])
         heap_arr.set_color(WHITE)
-        heap_arr.shift([0, -0.8, 0])
+        heap_arr.shift([0, -0.7, 0])
         self.play(Write(heap_arr))
 
         arr_lines = VGroup()
         for i in range(1, 8):
             line = Line([-3.5 + i, -1.3, 0], [-3.5 + i, -2.3, 0])
-            line.shift([0, -0.8, 0])
+            line.shift([0, -0.7, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
         res_text = TextMobject("\\textrm{arr}")
         res_text.move_to([-4.2, -1.8, 0])
-        res_text.shift([0, -0.8, 0])
+        res_text.shift([0, -0.7, 0])
         self.play(Write(res_text))
 
         self.wait(0.7)
@@ -753,7 +753,7 @@ class Intro(Scene):
             val.set_color(RED)
             val.scale(0.8)
             val.move_to([-3 + i, -2.8, 0])
-            val.shift([0, -0.65, 0])
+            val.shift([0, -0.5, 0])
             self.play(Write(val), run_time=0.2)
 
         self.wait(1)
@@ -765,14 +765,14 @@ class Intro(Scene):
         for i, node in enumerate(max_heap.arr):
             if i != 0:
                 new_rect = SurroundingRectangle(node.node_obj, buff=0.06, color=YELLOW)
-                self.play(Transform(rect, new_rect))
+                self.play(Transform(rect, new_rect), run_time = 0.6)
             else:
                 self.play(Write(rect))
-            self.wait(0.4)
+            self.wait(0.3)
             val = TextMobject(str(node.key))
             val.set_color(TEAL_E)
             val.move_to([-3 + i, -1.8, 0])
-            val.shift([0, -0.8, 0])
+            val.shift([0, -0.7, 0])
             self.play(TransformFromCopy(node.key_obj, val))
             values.add(val)
 
@@ -790,15 +790,21 @@ class Intro(Scene):
         def_4 = TextMobject("right(", "i", ") =  2 * ", "i", " + 2")
         def_5 = TextMobject("parent(", "i", ") = [(", "i", " - 1) / 2]")
 
-        def_0.set_color(GOLD_B)
-        def_1[0].set_color(GOLD_B)
-        def_1[1].set_color(GOLD)
-        def_1[2].set_color(MAROON_D)
-        def_21.set_color(GOLD_B)
-        def_22.set_color(GOLD_B)
-        def_3.set_color(MAROON_D)
-        def_4.set_color(MAROON_D)
-        def_5.set_color(MAROON_D)
+        def_0.set_color(BLUE)
+        def_1[0].set_color(BLUE)
+        def_1[1].set_color(BLUE)
+        def_1[2].set_color(GOLD_B)
+        def_21.set_color(BLUE)
+        def_22.set_color(BLUE)
+        def_3.set_color(GOLD_B)
+        def_3[1].set_color(BLUE)
+        def_3[3].set_color(BLUE)
+        def_4.set_color(GOLD_B)
+        def_4[1].set_color(BLUE)
+        def_4[3].set_color(BLUE)
+        def_5.set_color(GOLD_B)
+        def_5[1].set_color(BLUE)
+        def_5[3].set_color(BLUE)
 
         def_0.scale(0.75)
         def_1.scale(0.75)
@@ -812,17 +818,19 @@ class Intro(Scene):
         def_1.to_edge(LEFT, 0.5)
         def_21.to_edge(LEFT, 0.5)
         def_22.to_edge(LEFT, 0.5)
-        def_3.to_edge(LEFT, 2.2)
-        def_4.to_edge(LEFT, 2.2)
-        def_5.to_edge(LEFT, 2.2)
+        def_3.to_edge(LEFT, 1)
+        def_4.to_edge(LEFT, 1)
+        def_5.to_edge(LEFT, 1)
 
         def_0.shift([0, 1.7, 0])
         def_1.shift([0, 1.25, 0])
         def_21.shift([0, 0.8, 0])
         def_22.shift([0, 0.35, 0])
-        def_3.shift([0, -0.25, 0])
-        def_4.shift([0, -0.7, 0])
-        def_5.shift([0, -1.15, 0])
+        def_3.shift([0, -0.4, 0])
+        def_4.shift([0, -0.85, 0])
+        def_5.shift([0, -1.3, 0])
+
+        brace = Brace(VGroup(def_3, def_4, def_5), direction=LEFT)
 
         self.play(Write(def_0))
         self.play(Write(def_1[0]))
@@ -834,6 +842,7 @@ class Intro(Scene):
         self.play(Write(def_21[1]))
         self.play(Write(def_22))
         self.wait(0.6)
+        self.play(ShowCreation(brace))
         self.play(Write(def_3))
         self.play(Write(def_4))
         self.play(Write(def_5))
@@ -843,12 +852,14 @@ class Intro(Scene):
         # fade instructions. draw rectangle
         self.play(FadeOut(def_0), FadeOut(def_1), FadeOut(def_21), FadeOut(def_22))
         self.play(
-            def_3.shift, [0, 1, 0],
+            def_3.shift, [0.1, 1, 0],
             def_3.scale, 1.1,
-            def_4.shift, [0, 1, 0],
+            def_4.shift, [0.1, 1, 0],
             def_4.scale, 1.1,
-            def_5.shift, [0, 1, 0],
+            def_5.shift, [0.1, 1, 0],
             def_5.scale, 1.1,
+            brace.shift, [0, 1, 0],
+            brace.scale, 1.1,
             run_time=1.5
         )
 
@@ -856,8 +867,6 @@ class Intro(Scene):
         formulas.add(def_3)
         formulas.add(def_4)
         formulas.add(def_5)
-        formulas_rect = SurroundingRectangle(formulas, buff=0.16, color=ORANGE)
-        self.play(Write(formulas_rect))
         self.wait(0.7)
 
         for i, index in enumerate(indices):
@@ -1009,12 +1018,73 @@ class Intro(Scene):
         unblur_list.append(parent_edge.set_opacity)
         unblur_list.append(1)
 
+        params.add(param, param2)
+
         self.play(
             *[b for b in unblur_list],
         )
+<<<<<<< HEAD:animations/max-heap-hossein.py
 
         self.wait(2)
 
+=======
+        self.wait(1)
+
+        # final scene
+
+        self.play(
+            ReplacementTransform(params[0], def_3[1]),
+            ReplacementTransform(params[1], def_3[3]),
+            ReplacementTransform(params[2], def_4[1]),
+            ReplacementTransform(params[3], def_4[3]),
+            ReplacementTransform(params[4], def_5[1]),
+            ReplacementTransform(params[5], def_5[3]),
+            FadeOut(question)
+        )
+        max_heap.blur_heap(self, 1)
+        self.wait(1)
+
+        self.play(
+            formulas.shift, [0, -1, 0],
+            formulas.scale, 0.9,
+            brace.shift, [0, -1, 0],
+            brace.scale, 0.9,
+        )
+
+        rev_1 = TextMobject("Binary Max Heap is a data structure which is")
+        rev_2 = TextMobject("implemented with an array, and follows a rule:")
+        rev_3 = TextMobject("\"Each node must be greater than or equal")
+        rev_4 = TextMobject(" to its children.\"")
+
+        rev_1.set_color(BLUE)
+        rev_2.set_color(BLUE)
+        rev_3.set_color(GREEN)
+        rev_4.set_color(GREEN)
+
+        rev_1.scale(0.75)
+        rev_2.scale(0.75)
+        rev_3.scale(0.75)
+        rev_4.scale(0.75)
+
+        rev_1.to_edge(LEFT, 0.5)
+        rev_2.to_edge(LEFT, 0.5)
+        rev_3.to_edge(LEFT, 0.5)
+        rev_4.to_edge(LEFT, 0.65)
+
+        rev_1.shift([0, 1.9, 0])
+        rev_2.shift([0, 1.45, 0])
+        rev_3.shift([0, 0.95, 0])
+        rev_4.shift([0, 0.55, 0])
+
+        self.play(
+            FadeIn(rev_1),
+            FadeIn(rev_2),
+            FadeIn(rev_3),
+            FadeIn(rev_4),
+        )
+
+        self.wait(2)
+>>>>>>> 032d945dffbab8b4eebea2c28b8556c03f636f0a:animations/max-heap-intro-heapify.py
 
 class Heapify(Scene):
 
@@ -1050,13 +1120,13 @@ class Heapify(Scene):
         self.wait(0.5)
 
         # problem statement
-        prob_1 = TextMobject("Suppose we have a tree that the root's left and right")
+        prob_1 = TextMobject("Suppose we have a tree that its root's left and right")
         prob_2 = TextMobject("subtree are Max-Heaps, but the whole tree is not,")
         prob_3 = TextMobject("i.e. the root doesn't follow the rule.")
 
-        prob_1.set_color(GOLD_B)
-        prob_2.set_color(GOLD_B)
-        prob_3.set_color(GOLD_B)
+        prob_1.set_color(BLUE)
+        prob_2.set_color(BLUE)
+        prob_3.set_color(BLUE)
 
         prob_1.scale(0.75)
         prob_2.scale(0.75)
@@ -1106,7 +1176,7 @@ class Heapify(Scene):
         # asking
         ask = TextMobject("How can we make the whole tree a Max-Heap?")
         ask.scale(0.9)
-        ask.set_color(BLUE)
+        ask.set_color(GOLD_B)
         ask.shift([0, -2.6, 0])
         self.play(Write(ask))
         self.wait(1.5)
@@ -1203,7 +1273,7 @@ class Heapify(Scene):
 
         # another example
         another = TextMobject("Let's look at another exmaple.")
-        another.set_color(GOLD_B)
+        another.set_color(BLUE)
         another.scale(0.85)
         another.to_edge(LEFT, buff=1)
         another.shift([0, 2, 0])
@@ -1222,4 +1292,8 @@ class Heapify(Scene):
         # calling heapify
         max_heap.heapify(self, 0, code)
 
+<<<<<<< HEAD:animations/max-heap-hossein.py
         self.wait(3)
+=======
+        self.wait(3)
+>>>>>>> 032d945dffbab8b4eebea2c28b8556c03f636f0a:animations/max-heap-intro-heapify.py
