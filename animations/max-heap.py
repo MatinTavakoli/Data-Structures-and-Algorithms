@@ -278,8 +278,8 @@ class Intro(Scene):
         def_1.set_color(GOLD_B)
         def_2[0].set_color(GOLD_B)
         def_2[1].set_color(RED)
-        def_3.set_color(GOLD_B)
-        def_4.set_color(GOLD_B)
+        def_3.set_color(MAROON_D)
+        def_4.set_color(MAROON_D)
         def_1.scale(0.85)
         def_2.scale(0.85)
         def_3.scale(0.85)
@@ -304,7 +304,7 @@ class Intro(Scene):
         def_1 = TextMobject("A Binary Max Heap can be implemented")
         def_2 = TextMobject("using a simple array.")
         def_3 = TextMobject("We traverse through the heap, line by")
-        def_4 = TextMobject("line and store the values in the array.")
+        def_4 = TextMobject("line, and store the values in the array.")
         def_1.set_color(GOLD_B)
         def_2.set_color(GOLD_B)
         def_3.set_color(GOLD_B)
@@ -352,35 +352,85 @@ class Intro(Scene):
                 self.play(Transform(rect, new_rect))
             else:
                 self.play(Write(rect))
-            self.wait(1)
+            self.wait(0.4)
             val = TextMobject(str(node.key))
             val.set_color(PURPLE)
             val.move_to([-3 + i, -1.8, 0])
             self.play(TransformFromCopy(node.key_obj, val))
             values.add(val)
 
-        self.play(FadeOut(def_1), FadeOut(def_2), FadeOut(def_3), FadeOut(def_4))
+        self.play(FadeOut(def_1), FadeOut(def_2), FadeOut(def_3), FadeOut(def_4), FadeOut(rect))
 
         # part 3: pointers
-        def_1 = TextMobject("parent(i): (i - 1) / 2")
-        def_2 = TextMobject("left(i): 2 * i + 1")
-        def_3 = TextMobject("right(i): 2 * i + 2")
-        def_1.set_color(GOLD_B)
-        def_2.set_color(GOLD_B)
-        def_3.set_color(GOLD_B)
-        def_1.scale(0.85)
-        def_2.scale(0.85)
-        def_3.scale(0.85)
+
+        def_0 = TextMobject("But how can we find a node's parent")
+        def_1 = TextMobject("and children?", " Suppose a node is in index", " i")
+        def_21 = TextMobject("of the array.", " Then we can access its parent")
+        def_22 = TextMobject("and children using the following formulas:")
+        def_3 = TextMobject("left(i): 2 * i + 1")
+        def_4 = TextMobject("right(i): 2 * i + 2")
+        def_5 = TextMobject("parent(i): (i - 1) / 2")
+
+        def_0.set_color(GOLD_B)
+        def_1[0].set_color(GOLD_B)
+        def_1[1].set_color(GOLD)
+        def_1[2].set_color(MAROON_D)
+        def_21.set_color(GOLD_B)
+        def_22.set_color(GOLD_B)
+        def_3.set_color(MAROON_D)
+        def_4.set_color(MAROON_D)
+        def_5.set_color(MAROON_D)
+
+        def_0.scale(0.75)
+        def_1.scale(0.75)
+        def_21.scale(0.75)
+        def_22.scale(0.75)
+        def_3.scale(0.75)
+        def_4.scale(0.75)
+        def_5.scale(0.75)
+
+        def_0.to_edge(LEFT, 0.5)
         def_1.to_edge(LEFT, 0.5)
-        def_2.to_edge(LEFT, 0.5)
+        def_21.to_edge(LEFT, 0.5)
+        def_22.to_edge(LEFT, 0.5)
         def_3.to_edge(LEFT, 0.5)
-        def_1.shift([0, 1.7, 0])
-        def_2.shift([0, 1.25, 0])
-        def_3.shift([0, 0.6, 0])
-        self.play(Write(def_1))
-        self.play(Write(def_2))
+        def_4.to_edge(LEFT, 0.5)
+        def_5.to_edge(LEFT, 0.5)
+
+        def_0.shift([0, 2.2, 0])
+        def_1.shift([0, 1.75, 0])
+        def_21.shift([0, 1.3, 0])
+        def_22.shift([0, 0.85, 0])
+        def_3.shift([0, 0.25, 0])
+        def_4.shift([0, -0.2, 0])
+        def_5.shift([0, -0.65, 0])
+
+        self.play(Write(def_0))
+        self.play(Write(def_1[0]))
+        self.wait(1)
+        self.play(Write(def_1[1]))
+        self.play(Write(def_1[2]))
+        self.play(Write(def_21[0]))
+        self.wait(0.6)
+        self.play(Write(def_21[1]))
+        self.play(Write(def_22))
         self.play(Write(def_3))
+        self.play(Write(def_4))
+        self.play(Write(def_5))
+
         self.wait(0.5)
+
+        # fade instructions. draw rectangle
+        self.play(FadeOut(def_0), FadeOut(def_1), FadeOut(def_21), FadeOut(def_22))
+        self.play(def_3.shift, [0, 1.95, 0], def_4.shift, [0, 1.95, 0], def_5.shift, [0, 1.95, 0], run_time=1.5)
+
+        formulas = VGroup()
+        formulas.add(def_3)
+        formulas.add(def_4)
+        formulas.add(def_5)
+        formulas_rect = SurroundingRectangle(formulas, buff=0.16, color=ORANGE)
+        self.play(Write(formulas_rect))
+        self.wait(0.7)
 
         res_text = TextMobject("\\textrm{indices}")
         res_text.move_to([-4.5, -2.8, 0])
@@ -394,6 +444,7 @@ class Intro(Scene):
 
         self.wait(0.5)
 
+        #draw arrow and ^ pointers
         index = 0
 
         arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
@@ -428,4 +479,4 @@ class Intro(Scene):
 
                 index = max_heap.left(index)
 
-        self.play(FadeOut(def_1), FadeOut(def_2), FadeOut(def_3))
+        self.play(FadeOut(def_3), FadeOut(def_4), FadeOut(def_5), FadeOut(formulas_rect))
