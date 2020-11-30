@@ -1401,11 +1401,11 @@ class ExtractMax(Scene):
 
         # edge...
         edge = None
-        parent = max_heap.parent(len(max_heap.arr) - 1)
-        if max_heap.left(parent) == len(max_heap.arr) - 1:
+        parent = max_heap.parent(max_heap.size - 1)
+        if max_heap.left(parent) == max_heap.size - 1:
             edge = max_heap.arr[parent].left_edge
         else:
-            edge = max_heap.arr[parent].left_edge
+            edge = max_heap.arr[parent].right_edge
 
         self.wait(1)
         max_heap.extract_max(self)
@@ -1443,9 +1443,102 @@ class ExtractMax(Scene):
         self.play(Write(prob_11))
 
         # calling heapify
-
         self.play(max_heap.arr[0].node_obj.set_color, RED)
         self.wait(1)
         max_heap.heapify(self, 0, None, None, False)
+        self.wait(1)
 
+        prob_12 = TextMobject("And now we have a Max-Heap again!")
+        prob_12.set_color(BLUE)
+        prob_12.scale(0.8)
+        prob_12.to_edge(LEFT, 0.5)
+        prob_12.shift([0, 1.5, 0])
+        self.play(
+            FadeOutAndShift(prob_7, direction=[0, 0.5, 0]),
+            FadeOutAndShift(prob_8, direction=[0, 1, 0]),
+            FadeOutAndShift(prob_9, direction=[0, 1.5, 0]),
+            FadeOutAndShift(prob_10, direction=[0, 2, 0]),
+            FadeOutAndShift(prob_11, direction=[0, 2.5, 0]),
+            ReplacementTransform(prob_6, prob_12)
+        )
         self.wait(2)
+
+        # another example
+        self.play(FadeOut(prob_12))
+        self.wait(0.5)
+        prob_13 = TextMobject("Let's see another Extract Max.")
+        prob_13.set_color(BLUE)
+        prob_13.scale(0.8)
+        prob_13.to_edge(LEFT, 0.5)
+        prob_13.shift([0, 1.5, 0])
+        self.play(Write(prob_13))
+        self.wait(1)
+
+        self.play(max_heap.arr[0].node_obj.set_color, RED)
+        self.wait(0.5)
+        self.play(
+            max_heap.arr[0].node_obj.shift, [0, 1, 0],
+            max_heap.arr[0].key_obj.shift, [0, 1, 0]
+        )
+        self.wait(1)
+
+        self.play(
+            max_heap.arr[0].node_obj.set_opacity, 0,
+            max_heap.arr[0].key_obj.set_opacity, 0,
+        )
+
+        self.play(
+            max_heap.arr[0].node_obj.shift, [0, -1, 0],
+            max_heap.arr[0].key_obj.shift, [0, -1, 0]
+        )
+
+        # edge...
+        edge = None
+        parent = max_heap.parent(max_heap.size - 1)
+        if max_heap.left(parent) == max_heap.size - 1:
+            edge = max_heap.arr[parent].left_edge
+        else:
+            edge = max_heap.arr[parent].right_edge
+
+        max_heap.extract_max(self)
+
+        # removing the edge
+        self.play(FadeOut(edge))
+
+        # calling heapify
+        self.play(max_heap.arr[0].node_obj.set_color, RED)
+        self.wait(1)
+        max_heap.heapify(self, 0, None, None, False)
+        self.wait(2)
+
+
+        # summary
+        self.play(FadeOut(prob_13))
+        self.wait(1)
+        prob_14 = TextMobject("Steps:")
+        prob_15 = TextMobject("1. Extract the root node.")
+        prob_16 = TextMobject("2. Replace it with the last node.")
+        prob_17 = TextMobject("3. Call Heapify on the new root.")
+        prob_14.set_color(BLUE)
+        prob_15.set_color(BLUE)
+        prob_16.set_color(BLUE)
+        prob_17.set_color(BLUE)
+        prob_14.scale(0.8)
+        prob_15.scale(0.8)
+        prob_16.scale(0.8)
+        prob_17.scale(0.8)
+        prob_14.to_edge(LEFT, 0.5)
+        prob_15.to_edge(LEFT, 0.5)
+        prob_16.to_edge(LEFT, 0.5)
+        prob_17.to_edge(LEFT, 0.5)
+        prob_14.shift([0, 1.5, 0])
+        prob_15.shift([0, 1, 0])
+        prob_16.shift([0, 0.5, 0])
+        prob_17.shift([0, 0, 0])
+
+        self.play(Write(prob_14))
+        self.play(FadeInFrom(prob_15, [0, 0.5, 0]))
+        self.play(FadeInFrom(prob_16, [0, 0.5, 0]))
+        self.play(FadeInFrom(prob_17, [0, 0.5, 0]))
+
+        self.wait(3)
