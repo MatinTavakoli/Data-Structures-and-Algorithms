@@ -81,7 +81,36 @@ class MaxHeap:
 
             self.arr.append(node)
 
-    def swap_nodes(self, i, j, scene):
+    def swap_nodes(self, i, j, scene=None, show_sketch=False):
+
+        i_x = self.arr[i].node_obj.get_x()
+        i_y = self.arr[i].node_obj.get_y()
+        j_x = self.arr[j].node_obj.get_x()
+        j_y = self.arr[j].node_obj.get_y()
+
+        # swapping the nodes positions
+        if not show_sketch:
+
+            # the not-visual way
+            self.arr[i].node_obj.set_x(j_x)
+            self.arr[i].node_obj.set_y(j_y)
+            self.arr[i].key_obj.set_x(j_x)
+            self.arr[i].key_obj.set_y(j_y)
+
+            self.arr[j].node_obj.set_x(i_x)
+            self.arr[j].node_obj.set_y(i_y)
+            self.arr[j].key_obj.set_x(i_x)
+            self.arr[j].key_obj.set_y(i_y)
+
+        else:
+
+            # the visual way
+            scene.play(
+                self.arr[i].node_obj.move_to, [j_x, j_y, 0],
+                self.arr[i].key_obj.move_to, [j_x, j_y, 0],
+                self.arr[j].node_obj.move_to, [i_x, i_y, 0],
+                self.arr[j].key_obj.move_to, [i_x, i_y, 0],
+            )
 
         # swapping the edges between the 2 nodes (not visual)
         i_left = self.arr[i].left_edge
@@ -436,8 +465,8 @@ class MaxHeap:
                 scene.play(FadeOut(rect), FadeOut(new_rect), FadeOut(child_pointer), FadeOut(parent_pointer),
                            FadeOut(new_insert))
 
-    def pop(self):
-        return self.delete(0)
+    def extract_max(self, scene):
+        return self.delete(0, scene)
 
     def delete(self, index, scene):
 
@@ -449,8 +478,9 @@ class MaxHeap:
             self.edges.remove(self.arr[node_parent].right_edge)
             self.arr[node_parent].right_edge = None
 
-        self.swap_nodes(index, self.size - 1)
+        self.swap_nodes(index, self.size - 1, scene, True)
         node = self.arr[self.size - 1]
+        self.arr.remove(node)
         self.nodes.remove(node)
 
         self.size = self.size - 1
@@ -458,13 +488,30 @@ class MaxHeap:
             self.height = math.floor(math.log2(self.size))
         else:
             self.height = 0
-        self.heapify(index, scene)
+        # self.heapify(scene, index)
         return node
 
-    def heapify(self, index, scene):
+    def heapify(self, scene, index, code, prev_rect=None, show_rect=True):
 
         left = self.left(index)
         right = self.right(index)
+
+        rect = None
+        new_rect = None
+
+        if show_rect:
+            rect = SurroundingRectangle(code[0], buff=0.06, color=RED)
+            if prev_rect is None:
+                scene.play(Write(rect))
+            else:
+                scene.play(ReplacementTransform(prev_rect, rect))
+
+            scene.wait(1)
+
+            new_rect = SurroundingRectangle(VGroup(code[1], code[2]), buff=0.06, color=BLUE_C)
+            scene.play(ReplacementTransform(rect, new_rect))
+            rect = new_rect
+            scene.wait(0.5)
 
         big = None
         if right is not None:
@@ -472,16 +519,62 @@ class MaxHeap:
                 big = left
             else:
                 big = right
-
         elif right is None and left is not None:
             big = left
-
         else:
-            return
+            big = index
+
+        if self.arr[big].key <= self.arr[index].key:
+            big = index
+
+        big_pointer = TextMobject("\^")
+        big_pointer.rotate(PI)
+        big_pointer.move_to([self.arr[big].node_obj.get_x(), self.arr[big].node_obj.get_y() + 0.5, 0])
+        big_pointer.set_color(BLUE_C)
+        big_pointer.scale(2)
+        scene.play(Write(big_pointer))
+        scene.wait(0.5)
+
+        if show_rect:
+            new_rect = SurroundingRectangle(code[3], buff=0.06, color=WHITE)
+            scene.play(ReplacementTransform(rect, new_rect))
+            rect = new_rect
+            scene.wait(0.7)
 
         if self.arr[big].key > self.arr[index].key:
-            self.swap_nodes(big, index, scene)
-            self.heapify(big, scene)
+
+            if show_rect:
+                new_rect = SurroundingRectangle(code[4], buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.5)
+
+            self.swap_nodes(big, index, scene, True)
+            scene.wait(0.8)
+
+            if show_rect:
+                new_rect = SurroundingRectangle(code[5], buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(0.5)
+
+            scene.play(FadeOut(big_pointer))
+
+            self.heapify(scene, big, code, rect, show_rect)
+
+        else:
+            if show_rect:
+                new_rect = SurroundingRectangle(code[6], buff=0.06, color=WHITE)
+                scene.play(ReplacementTransform(rect, new_rect))
+                rect = new_rect
+                scene.wait(1.5)
+                scene.play(FadeOut(rect))
+
+            scene.play(
+                FadeOut(big_pointer),
+                self.arr[index].node_obj.set_color, TEAL_E
+            )
+            scene.wait(0.5)
 
     def build(self, scene):
         for i in range(self.size // 2 - 1, -1, -1):
@@ -894,43 +987,6 @@ class Intro(Scene):
 
         self.wait(2)
 
-        # draw arrow and ^ pointers
-        # index = 0
-
-        # arrow = Arrow([values[index].get_x(), values[index].get_y() - 2.2, 0],
-        #               [values[index].get_x(), values[index].get_y() - 1.1, 0])
-        # arrow.set_color(ORANGE)
-        # self.play(Write(arrow))
-        # self.wait(1)
-
-        # pointer = TextMobject("\^")
-        # pointer.rotate(PI)
-        # pointer.move_to([max_heap.arr[index].node_obj.get_x(), max_heap.arr[index].node_obj.get_y() + 0.5, 0])
-        # pointer.set_color(ORANGE)
-        # pointer.scale(2)
-        # self.play(Write(pointer))
-        # self.wait(1)
-
-        # for i in range(3):
-        #     if max_heap.left(index) is not None:
-        #         new_arrow = Arrow([values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 2.2, 0],
-        #                           [values[max_heap.left(index)].get_x(), values[max_heap.left(index)].get_y() - 1.1, 0])
-        #         new_arrow.set_color(ORANGE)
-        #         self.wait(1)
-
-        #         new_pointer = TextMobject("\^")
-        #         new_pointer.rotate(PI)
-        #         new_pointer.move_to([max_heap.arr[max_heap.left(index)].node_obj.get_x(),
-        #                              max_heap.arr[max_heap.left(index)].node_obj.get_y() + 0.5, 0])
-        #         new_pointer.set_color(ORANGE)
-        #         new_pointer.scale(2)
-        #         self.play(Transform(pointer, new_pointer), Transform(arrow, new_arrow))
-        #         self.wait(1)
-
-        #         index = max_heap.left(index)
-
-        # self.play(FadeOut(def_3), FadeOut(def_4), FadeOut(def_5), FadeOut(formulas_rect))
-
 
 class Insert(Scene):
 
@@ -962,3 +1018,155 @@ class Insert(Scene):
         max_heap.sketch_heap(self)
         max_heap.insert(6, self, 4, 6, -3)
         self.wait(3)
+
+
+class HeapSort(Scene):
+
+    def construct(self):
+
+        # title
+        title = TextMobject("Heap Sort:")
+        title.to_edge(LEFT, buff=0.8)
+        title.shift([0, 3, 0])
+        title.scale(1.2)
+        self.play(Write(title))
+        self.wait(0.5)
+
+        # problem statement
+        prob_1 = TextMobject("Suppose we have an array of size n and we want to sort it.")
+        prob_2 = TextMobject("We can use Heap Sort, by first building a Max Heap,")
+        prob_3 = TextMobject("and then calling Extract Max Heap n times.")
+        prob_4 = TextMobject("Let's see how it's done!")
+
+        prob_1.set_color(BLUE)
+        prob_2.set_color(BLUE)
+        prob_3.set_color(BLUE)
+        prob_4.set_color(BLUE)
+
+        prob_1.scale(0.8)
+        prob_2.scale(0.8)
+        prob_3.scale(0.8)
+        prob_4.scale(0.8)
+
+        prob_1.to_edge(LEFT, 0.5)
+        prob_2.to_edge(LEFT, 0.5)
+        prob_3.to_edge(LEFT, 0.5)
+        prob_4.to_edge(LEFT, 0.5)
+
+        prob_1.shift([0, 2.2, 0])
+        prob_2.shift([0, 1.8, 0])
+        prob_3.shift([0, 1.3, 0])
+        prob_4.shift([0, 0.5, 0])
+
+        self.play(Write(prob_1), run_time=2.5)
+        self.wait(1)
+        self.play(Write(prob_2), run_time=2.5)
+        self.wait(1)
+
+        # drawing the tree
+        # orig_arr = [1, 4, 2, 8, -3, -1, 0]
+        orig_arr = [8, 4, 2, 1, -3, -1, 0]
+        max_heap = MaxHeap(orig_arr, 3.8, 1, hspace=3, node_color=TEAL_E)
+        max_heap.sketch_heap(self)
+        self.wait(1)
+
+        # step 0: find the root
+        self.play(Write(prob_3))
+        self.wait(2)
+        self.play(Write(prob_4))
+        self.wait(1)
+
+        # result array
+        heap_arr = Polygon([-3.5, -2.8, 0], [3.5, -2.8, 0], [3.5, -1.8, 0], [-3.5, -1.8, 0])
+        heap_arr.set_color(WHITE)
+        self.play(Write(heap_arr))
+
+        arr_lines = VGroup()
+        for i in range(1, len(max_heap.arr)):
+            line = Line([-3.5 + i, -1.8, 0], [-3.5 + i, -2.8, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        res_text = TextMobject("\\textrm{sorted arr}")
+        res_text.move_to([-4.8, -2.3, 0])
+        self.play(Write(res_text))
+
+        values = VMobject()
+
+        n = len(max_heap.arr)
+
+        for i in range(n):
+
+            self.play(max_heap.arr[0].node_obj.set_color, YELLOW)
+            self.wait(1)
+
+            self.play(
+                max_heap.arr[0].node_obj.shift, [0, 0.6, 0],
+                max_heap.arr[0].key_obj.shift, [0, 0.6, 0]
+            )
+            self.wait(1)
+
+            val = max_heap.arr[0].key_obj.copy()
+            val.set_color(PURPLE)
+            val.move_to([-3 + i, -2.3, 0])
+            values.add(val)
+
+            self.play(TransformFromCopy(max_heap.arr[0].key_obj, val))
+
+            self.wait(0.5)
+
+            self.play(
+                max_heap.arr[0].node_obj.set_opacity, 0,
+                max_heap.arr[0].key_obj.set_opacity, 0,
+            )
+
+            self.play(
+                max_heap.arr[0].node_obj.shift, [0, -0.6, 0],
+                max_heap.arr[0].key_obj.shift, [0, -0.6, 0]
+            )
+
+            # edge...
+            edge = None
+
+            if i != n - 1:
+                parent = max_heap.parent(len(max_heap.arr) - 1)
+                if max_heap.left(parent) == len(max_heap.arr) - 1:
+                    edge = max_heap.arr[parent].left_edge
+                elif max_heap.right(parent) == len(max_heap.arr) - 1:
+                    edge = max_heap.arr[parent].right_edge
+
+            self.wait(1)
+            max_heap.extract_max(self)
+
+            if i != n - 1:
+                # removing the edge
+                self.play(FadeOut(edge))
+                self.wait(1)
+
+            # we need to heapify
+
+            if i == 0:
+                prob_8 = TextMobject("Now we apply Heapify!")
+                prob_8.set_color(BLUE)
+                prob_8.scale(0.8)
+                prob_8.to_edge(LEFT, 0.5)
+                prob_8.shift([0, -0.3, 0])
+                self.play(Write(prob_8))
+                self.wait(1)
+
+            # calling heapify
+            if len(max_heap.arr) != 0:
+                self.play(max_heap.arr[0].node_obj.set_color, RED)
+                self.wait(1)
+                max_heap.heapify(self, 0, None, None, False)
+
+            if i == 0:
+                prob_9 = TextMobject("and repeat!")
+                prob_9.set_color(BLUE)
+                prob_9.scale(0.8)
+                prob_9.to_edge(LEFT, 0.5)
+                prob_9.shift([0, -1.3, 0])
+                self.play(Write(prob_9))
+                self.wait(1)
+
+            self.wait(1.5)
