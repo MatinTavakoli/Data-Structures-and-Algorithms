@@ -1582,7 +1582,6 @@ class ExtractMax(Scene):
 
         self.wait(3)
 
-
 class BuildMaxHeap(Scene):
 
     def construct(self):
@@ -1621,26 +1620,26 @@ class BuildMaxHeap(Scene):
 
         # heap
         arr = [-1, 4, 3, 5, 7, 9, 6]
-        max_heap = MaxHeap(arr, 3.8, 2, hspace=3, node_color=TEAL_E)
+        max_heap = MaxHeap(arr, 4, 1.5, hspace=3, node_color=TEAL_E)
         self.wait(1)
 
         # heap array
-        heap_arr = Polygon([-3.5, -2.3, 0], [3.5, -2.3, 0], [3.5, -1.3, 0], [-3.5, -1.3, 0])
+        heap_arr = Polygon([-3.5, -2.5, 0], [3.5, -2.5, 0], [3.5, -1.5, 0], [-3.5, -1.5, 0])
         heap_arr.set_color(WHITE)
-        heap_arr.shift([0, -0.7, 0])
+        heap_arr.shift([0, -0.9, 0])
         self.play(Write(heap_arr))
 
         arr_lines = VGroup()
         for i in range(0, 7):
-            line = Line([-3.5 + i, -1.3, 0], [-3.5 + i, -2.3, 0])
-            line.shift([0, -0.7, 0])
+            line = Line([-3.5 + i, -1.5, 0], [-3.5 + i, -2.5, 0])
+            line.shift([0, -0.9, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
         self.wait(0.5)
         res_text = TextMobject("\\textrm{arr}")
-        res_text.move_to([-4.2, -1.8, 0])
-        res_text.shift([0, -0.7, 0])
+        res_text.move_to([-4.2, -2, 0])
+        res_text.shift([0, -0.9, 0])
         self.play(Write(res_text))
 
         self.wait(0.5)
@@ -1649,8 +1648,8 @@ class BuildMaxHeap(Scene):
         for i, node in enumerate(max_heap.arr):
             val = TextMobject(str(node.key))
             val.set_color(TEAL_E)
-            val.move_to([-3 + i, -1.8, 0])
-            val.shift([0, -0.7, 0])
+            val.move_to([-3 + i, -2, 0])
+            val.shift([0, -0.9, 0])
             self.play(Write(val), run_time=0.2)
             values.append(val)
 
@@ -1726,4 +1725,94 @@ class BuildMaxHeap(Scene):
 
         self.play(FadeOut(pointer))
 
-        self.wait(2)
+        self.wait(1)
+        prob_10 = TextMobject("And now we have a Max-Heap!")
+        prob_10.set_color(BLUE)
+        prob_10.scale(0.8)
+        prob_10.to_edge(LEFT, 0.5)
+        prob_10.shift([0, 1.5, 0])
+        self.play(
+            FadeOutAndShift(prob_5, direction=[0, 0.5, 0]),
+            FadeOutAndShift(prob_6, direction=[0, 1, 0]),
+            FadeOutAndShift(prob_7, direction=[0, 1.5, 0]),
+            FadeOutAndShift(prob_8, direction=[0, 2, 0]),
+            FadeOutAndShift(prob_9, direction=[0, 2.5, 0]),
+            ReplacementTransform(prob_4, prob_10)
+        )
+        self.wait(1)
+        self.play(FadeOut(prob_10))
+        self.wait(1)
+
+        prob_11 = TextMobject("As we saw, it's not necessary to call Heapify")
+        prob_12 = TextMobject("on leaf nodes. So we can skip those and start")
+        prob_13 = TextMobject("from the first non-leaf node, which is always")
+        prob_14 = TextMobject("the middle element of the array.")
+        prob_15 = TextMobject("So, the actual code is...")
+        prob_11.set_color(BLUE)
+        prob_12.set_color(BLUE)
+        prob_13.set_color(BLUE)
+        prob_14.set_color(BLUE)
+        prob_15.set_color(BLUE)
+        prob_11.scale(0.8)
+        prob_12.scale(0.8)
+        prob_13.scale(0.8)
+        prob_14.scale(0.8)
+        prob_15.scale(0.8)
+        prob_11.to_edge(LEFT, 0.5)
+        prob_12.to_edge(LEFT, 0.5)
+        prob_13.to_edge(LEFT, 0.5)
+        prob_14.to_edge(LEFT, 0.5)
+        prob_15.to_edge(LEFT, 0.5)
+        prob_11.shift([0, 1.5, 0])
+        prob_12.shift([0, 1, 0])
+        prob_13.shift([0, 0.5, 0])
+        prob_14.shift([0, 0, 0])
+        prob_15.shift([0, -0.5, 0])
+        self.play(Write(prob_11))
+        self.play(Write(prob_12))
+        self.play(Write(prob_13))
+        self.play(Write(prob_14))
+        self.wait(1)
+        self.play(Write(prob_15))
+        self.wait(1)
+        self.play(
+            FadeOut(prob_11),
+            FadeOut(prob_12),
+            FadeOut(prob_13),
+            FadeOut(prob_14),
+            FadeOut(prob_15),
+        )
+        self.wait(1)
+
+        # drawing the code line
+        line = Line([-6.1, 1.25, 0], [-6.1, -0.7, 0])
+
+        code = VGroup()
+        l1 = TextMobject("def", " build\\_max\\_heap", "(", "arr", "):")
+        for i, color in zip(l1, [YELLOW_B, PURPLE_C, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l1)
+
+        l2 = TextMobject("   for", " i", " = [", "n", " /", " 2", "]", " to", " 0", ":")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, YELLOW_B, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l2)
+
+        l3 = TextMobject("      heapify", "(", "i", ")")
+        for i, color in zip(l3, [PURPLE_C, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l3)
+
+        for i, l in enumerate(code):
+            l.to_edge(LEFT, buff=0.9)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i + 0.65, 0])
+
+        code.scale(0.85)
+        code.shift([0, 0.2, 0])
+
+        self.play(FadeInFromDown(line))
+
+        for l in code:
+            self.play(FadeInFrom(l, LEFT), run_time=0.5)
+
+        self.wait(3)
