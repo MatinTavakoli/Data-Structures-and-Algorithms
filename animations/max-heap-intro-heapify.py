@@ -1616,6 +1616,27 @@ class BuildMaxHeap(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Build Max Heap")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
         # title
         title = TextMobject("Build Max Heap:")
         title.to_edge(LEFT, buff=0.8)
@@ -1625,8 +1646,8 @@ class BuildMaxHeap(Scene):
         self.wait(0.5)
 
         # problem statement
-        prob_1 = TextMobject("Suppose we have an arbitrary array and we want to turn it into a ")
-        prob_2 = TextMobject("Max Heap.")
+        prob_1 = TextMobject("Suppose we have an arbitrary array and we want to")
+        prob_2 = TextMobject("turn it into a Max Heap.")
         prob_3 = TextMobject("How can we do that without allocating an extra array?")
 
         prob_1.set_color(BLUE)
@@ -1707,7 +1728,7 @@ class BuildMaxHeap(Scene):
         prob_4.to_edge(LEFT, 0.5)
         prob_5.to_edge(LEFT, 0.5)
         prob_6.to_edge(LEFT, 0.5)
-        prob_4.shift([0, 1.5, 0])
+        prob_4.shift([0, 1.75, 0])
         prob_5.shift([0, 1, 0])
         prob_6.shift([0, 0.5, 0])
 
@@ -1723,10 +1744,11 @@ class BuildMaxHeap(Scene):
         # iterate back and call heapify
 
         prob_7 = TextMobject("Then we iterate from the last position in")
-        prob_8 = TextMobject("the array to the first one, and call Heapify")
+        prob_8 = TextMobject("the array to the first one, and call ", "Heapify")
         prob_9 = TextMobject("on each position.")
         prob_7.set_color(BLUE)
-        prob_8.set_color(BLUE)
+        prob_8[0].set_color(BLUE)
+        prob_8[1].set_color(GOLD_B)
         prob_9.set_color(BLUE)
         prob_7.scale(0.8)
         prob_8.scale(0.8)
@@ -1734,9 +1756,9 @@ class BuildMaxHeap(Scene):
         prob_7.to_edge(LEFT, 0.5)
         prob_8.to_edge(LEFT, 0.5)
         prob_9.to_edge(LEFT, 0.5)
-        prob_7.shift([0, 0, 0])
-        prob_8.shift([0, -0.5, 0])
-        prob_9.shift([0, -1, 0])
+        prob_7.shift([0, -0.25, 0])
+        prob_8.shift([0, -0.75, 0])
+        prob_9.shift([0, -1.25, 0])
 
         self.play(Write(prob_7))
         self.play(Write(prob_8))
@@ -1755,7 +1777,7 @@ class BuildMaxHeap(Scene):
 
         self.play(FadeOut(pointer))
 
-        self.wait(1)
+        self.wait(0.3)
         prob_10 = TextMobject("And now we have a Max Heap!")
         prob_10.set_color(BLUE)
         prob_10.scale(0.8)
@@ -1769,16 +1791,17 @@ class BuildMaxHeap(Scene):
             FadeOutAndShift(prob_9, direction=[0, 2.5, 0]),
             ReplacementTransform(prob_4, prob_10)
         )
-        self.wait(1)
+        self.wait(1.5)
         self.play(FadeOut(prob_10))
-        self.wait(1)
+        self.wait(0.7)
 
-        prob_11 = TextMobject("As we saw, it's not necessary to call Heapify")
+        prob_11 = TextMobject("As we saw, it's not necessary to call ", "Heapify")
         prob_12 = TextMobject("on leaf nodes. So we can skip those and start")
         prob_13 = TextMobject("from the first non-leaf node, which is always")
         prob_14 = TextMobject("the middle element of the array.")
         prob_15 = TextMobject("So, the actual code is...")
-        prob_11.set_color(BLUE)
+        prob_11[0].set_color(BLUE)
+        prob_11[1].set_color(GOLD_B)
         prob_12.set_color(BLUE)
         prob_13.set_color(BLUE)
         prob_14.set_color(BLUE)
@@ -1797,7 +1820,7 @@ class BuildMaxHeap(Scene):
         prob_12.shift([0, 1, 0])
         prob_13.shift([0, 0.5, 0])
         prob_14.shift([0, 0, 0])
-        prob_15.shift([0, -0.5, 0])
+        prob_15.shift([0, -0.75, 0])
         self.play(Write(prob_11))
         self.play(Write(prob_12))
         self.play(Write(prob_13))
