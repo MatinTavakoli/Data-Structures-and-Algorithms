@@ -175,7 +175,7 @@ class MaxHeap:
 
         l4 = TextMobject("    \\textrm{arr}", "\\textrm{.}", "\\textrm{size}", "\\textrm{ =}", " \\textrm{arr}",
                          "\\textrm{.}", "\\textrm{size}", "\\textrm{ + }", "\\textrm{1}")
-        for i, color in zip(l4, [BLUE, WHITE, PURPLE_C, WHITE, BLUE, WHITE, PURPLE_C, WHITE, WHITE]):
+        for i, color in zip(l4, [BLUE, WHITE, PURPLE_C, WHITE, BLUE, WHITE, PURPLE_C, WHITE, BLUE]):
             i.set_color(color)
         code.add(l4)
 
@@ -1037,7 +1037,7 @@ class HeapSort(Scene):
         # problem statement
         prob_1 = TextMobject("Suppose we have an array of size", " n ", "and we want to sort it.")
         prob_2 = TextMobject("We can use Heap Sort, by first building a Max Heap,")
-        prob_3 = TextMobject("and then calling ", "Extract Max Heap", " n times.")
+        prob_3 = TextMobject("and then calling ", "Extract Max Heap", " n ", "times.")
         prob_4 = TextMobject("Let's see how it's done!")
 
         prob_1[0].set_color(BLUE)
@@ -1046,7 +1046,8 @@ class HeapSort(Scene):
         prob_2.set_color(BLUE)
         prob_3[0].set_color(BLUE)
         prob_3[1].set_color(GOLD_B)
-        prob_3[2].set_color(BLUE)
+        prob_3[2].set_color(RED)
+        prob_3[3].set_color(BLUE)
         prob_4.set_color(BLUE)
 
         prob_1.scale(0.8)
@@ -1066,15 +1067,57 @@ class HeapSort(Scene):
 
         self.play(Write(prob_1), run_time=2.5)
         self.wait(1)
+
+        # result array
+        arr = Polygon([-3.5, -2.5, 0], [3.5, -2.5, 0], [3.5, -1.5, 0], [-3.5, -1.5, 0])
+        arr.set_color(WHITE)
+        arr.shift([0, -0.7, 0])
+        self.play(Write(arr))
+
+        orig_arr = [1, 4, 2, 8, -3, -1, 0]
+        heap_arr = [8, 4, 2, 1, -3, -1, 0]
+
+        arr_lines = VGroup()
+        for i in range(1, len(orig_arr) + 1):
+            line = Line([-3.5 + i, -1.5, 0], [-3.5 + i, -2.5, 0])
+            line.shift([0, -0.7, 0])
+            arr_lines.add(line)
+            self.play(Write(line), rate_func=smooth, run_time=0.2)
+
+        arr_text = TextMobject("\\textrm{arr}")
+        arr_text.move_to([-4.2, -2, 0])
+        arr_text.shift([0, -0.7, 0])
+        self.play(Write(arr_text))
+
+        self.wait(0.7)
+
+        values = VGroup()
+        for i, elem in enumerate(orig_arr):
+            val = TextMobject(str(elem))
+            val.set_color(TEAL_E)
+            val.move_to([-3 + i, -2, 0])
+            val.shift([0, -0.7, 0])
+            self.play(Write(val), run_time=0.2)
+            values.add(val)
+
+        self.wait(1)
+
         self.play(Write(prob_2), run_time=2.5)
         self.wait(1)
 
         # drawing the tree
-        # orig_arr = [1, 4, 2, 8, -3, -1, 0]
-        orig_arr = [8, 4, 2, 1, -3, -1, 0]
         max_heap = MaxHeap(orig_arr, 3.8, 1, hspace=3, node_color=TEAL_E)
+        built_max_heap = MaxHeap(heap_arr, 3.8, 1, hspace=3, node_color=TEAL_E)
         max_heap.sketch_heap(self)
         self.wait(1)
+
+        self.play(*[FadeOut(node.key_obj) for node in max_heap.arr])
+
+        max_heap = built_max_heap
+
+        self.wait(1.5)
+        self.play(*[FadeIn(node.key_obj) for node in max_heap.arr])
+        self.wait(0.7)
 
         # step 0: find the root
         self.play(Write(prob_3))
@@ -1082,20 +1125,22 @@ class HeapSort(Scene):
         self.play(Write(prob_4))
         self.wait(1)
 
+        self.play(FadeOut(arr_text), FadeOut(arr), FadeOut(arr_lines), FadeOut(values))
+
         # result array
-        heap_arr = Polygon([-3.5, -2.8, 0], [3.5, -2.8, 0], [3.5, -1.8, 0], [-3.5, -1.8, 0])
+        heap_arr = Polygon([-3.5, -3.2, 0], [3.5, -3.2, 0], [3.5, -2.2, 0], [-3.5, -2.2, 0])
         heap_arr.set_color(WHITE)
         self.play(Write(heap_arr))
 
         arr_lines = VGroup()
         for i in range(1, len(max_heap.arr)):
-            line = Line([-3.5 + i, -1.8, 0], [-3.5 + i, -2.8, 0])
+            line = Line([-3.5 + i, -2.2, 0], [-3.5 + i, -3.2, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
-        res_text = TextMobject("\\textrm{sorted arr}")
-        res_text.move_to([-4.8, -2.3, 0])
-        self.play(Write(res_text))
+        sorted_text = TextMobject("\\textrm{sorted arr}")
+        sorted_text.move_to([-4.8, -2.7, 0])
+        self.play(Write(sorted_text))
 
         values = VMobject()
 
@@ -1117,7 +1162,7 @@ class HeapSort(Scene):
 
             val = max_heap.arr[0].key_obj.copy()
             val.set_color(PURPLE)
-            val.move_to([-3 + i, -2.3, 0])
+            val.move_to([-3 + i, -2.7, 0])
             values.add(val)
 
             self.play(TransformFromCopy(max_heap.arr[0].key_obj, val), run_time=run_time)
@@ -1194,3 +1239,74 @@ class HeapSort(Scene):
         self.play(values[n - 2].scale, 0.7, values[n - 2].set_color, PURPLE, run_time=0.12)
         self.wait(0.12)
         self.play(values[n - 1].scale, 0.7, values[n - 1].set_color, PURPLE, run_time=0.12)
+        self.wait(0.7)
+
+        prob_12 = TextMobject("And now we have a sorted array!")
+        prob_12.set_color(BLUE)
+        prob_12.scale(0.8)
+        prob_12.to_edge(LEFT, 0.5)
+        prob_12.shift([0, 2.2, 0])
+        self.play(
+            FadeOutAndShift(prob_1, direction=[0, 0.5, 0]),
+            FadeOutAndShift(prob_2, direction=[0, 1, 0]),
+            FadeOutAndShift(prob_3, direction=[0, 1.5, 0]),
+            FadeOutAndShift(prob_4, direction=[0, 2, 0]),
+            FadeOutAndShift(prob_8, direction=[0, 2.5, 0]),
+            ReplacementTransform(prob_9, prob_12)
+        )
+        self.wait(2)
+
+        prob_15 = TextMobject("So, the actual code is...")
+        prob_15.set_color(BLUE)
+        prob_15.scale(0.8)
+        prob_15.to_edge(LEFT, 0.5)
+        prob_15.shift([0, 1.7, 0])
+        self.play(Write(prob_15))
+        self.wait(1)
+        self.play(FadeOut(prob_12), FadeOut(prob_15))
+        self.wait(1)
+
+        # writing the code
+
+        # drawing the code line
+        line = Line([-6.1, 1.8, 0], [-6.1, -0.7, 0])
+
+        code = VGroup()
+        l1 = TextMobject("def", " heap\\_sort", "(", "arr", "):")
+        for i, color in zip(l1, [YELLOW_B, PURPLE_C, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l1)
+
+        l2 = TextMobject("    sorted\\_arr", " = ", "[ ]")
+        for i, color in zip(l2, [BLUE, WHITE, WHITE]):
+            i.set_color(color)
+        code.add(l2)
+
+        l3 = TextMobject("    for", " i", " = ", "0", " to", " n", ":")
+        for i, color in zip(l3, [YELLOW_B, BLUE, WHITE, BLUE, YELLOW_B, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l3)
+
+        l4 = TextMobject("        sorted\\_arr", ".", "add", "(", "extract\\_max\\_heap", "(", "i", "))")
+        for i, color in zip(l4, [BLUE, WHITE, YELLOW_B, WHITE, PURPLE_C, WHITE, BLUE, WHITE]):
+            i.set_color(color)
+        code.add(l4)
+
+        l4 = TextMobject("    return ", "sorted\\_arr")
+        for i, color in zip(l4, [YELLOW_B, BLUE]):
+            i.set_color(color)
+        code.add(l4)
+
+        for i, l in enumerate(code):
+            l.to_edge(LEFT, buff=0.9)
+            l.shift([0.2 * (len(l[0].get_tex_string()) - len(l[0].get_tex_string().lstrip())), -0.55 * i + 0.65, 0])
+
+        code.scale(0.85)
+        code.shift([0, 1, 0])
+
+        self.play(FadeInFromDown(line))
+
+        for l in code:
+            self.play(FadeInFrom(l, LEFT), run_time=0.5)
+
+        self.wait(3)

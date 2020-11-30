@@ -492,7 +492,7 @@ class MaxHeap:
             self.edges.remove(self.arr[node_parent].right_edge)
             self.arr[node_parent].right_edge = None
 
-        self.swap_nodes(index, self.size - 1, scene, True)
+        self.swap_nodes(index, self.size - 1, scene, True, None, False)
         node = self.arr[self.size - 1]
         self.nodes.remove(node)
 
@@ -1158,7 +1158,7 @@ class Heapify(Scene):
 
         # problem statement
         prob_1 = TextMobject("Suppose we have a tree that its root's left and right")
-        prob_2 = TextMobject("subtree are Max-Heaps, but the whole tree is not,")
+        prob_2 = TextMobject("subtree are Max Heaps, but the whole tree is not,")
         prob_3 = TextMobject("i.e. the root doesn't follow the rule.")
 
         prob_1.set_color(BLUE)
@@ -1211,7 +1211,7 @@ class Heapify(Scene):
         self.wait(1)
 
         # asking
-        ask = TextMobject("How can we make the whole tree a Max-Heap?")
+        ask = TextMobject("How can we make the whole tree a Max Heap?")
         ask.scale(0.9)
         ask.set_color(GOLD_B)
         ask.shift([0, -2.6, 0])
@@ -1335,6 +1335,27 @@ class ExtractMax(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Extract Max")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
         # title
         title = TextMobject("Extract Max:")
         title.to_edge(LEFT, buff=0.8)
@@ -1344,17 +1365,18 @@ class ExtractMax(Scene):
         self.wait(0.5)
 
         # problem statement
-        prob_1 = TextMobject("Suppose we have a Max-Heap and we want to")
+        prob_1 = TextMobject("Suppose we have a Max Heap and we want to")
         prob_2 = TextMobject("extract and retrun the node with maximum key.")
-        prob_3 = TextMobject("We already know that in a Max-Heap, the")
+        prob_3 = TextMobject("We already know that in a Max Heap, the")
         prob_4 = TextMobject("maximum is always found at the root.")
-        prob_5 = TextMobject("So the problem is solved: Extract the root!")
+        prob_5 = TextMobject("So the problem is solved: ", "Extract the root!")
 
         prob_1.set_color(BLUE)
         prob_2.set_color(BLUE)
         prob_3.set_color(BLUE)
         prob_4.set_color(BLUE)
-        prob_5.set_color(BLUE)
+        prob_5[0].set_color(BLUE)
+        prob_5[1].set_color(GOLD_B)
 
         prob_1.scale(0.8)
         prob_2.scale(0.8)
@@ -1370,12 +1392,13 @@ class ExtractMax(Scene):
 
         prob_1.shift([0, 1.5, 0])
         prob_2.shift([0, 1, 0])
-        prob_3.shift([0, 0.5, 0])
-        prob_4.shift([0, 0, 0])
-        prob_5.shift([0, -0.5, 0])
+        prob_3.shift([0, 0.25, 0])
+        prob_4.shift([0, -0.25, 0])
+        prob_5.shift([0, -1, 0])
 
         self.play(Write(prob_1))
         self.play(Write(prob_2))
+        self.wait(1)
 
         # drawing the tree
         arr = [9, 7, 6, 5, 4, -1, 3, 0]
@@ -1399,7 +1422,7 @@ class ExtractMax(Scene):
             max_heap.arr[0].node_obj.shift, [0, 1, 0],
             max_heap.arr[0].key_obj.shift, [0, 1, 0]
         )
-        self.wait(1)
+        self.wait(0.8)
 
         self.play(
             max_heap.arr[0].node_obj.set_opacity, 0,
@@ -1410,7 +1433,7 @@ class ExtractMax(Scene):
             max_heap.arr[0].node_obj.shift, [0, -1, 0],
             max_heap.arr[0].key_obj.shift, [0, -1, 0]
         )
-        self.wait(1)
+        self.wait(0.5)
 
         # step 3: filling the gap
         prob_6 = TextMobject("But how shall we fill the gap?")
@@ -1431,7 +1454,7 @@ class ExtractMax(Scene):
         self.play(Write(prob_6))
         self.wait(1)
 
-        prob_7 = TextMobject("We move the last node to there.")
+        prob_7 = TextMobject("We move the last node there.")
         prob_7.set_color(BLUE)
         prob_7.scale(0.8)
         prob_7.to_edge(LEFT, 0.5)
@@ -1462,32 +1485,34 @@ class ExtractMax(Scene):
         prob_9.scale(0.8)
         prob_8.to_edge(LEFT, 0.5)
         prob_9.to_edge(LEFT, 0.5)
-        prob_8.shift([0, 0.5, 0])
-        prob_9.shift([0, 0, 0])
+        prob_8.shift([0, 0.25, 0])
+        prob_9.shift([0, -0.25, 0])
         self.play(Write(prob_8))
         self.play(Write(prob_9))
         self.wait(1)
         
-        prob_10 = TextMobject("It's easy to fix thta, we just need")
-        prob_11 = TextMobject("to call Heapify on our new root!")
+        prob_10 = TextMobject("It's easy to fix that, we just need")
+        prob_11 = TextMobject("to call ", "Heapify", " on our new root!")
         prob_10.set_color(BLUE)
-        prob_11.set_color(BLUE)
+        prob_11[0].set_color(BLUE)
+        prob_11[1].set_color(GOLD_B)
+        prob_11[2].set_color(BLUE)
         prob_10.scale(0.8)
         prob_11.scale(0.8)
         prob_10.to_edge(LEFT, 0.5)
         prob_11.to_edge(LEFT, 0.5)
-        prob_10.shift([0, -0.5, 0])
-        prob_11.shift([0, -1, 0])
+        prob_10.shift([0, -0.75, 0])
+        prob_11.shift([0, -1.25, 0])
         self.play(Write(prob_10))
         self.play(Write(prob_11))
 
         # calling heapify
         self.play(max_heap.arr[0].node_obj.set_color, RED)
         self.wait(1)
-        max_heap.heapify(self, 0, None, None, False)
+        max_heap.heapify(self, 0, None, None, False, None, False)
         self.wait(1)
 
-        prob_12 = TextMobject("And now we have a Max-Heap again!")
+        prob_12 = TextMobject("And now we have a Max Heap again!")
         prob_12.set_color(BLUE)
         prob_12.scale(0.8)
         prob_12.to_edge(LEFT, 0.5)
@@ -1547,7 +1572,7 @@ class ExtractMax(Scene):
         # calling heapify
         self.play(max_heap.arr[0].node_obj.set_color, RED)
         self.wait(1)
-        max_heap.heapify(self, 0, None, None, False)
+        max_heap.heapify(self, 0, None, None, False, None, False)
         self.wait(1)
 
 
@@ -1555,13 +1580,18 @@ class ExtractMax(Scene):
         self.play(FadeOut(prob_13))
         self.wait(1)
         prob_14 = TextMobject("Steps:")
-        prob_15 = TextMobject("1. Extract the root node.")
-        prob_16 = TextMobject("2. Replace it with the last node.")
-        prob_17 = TextMobject("3. Call Heapify on the new root.")
+        prob_15 = TextMobject("1. ", "Extract the root node.")
+        prob_16 = TextMobject("2. ", "Replace it with the last node.")
+        prob_17 = TextMobject("3. ", "Call ", "Heapify", " on the new root.")
         prob_14.set_color(BLUE)
-        prob_15.set_color(BLUE)
-        prob_16.set_color(BLUE)
-        prob_17.set_color(BLUE)
+        prob_15[0].set_color(GOLD_B)
+        prob_15[1].set_color(BLUE)
+        prob_16[0].set_color(GOLD_B)
+        prob_16[1].set_color(BLUE)
+        prob_17[0].set_color(GOLD_B)
+        prob_17[1].set_color(BLUE)
+        prob_17[2].set_color(GOLD_B)
+        prob_17[3].set_color(BLUE)
         prob_14.scale(0.8)
         prob_15.scale(0.8)
         prob_16.scale(0.8)
@@ -1571,9 +1601,9 @@ class ExtractMax(Scene):
         prob_16.to_edge(LEFT, 0.5)
         prob_17.to_edge(LEFT, 0.5)
         prob_14.shift([0, 1.5, 0])
-        prob_15.shift([0, 1, 0])
-        prob_16.shift([0, 0.5, 0])
-        prob_17.shift([0, 0, 0])
+        prob_15.shift([0, 0.75, 0])
+        prob_16.shift([0, 0.25, 0])
+        prob_17.shift([0, -0.25, 0])
 
         self.play(Write(prob_14))
         self.play(FadeInFrom(prob_15, [0, 0.5, 0]))
@@ -1586,8 +1616,29 @@ class BuildMaxHeap(Scene):
 
     def construct(self):
 
+        # Introduction
+        title_l1 = TextMobject("Binary Max Heap")
+        title_l2 = TextMobject("Build Max Heap")
+        title_l1.scale(1.8)
+        title_l2.scale(1.3)
+        title_l1.shift([0, 0.5, 0])
+        title_l2.shift([0, -0.35, 0])
+        line = Line([-3.8, 0, 0], [3.8, 0, 0])
+        line.set_stroke(WHITE, 1.1, 1)
+        creators = TextMobject("Made by Matin Tavakoli \& Hossein Zaredar")
+        creators.scale(0.4)
+        creators.move_to([5, -3.7, 0])
+        self.add(title_l1)
+        self.add(title_l2)
+        self.add(line)
+        self.wait(2)
+        self.play(Write(creators), run_time=0.7)
+        self.wait(2)
+        self.play(FadeOut(title_l1), FadeOut(title_l2), FadeOut(line))
+        self.wait(1.5)
+
         # title
-        title = TextMobject("Build Max-Heap:")
+        title = TextMobject("Build Max Heap:")
         title.to_edge(LEFT, buff=0.8)
         title.shift([0, 3, 0])
         title.scale(1.2)
@@ -1595,8 +1646,8 @@ class BuildMaxHeap(Scene):
         self.wait(0.5)
 
         # problem statement
-        prob_1 = TextMobject("Suppose we have an arbitrary array and we want to turn it into a ")
-        prob_2 = TextMobject("Max-Heap.")
+        prob_1 = TextMobject("Suppose we have an arbitrary array and we want to")
+        prob_2 = TextMobject("turn it into a Max Heap.")
         prob_3 = TextMobject("How can we do that without allocating an extra array?")
 
         prob_1.set_color(BLUE)
@@ -1619,7 +1670,7 @@ class BuildMaxHeap(Scene):
         self.play(Write(prob_2))
 
         # heap
-        arr = [-1, 4, 3, 5, 7, 9, 6]
+        arr = [-1, 3, 4, 5, 6, 7, 9]
         max_heap = MaxHeap(arr, 4, 1.5, hspace=3, node_color=TEAL_E)
         self.wait(1)
 
@@ -1667,7 +1718,7 @@ class BuildMaxHeap(Scene):
 
         prob_4 = TextMobject("There are multiple ways to do that.")
         prob_5 = TextMobject("One way is to first treat our unsorted array")
-        prob_6 = TextMobject("as a Max-Heap that needs to be fixed.")
+        prob_6 = TextMobject("as a Max Heap that needs to be fixed.")
         prob_4.set_color(BLUE)
         prob_5.set_color(BLUE)
         prob_6.set_color(BLUE)
@@ -1677,7 +1728,7 @@ class BuildMaxHeap(Scene):
         prob_4.to_edge(LEFT, 0.5)
         prob_5.to_edge(LEFT, 0.5)
         prob_6.to_edge(LEFT, 0.5)
-        prob_4.shift([0, 1.5, 0])
+        prob_4.shift([0, 1.75, 0])
         prob_5.shift([0, 1, 0])
         prob_6.shift([0, 0.5, 0])
 
@@ -1692,11 +1743,12 @@ class BuildMaxHeap(Scene):
 
         # iterate back and call heapify
 
-        prob_7 = TextMobject("Then we iterate from the last position in,")
-        prob_8 = TextMobject("the array to the first one, and call Heapify")
-        prob_9 = TextMobject("on each postion.")
+        prob_7 = TextMobject("Then we iterate from the last position in")
+        prob_8 = TextMobject("the array to the first one, and call ", "Heapify")
+        prob_9 = TextMobject("on each position.")
         prob_7.set_color(BLUE)
-        prob_8.set_color(BLUE)
+        prob_8[0].set_color(BLUE)
+        prob_8[1].set_color(GOLD_B)
         prob_9.set_color(BLUE)
         prob_7.scale(0.8)
         prob_8.scale(0.8)
@@ -1704,9 +1756,9 @@ class BuildMaxHeap(Scene):
         prob_7.to_edge(LEFT, 0.5)
         prob_8.to_edge(LEFT, 0.5)
         prob_9.to_edge(LEFT, 0.5)
-        prob_7.shift([0, 0, 0])
-        prob_8.shift([0, -0.5, 0])
-        prob_9.shift([0, -1, 0])
+        prob_7.shift([0, -0.25, 0])
+        prob_8.shift([0, -0.75, 0])
+        prob_9.shift([0, -1.25, 0])
 
         self.play(Write(prob_7))
         self.play(Write(prob_8))
@@ -1716,7 +1768,7 @@ class BuildMaxHeap(Scene):
         # array pointer
         pointer = TextMobject("\^")
         pointer.rotate(PI)
-        pointer.move_to([3, -1.8, 0])
+        pointer.move_to([3, -2, 0])
         pointer.set_color(ORANGE)
         pointer.scale(2)
 
@@ -1725,8 +1777,8 @@ class BuildMaxHeap(Scene):
 
         self.play(FadeOut(pointer))
 
-        self.wait(1)
-        prob_10 = TextMobject("And now we have a Max-Heap!")
+        self.wait(0.3)
+        prob_10 = TextMobject("And now we have a Max Heap!")
         prob_10.set_color(BLUE)
         prob_10.scale(0.8)
         prob_10.to_edge(LEFT, 0.5)
@@ -1739,16 +1791,17 @@ class BuildMaxHeap(Scene):
             FadeOutAndShift(prob_9, direction=[0, 2.5, 0]),
             ReplacementTransform(prob_4, prob_10)
         )
-        self.wait(1)
+        self.wait(1.5)
         self.play(FadeOut(prob_10))
-        self.wait(1)
+        self.wait(0.7)
 
-        prob_11 = TextMobject("As we saw, it's not necessary to call Heapify")
+        prob_11 = TextMobject("As we saw, it's not necessary to call ", "Heapify")
         prob_12 = TextMobject("on leaf nodes. So we can skip those and start")
         prob_13 = TextMobject("from the first non-leaf node, which is always")
         prob_14 = TextMobject("the middle element of the array.")
         prob_15 = TextMobject("So, the actual code is...")
-        prob_11.set_color(BLUE)
+        prob_11[0].set_color(BLUE)
+        prob_11[1].set_color(GOLD_B)
         prob_12.set_color(BLUE)
         prob_13.set_color(BLUE)
         prob_14.set_color(BLUE)
@@ -1767,7 +1820,7 @@ class BuildMaxHeap(Scene):
         prob_12.shift([0, 1, 0])
         prob_13.shift([0, 0.5, 0])
         prob_14.shift([0, 0, 0])
-        prob_15.shift([0, -0.5, 0])
+        prob_15.shift([0, -0.75, 0])
         self.play(Write(prob_11))
         self.play(Write(prob_12))
         self.play(Write(prob_13))
