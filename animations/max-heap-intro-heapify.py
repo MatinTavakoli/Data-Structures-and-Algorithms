@@ -1670,27 +1670,27 @@ class BuildMaxHeap(Scene):
         self.play(Write(prob_2))
 
         # heap
-        arr = [-1, 3, 4, 5, 6, 7, 9]
+        arr = [-1, 9, 4, 5, 6, 7, 3]
         max_heap = MaxHeap(arr, 4, 1.5, hspace=3, node_color=TEAL_E)
         self.wait(1)
 
         # heap array
-        heap_arr = Polygon([-3.5, -2.5, 0], [3.5, -2.5, 0], [3.5, -1.5, 0], [-3.5, -1.5, 0])
+        heap_arr = Polygon([-3.5, -2.4, 0], [3.5, -2.4, 0], [3.5, -1.4, 0], [-3.5, -1.4, 0])
         heap_arr.set_color(WHITE)
-        heap_arr.shift([0, -0.9, 0])
+        heap_arr.shift([0, -0.8, 0])
         self.play(Write(heap_arr))
 
         arr_lines = VGroup()
         for i in range(0, 7):
-            line = Line([-3.5 + i, -1.5, 0], [-3.5 + i, -2.5, 0])
-            line.shift([0, -0.9, 0])
+            line = Line([-3.5 + i, -1.4, 0], [-3.5 + i, -2.4, 0])
+            line.shift([0, -0.8, 0])
             arr_lines.add(line)
             self.play(Write(line), rate_func=smooth, run_time=0.2)
 
         self.wait(0.5)
         res_text = TextMobject("\\textrm{arr}")
-        res_text.move_to([-4.2, -2, 0])
-        res_text.shift([0, -0.9, 0])
+        res_text.move_to([-4.2, -1.9, 0])
+        res_text.shift([0, -0.8, 0])
         self.play(Write(res_text))
 
         self.wait(0.5)
@@ -1699,8 +1699,8 @@ class BuildMaxHeap(Scene):
         for i, node in enumerate(max_heap.arr):
             val = TextMobject(str(node.key))
             val.set_color(TEAL_E)
-            val.move_to([-3 + i, -2, 0])
-            val.shift([0, -0.9, 0])
+            val.move_to([-3 + i, -1.9, 0])
+            val.shift([0, -0.8, 0])
             self.play(Write(val), run_time=0.2)
             values.append(val)
 
@@ -1717,8 +1717,8 @@ class BuildMaxHeap(Scene):
         )
 
         prob_4 = TextMobject("There are multiple ways to do that.")
-        prob_5 = TextMobject("One way is to first treat our unsorted array")
-        prob_6 = TextMobject("as a Max Heap that needs to be fixed.")
+        prob_5 = TextMobject("One way is to first treat our array as")
+        prob_6 = TextMobject("a Max Heap that needs to be fixed.")
         prob_4.set_color(BLUE)
         prob_5.set_color(BLUE)
         prob_6.set_color(BLUE)
@@ -1768,7 +1768,7 @@ class BuildMaxHeap(Scene):
         # array pointer
         pointer = TextMobject("\^")
         pointer.rotate(PI)
-        pointer.move_to([3, -2, 0])
+        pointer.move_to([3, -1.9, 0])
         pointer.set_color(ORANGE)
         pointer.scale(2)
 
@@ -1846,8 +1846,8 @@ class BuildMaxHeap(Scene):
             i.set_color(color)
         code.add(l1)
 
-        l2 = TextMobject("   for", " i", " = [", "n", " /", " 2", "]", " to", " 0", ":")
-        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, YELLOW_B, BLUE, WHITE]):
+        l2 = TextMobject("   for", " i", " = [", "n", " /", " 2", "] - ", "1", " to", " 0", ":")
+        for i, color in zip(l2, [YELLOW_B, BLUE, WHITE, BLUE, WHITE, BLUE, WHITE, BLUE, YELLOW_B, BLUE, WHITE]):
             i.set_color(color)
         code.add(l2)
 

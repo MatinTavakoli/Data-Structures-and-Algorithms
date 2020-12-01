@@ -1058,7 +1058,7 @@ class HeapSort(Scene):
         # problem statement
         prob_1 = TextMobject("Suppose we have an array of size", " n ", "and we want to sort it.")
         prob_2 = TextMobject("We can use Heap Sort, by first calling ", "Build Max Heap", ",")
-        prob_3 = TextMobject("and then calling ", "Extract Max Heap", " n ", "times.")
+        prob_3 = TextMobject("and then calling ", "Extract Max", " n ", "times.")
         prob_4 = TextMobject("Let's see how it's done!")
 
         prob_1[0].set_color(BLUE)
@@ -1293,7 +1293,7 @@ class HeapSort(Scene):
         )
         self.wait(2)
 
-        prob_15 = TextMobject("So, the actual code is...")
+        prob_15 = TextMobject("So, the code for Heap Sort is this...")
         prob_15.set_color(BLUE)
         prob_15.scale(0.8)
         prob_15.to_edge(LEFT, 0.5)
@@ -1306,7 +1306,7 @@ class HeapSort(Scene):
         # writing the code
 
         # drawing the code line
-        line = Line([-6.1, 1.8, 0], [-6.1, -0.7, 0])
+        line = Line([-5.9, 1.8, 0], [-5.9, -0.7, 0])
 
         code = VGroup()
         l1 = TextMobject("def", " heap\\_sort", "(", "arr", "):")
@@ -1319,12 +1319,12 @@ class HeapSort(Scene):
             i.set_color(color)
         code.add(l2)
 
-        l3 = TextMobject("    for", " i", " = ", "0", " to", " n", ":")
-        for i, color in zip(l3, [YELLOW_B, BLUE, WHITE, BLUE, YELLOW_B, BLUE, WHITE]):
+        l3 = TextMobject("    for", " i", " = ", "0", " to", " n", " -", " 1" ":")
+        for i, color in zip(l3, [YELLOW_B, BLUE, WHITE, BLUE, YELLOW_B, BLUE, WHITE, BLUE, WHITE]):
             i.set_color(color)
         code.add(l3)
 
-        l4 = TextMobject("        sorted\\_arr", ".", "add", "(", "extract\\_max\\_heap", "(", "i", "))")
+        l4 = TextMobject("        sorted\\_arr", ".", "add", "(", "extract\\_max", "(", "i", "))")
         for i, color in zip(l4, [BLUE, WHITE, YELLOW_B, WHITE, PURPLE_C, WHITE, BLUE, WHITE]):
             i.set_color(color)
         code.add(l4)
