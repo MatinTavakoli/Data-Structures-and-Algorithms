@@ -1057,14 +1057,16 @@ class HeapSort(Scene):
 
         # problem statement
         prob_1 = TextMobject("Suppose we have an array of size", " n ", "and we want to sort it.")
-        prob_2 = TextMobject("We can use Heap Sort, by first building a Max Heap,")
+        prob_2 = TextMobject("We can use Heap Sort, by first calling ", "Build Max Heap", ",")
         prob_3 = TextMobject("and then calling ", "Extract Max Heap", " n ", "times.")
         prob_4 = TextMobject("Let's see how it's done!")
 
         prob_1[0].set_color(BLUE)
         prob_1[1].set_color(RED)
         prob_1[2].set_color(BLUE)
-        prob_2.set_color(BLUE)
+        prob_2[0].set_color(BLUE)
+        prob_2[1].set_color(GOLD_B)
+        prob_2[2].set_color(BLUE)
         prob_3[0].set_color(BLUE)
         prob_3[1].set_color(GOLD_B)
         prob_3[2].set_color(RED)
@@ -1121,6 +1123,15 @@ class HeapSort(Scene):
             self.play(Write(val), run_time=0.2)
             values.add(val)
 
+        sorted_values = VGroup()
+        for i, elem in enumerate(heap_arr):
+            val = TextMobject(str(elem))
+            val.set_color(TEAL_E)
+            val.move_to([-3 + i, -2, 0])
+            val.shift([0, -0.7, 0])
+            # self.play(Write(val), run_time=0.2)
+            sorted_values.add(val)
+
         self.wait(1)
 
         self.play(Write(prob_2), run_time=2.5)
@@ -1132,12 +1143,17 @@ class HeapSort(Scene):
         max_heap.sketch_heap(self)
         self.wait(1)
 
-        self.play(*[FadeOut(node.key_obj) for node in max_heap.arr])
+        self.play(*[FadeOut(node.key_obj) for node in max_heap.arr], *[FadeOut(val) for val in values])
 
-        max_heap = built_max_heap
+        for i, node in enumerate(max_heap.arr):
+            # self.play(node.node_obj.set_opacity, 0, run_time=0.05)
+            max_heap.arr[i].key_obj = built_max_heap.arr[i].key_obj
+            max_heap.arr[i].key = built_max_heap.arr[i].key
+
+        values = sorted_values
 
         self.wait(1.5)
-        self.play(*[FadeIn(node.key_obj) for node in max_heap.arr])
+        self.play(*[FadeIn(node.key_obj) for node in max_heap.arr], *[FadeIn(val) for val in values])
         self.wait(0.7)
 
         # step 0: find the root
